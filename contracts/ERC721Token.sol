@@ -1,7 +1,7 @@
 pragma solidity ^0.8.0;
 
 // ----------------------------------------------------------------------------
-// ERC721 Token
+// ERC-721 Token
 //
 // https://github.com/bokkypoobah/GettingStartedInEthereum
 //

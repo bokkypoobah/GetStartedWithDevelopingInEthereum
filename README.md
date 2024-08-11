@@ -8,25 +8,25 @@ Materials for [ETHSydney August - Get started with developing in Ethereum](https
 
 ---
 
-## Tokens - Building Blocks
+## Building Blocks - Tokens
 
-### ERC-20
+### ERC-20 Fungible Tokens - "Coins"
 
 <kbd><img src="images/Overview-ERC-20.png" /></kbd>
 
 * [contracts/ERC20Token.sol](contracts/ERC20Token.sol)
 
-### ERC-721
+### ERC-721 Non-Fungible Tokens - "Pictures"
 
 <kbd><img src="images/Overview-ERC-721.png" /></kbd>
 
 * [contracts/ERC721Token.sol](contracts/ERC721Token.sol)
 
-### ERC-1155
+### ERC-1155 Non-Fungible Tokens - "Coins & Pictures"
 
 <kbd><img src="images/Overview-ERC-1155.png" /></kbd>
 
-* TODO
+* [contracts/ERC1155Token.sol](contracts/ERC1155Token.sol)
 
 <br />
 

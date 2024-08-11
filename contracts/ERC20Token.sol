@@ -1,7 +1,7 @@
 pragma solidity ^0.8.0;
 
 // ----------------------------------------------------------------------------
-// ERC20 Token
+// ERC-20 Token
 //
 // https://github.com/bokkypoobah/GettingStartedInEthereum
 //
