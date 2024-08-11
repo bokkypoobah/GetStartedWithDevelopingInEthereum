@@ -234,9 +234,8 @@
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const contract = new ethers.Contract(this.settings.erc20.contract, ERC20ABI, provider);
             const block = await provider.getBlock("latest");
-            const blockNumber = parseInt(block.number);
+            const latestBlockNumber = parseInt(block.number);
             const timestamp = parseInt(block.timestamp);
-
             const symbol = await contract.symbol();
             Vue.set(this.erc20, 'symbol', symbol);
             const name = await contract.name();
@@ -245,58 +244,74 @@
             Vue.set(this.erc20, 'decimals', decimals.toString());
             const totalSupply = await contract.totalSupply();
             Vue.set(this.erc20, 'totalSupply', totalSupply.toString());
-
-            try {
-              const filter = {
-                address: this.settings.erc20.contract,
-                fromBlock: blockNumber - 10000,
-                toBlock: blockNumber,
-                topics: [
-                  ethers.utils.id("Transfer(address,address,uint256)"),
-                  null,
-                  null,
-                ],
-              };
-              console.log(moment().format("HH:mm:ss") + " retrieveERC20 - filter: " + JSON.stringify(filter, null, 2));
-              const eventLogs = await provider.getLogs(filter);
-              const events = [];
-              for (const event of eventLogs) {
-                console.log(moment().format("HH:mm:ss") + " retrieveERC20 - event: " + JSON.stringify(event, null, 2));
-                const log = contract.interface.parseLog(event);
-                console.log(moment().format("HH:mm:ss") + " retrieveERC20 - log: " + JSON.stringify(log, null, 2));
-                if (log.eventFragment.name == "Transfer") {
-                  console.log("transfer");
-                  const [ from, to, tokens ] = log.args;
+            const events = [];
+            const t = this; // async function has a new `this`, so use `t` to represent the original `this`
+            async function getLogs(fromBlock, toBlock) {
+              console.log(moment().format("HH:mm:ss") + " retrieveERC20.getLogs - fromBlock: " + fromBlock + ", toBlock: " + toBlock);
+              let split = false;
+              try {
+                const filter = {
+                  address: t.settings.erc20.contract,
+                  fromBlock,
+                  toBlock,
+                  topics: [
+                    [
+                      ethers.utils.id("Transfer(address,address,uint256)"),
+                      ethers.utils.id("Approval(address,address,uint256)"),
+                    ],
+                    null,
+                    null,
+                  ],
+                };
+                // console.log(moment().format("HH:mm:ss") + " retrieveERC20.getLogs - filter: " + JSON.stringify(filter));
+                const eventLogs = await provider.getLogs(filter);
+                for (const event of eventLogs) {
+                  // console.log(moment().format("HH:mm:ss") + " retrieveERC20.getLogs - event: " + JSON.stringify(event));
+                  const log = contract.interface.parseLog(event);
+                  // console.log(moment().format("HH:mm:ss") + " retrieveERC20.getLogs - log: " + JSON.stringify(log));
+                  if (log.eventFragment.name == "Transfer") {
+                    // event Transfer(address indexed from, address indexed to, uint tokens);
+                    const [ from, to, tokens ] = log.args;
                     events.push({
                       blockNumber: event.blockNumber,
+                      confirmations: latestBlockNumber - event.blockNumber,
+                      txIndex: parseInt(event.transactionIndex),
+                      txHash: event.transactionHash,
                       logIndex: parseInt(event.logIndex),
-                      // txIndex: parseInt(log.transactionIndex),
-                      // txHash: log.transactionHash,
-                      // contract,
-                      // name: logData.name,
-                      // registrant: ethers.utils.getAddress(logData.args[0]),
-                      // schemeId,
-                      // stealthMetaAddress: ethers.utils.toUtf8String(logData.args[2]),
-                      // mine: false,
-                      // confirmations: parameter.blockNumber - log.blockNumber,
-                      // timestamp: null,
-                      // tx: null,
-
-
-
-                    from,
-                    to,
-                    tokens: tokens.toString(),
-                  });
+                      address: event.address,
+                      name: log.eventFragment.name,
+                      from,
+                      to,
+                      tokens: tokens.toString(),
+                    });
+                  } else if (log.eventFragment.name == "Approval") {
+                    // event Approval(address indexed tokenOwner, address indexed spender, uint tokens);
+                    const [ tokenOwner, spender, tokens ] = log.args;
+                    events.push({
+                      blockNumber: event.blockNumber,
+                      confirmations: latestBlockNumber - event.blockNumber,
+                      txIndex: parseInt(event.transactionIndex),
+                      txHash: event.transactionHash,
+                      logIndex: parseInt(event.logIndex),
+                      address: event.address,
+                      name: log.eventFragment.name,
+                      tokenOwner,
+                      spender,
+                      tokens: tokens.toString(),
+                    });
+                  }
                 }
+              } catch (e) {
+                split = true;
               }
-              Vue.set(this.erc20, 'events', events);
-            } catch (e) {
-              console.log(moment().format("HH:mm:ss") + " retrieveERC20 ERROR: " + e.message);
+              if (split) {
+                const mid = parseInt((fromBlock + toBlock) / 2);
+                await getLogs(fromBlock, mid);
+                await getLogs(parseInt(mid) + 1, toBlock);
+              }
             }
-
-
-
+            await getLogs(latestBlockNumber - 10000, latestBlockNumber);
+            Vue.set(this.erc20, 'events', events);
             console.log(moment().format("HH:mm:ss") + " retrieveERC20 END - erc20: " + JSON.stringify(this.erc20, null, 2));
           },
 
