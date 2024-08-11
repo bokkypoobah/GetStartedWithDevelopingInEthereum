@@ -14,15 +14,15 @@ pragma solidity ^0.8.0;
 
 interface ERC20 {
     event Transfer(address indexed from, address indexed to, uint tokens);
-    event Approval(address indexed tokenOwner, address indexed spender, uint tokens);
+    event Approval(address indexed owner, address indexed spender, uint tokens);
 
     function name() external view returns (string memory);
     function symbol() external view returns (string memory);
     function decimals() external view returns (uint8);
 
     function totalSupply() external view returns (uint);
-    function balanceOf(address tokenOwner) external view returns (uint balance);
-    function allowance(address tokenOwner, address spender) external view returns (uint remaining);
+    function balanceOf(address owner) external view returns (uint balance);
+    function allowance(address owner, address spender) external view returns (uint remaining);
     function transfer(address to, uint tokens) external returns (bool success);
     function approve(address spender, uint tokens) external returns (bool success);
     function transferFrom(address from, address to, uint tokens) external returns (bool success);
@@ -48,8 +48,8 @@ contract ERC20Token is ERC20 {
     function totalSupply() external view override returns (uint) {
         return _totalSupply - balances[address(0)];
     }
-    function balanceOf(address tokenOwner) external view override returns (uint balance) {
-        return balances[tokenOwner];
+    function balanceOf(address owner) external view override returns (uint balance) {
+        return balances[owner];
     }
     function transfer(address to, uint tokens) external override returns (bool success) {
         balances[msg.sender] -= tokens;
@@ -69,7 +69,7 @@ contract ERC20Token is ERC20 {
         emit Transfer(from, to, tokens);
         return true;
     }
-    function allowance(address tokenOwner, address spender) external view override returns (uint remaining) {
-        return allowed[tokenOwner][spender];
+    function allowance(address owner, address spender) external view override returns (uint remaining) {
+        return allowed[owner][spender];
     }
 }

@@ -113,9 +113,9 @@
                         </span>
                       </div>
                       <div v-else-if="data.item.name == 'Approval'">
-                        tokenOwner:
-                        <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.tokenOwner" variant="link" v-b-popover.hover.ds500="data.item.tokenOwner" target="_blank">
-                          {{ data.item.tokenOwner.substring(0, 6) + '...' + data.item.tokenOwner.slice(-4) }}
+                        owner:
+                        <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.owner" variant="link" v-b-popover.hover.ds500="data.item.owner" target="_blank">
+                          {{ data.item.owner.substring(0, 6) + '...' + data.item.owner.slice(-4) }}
                         </b-link>
                         spender:
                         <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.spender" variant="link" v-b-popover.hover.ds500="data.item.spender" target="_blank">
@@ -169,9 +169,9 @@
                         {{ data.item.tokens.blockNumber + ':' + data.item.tokens.txIndex + '.' + data.item.tokens.logIndex + ':' + data.item.tokens.txHash.substring(0, 8) + '...' + data.item.tokens.txHash.slice(-6) }}
                       </b-link>
                     </template>
-                    <template #cell(tokenOwner)="data">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc20.contract + '?a=' + data.item.tokenOwner" variant="link" v-b-popover.hover.ds500="data.item.tokenOwner" target="_blank">
-                        {{ data.item.tokenOwner.substring(0, 6) + '...' + data.item.tokenOwner.slice(-4) }}
+                    <template #cell(owner)="data">
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc20.contract + '?a=' + data.item.owner" variant="link" v-b-popover.hover.ds500="data.item.owner" target="_blank">
+                        {{ data.item.owner.substring(0, 6) + '...' + data.item.owner.slice(-4) }}
                       </b-link>
                     </template>
                     <template #cell(spender)="data">
@@ -217,11 +217,11 @@
 
               <b-form-group label="allowance:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
                 <b-card bg-variant="light">
-                  <b-form-group label="tokenOwner:" label-for="erc20-allowance-tokenowner" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
+                  <b-form-group label="owner:" label-for="erc20-allowance-tokenowner" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
                     <b-input-group size="sm" class="w-50">
-                      <b-form-input type="text" size="sm" id="erc20-allowance-tokenowner" v-model="settings.erc20.allowanceTokenOwner" @change="saveSettings"></b-form-input>
+                      <b-form-input type="text" size="sm" id="erc20-allowance-tokenowner" v-model="settings.erc20.allowanceOwner" @change="saveSettings"></b-form-input>
                       <b-input-group-append>
-                        <b-button size="sm" :href="'https://sepolia.etherscan.io/address/' + settings.erc20.allowanceTokenOwner" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                        <b-button size="sm" :href="'https://sepolia.etherscan.io/address/' + settings.erc20.allowanceOwner" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
@@ -236,7 +236,7 @@
                   <b-form-group label="" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
                     <b-button size="sm" @click="retrieveERC20Allowance" variant="primary">Retrieve</b-button>
                   </b-form-group>
-                  <b-form-group label="allowance(tokenOwner, spender):" label-for="erc20-allowance-tokens" label-size="sm" label-cols-sm="3" label-align-sm="right" :description="erc20.allowance ? 'Raw value: ' + formatNumber(erc20.allowance) : null" class="mx-0 my-1 p-0">
+                  <b-form-group label="allowance(owner, spender):" label-for="erc20-allowance-tokens" label-size="sm" label-cols-sm="3" label-align-sm="right" :description="erc20.allowance ? 'Raw value: ' + formatNumber(erc20.allowance) : null" class="mx-0 my-1 p-0">
                     <b-form-input type="text" size="sm" readonly id="erc20-allowance-tokens" :value="formatDecimals(erc20.allowance, erc20.decimals)" class="w-25"></b-form-input>
                   </b-form-group>
                 </b-card>
@@ -455,7 +455,7 @@
             erc20: {
               contract: null,
               balanceOfOwner: null,
-              allowanceTokenOwner: null,
+              allowanceOwner: null,
               allowanceSpender: null,
               transferTo: null,
               transferTokens: null,
@@ -506,7 +506,7 @@
           erc20AllowancesFields: [
             { key: 'number', label: '#', sortable: false, thStyle: 'width: 5%;', tdClass: 'text-truncate' },
             { key: 'latestUpdate', label: 'Latest Update', sortable: false, thStyle: 'width: 20%;', thClass: 'text-left', tdClass: 'text-left' },
-            { key: 'tokenOwner', label: 'Token Owner', sortable: false, thStyle: 'width: 25%;', thClass: 'text-left', tdClass: 'text-left' },
+            { key: 'owner', label: 'Token Owner', sortable: false, thStyle: 'width: 25%;', thClass: 'text-left', tdClass: 'text-left' },
             { key: 'spender', label: 'Spender', sortable: false, thStyle: 'width: 25%;', thClass: 'text-left', tdClass: 'text-left' },
             { key: 'tokens', label: 'Tokens', sortable: false, thStyle: 'width: 25%;', tdClass: 'text-truncate' },
           ],
@@ -554,7 +554,7 @@
                     [
                       // event Transfer(address indexed from, address indexed to, uint tokens);
                       ethers.utils.id("Transfer(address,address,uint256)"),
-                      // event Approval(address indexed tokenOwner, address indexed spender, uint tokens);
+                      // event Approval(address indexed owner, address indexed spender, uint tokens);
                       ethers.utils.id("Approval(address,address,uint256)"),
                     ],
                     null,
@@ -583,8 +583,8 @@
                       tokens: tokens.toString(),
                     });
                   } else if (log.eventFragment.name == "Approval") {
-                    // event Approval(address indexed tokenOwner, address indexed spender, uint tokens);
-                    const [ tokenOwner, spender, tokens ] = log.args;
+                    // event Approval(address indexed owner, address indexed spender, uint tokens);
+                    const [ owner, spender, tokens ] = log.args;
                     events.push({
                       blockNumber: event.blockNumber,
                       confirmations: latestBlockNumber - event.blockNumber,
@@ -593,7 +593,7 @@
                       logIndex: parseInt(event.logIndex),
                       address: event.address,
                       name: log.eventFragment.name,
-                      tokenOwner,
+                      owner,
                       spender,
                       tokens: tokens.toString(),
                     });
@@ -653,10 +653,10 @@
                 }
               } else if (event.name == "Approval") {
                 // console.log(moment().format("HH:mm:ss") + " retrieveERC20 - Approval event: " + JSON.stringify(event));
-                if (!(event.tokenOwner in allowancesCollator)) {
-                  allowancesCollator[event.tokenOwner] = {};
+                if (!(event.owner in allowancesCollator)) {
+                  allowancesCollator[event.owner] = {};
                 }
-                allowancesCollator[event.tokenOwner][event.spender] = {
+                allowancesCollator[event.owner][event.spender] = {
                   blockNumber: event.blockNumber,
                   txIndex: event.txIndex,
                   txHash: event.txHash,
@@ -692,9 +692,9 @@
             console.log(moment().format("HH:mm:ss") + " retrieveERC20 - balances: " + JSON.stringify(balances, null, 2));
 
             const allowances = [];
-            for (const [tokenOwner, spenders] of Object.entries(allowancesCollator)) {
+            for (const [owner, spenders] of Object.entries(allowancesCollator)) {
               for (const [spender, tokens] of Object.entries(spenders)) {
-                allowances.push({ tokenOwner, spender, tokens });
+                allowances.push({ owner, spender, tokens });
               }
             }
             allowances.sort((a, b) => {
@@ -738,7 +738,7 @@
             const decimals = await contract.decimals();
             Vue.set(this.erc20, 'decimals', decimals.toString());
 
-            const allowance = await contract.allowance(this.settings.erc20.allowanceTokenOwner, this.settings.erc20.allowanceSpender);
+            const allowance = await contract.allowance(this.settings.erc20.allowanceOwner, this.settings.erc20.allowanceSpender);
             Vue.set(this.erc20, 'allowance', allowance);
             // console.log(moment().format("HH:mm:ss") + " retrieveERC20Allowance - erc20.allowance: " + allowance);
             // console.log(moment().format("HH:mm:ss") + " retrieveERC20Allowance END - erc20: " + JSON.stringify(this.erc20, null, 2));
