@@ -2,7 +2,7 @@
 <!--To view this file, download free mind mapping software Freeplane from http://freeplane.sourceforge.net -->
 <node TEXT="Get Started With Developing In Ethereum" FOLDED="false" ID="ID_667085765" CREATED="1723336159154" MODIFIED="1723374176347" STYLE="oval">
 <font SIZE="18"/>
-<hook NAME="MapStyle">
+<hook NAME="MapStyle" zoom="0.9175092">
     <properties fit_to_viewport="false" edgeColorConfiguration="#808080ff,#ff0000ff,#0000ffff,#00ff00ff,#ff00ffff,#00ffffff,#7c0000ff,#00007cff,#007c00ff,#7c007cff,#007c7cff,#7c7c00ff"/>
 
 <map_styles>
@@ -64,7 +64,7 @@
 </map_styles>
 </hook>
 <hook NAME="AutomaticEdgeColor" COUNTER="7" RULE="ON_BRANCH_CREATION"/>
-<node TEXT="Ethereum" POSITION="right" ID="ID_1814734754" CREATED="1723336193145" MODIFIED="1723359398005">
+<node TEXT="Ethereum" FOLDED="true" POSITION="right" ID="ID_1814734754" CREATED="1723336193145" MODIFIED="1723359398005">
 <edge COLOR="#00007c"/>
 <node TEXT="History" ID="ID_1562096745" CREATED="1723359408616" MODIFIED="1723359471902">
 <node TEXT="Bitcoin" ID="ID_294212789" CREATED="1723359465765" MODIFIED="1723359467874"/>
@@ -77,7 +77,7 @@
 <node TEXT="Longevity" ID="ID_531885078" CREATED="1723371570384" MODIFIED="1723371576093"/>
 <node TEXT="Layer 2s" ID="ID_199007108" CREATED="1723345268533" MODIFIED="1723345272849"/>
 </node>
-<node TEXT="Dapps &amp; Smart Contracts" POSITION="right" ID="ID_1118280691" CREATED="1723336198193" MODIFIED="1723361371856">
+<node TEXT="Dapps &amp; Smart Contracts" FOLDED="true" POSITION="right" ID="ID_1118280691" CREATED="1723336198193" MODIFIED="1723361371856">
 <edge COLOR="#0000ff"/>
 <node TEXT="Building Blocks - Tokens" ID="ID_470878196" CREATED="1723336223737" MODIFIED="1723374191140">
 <node TEXT="ERC-20 &quot;Coins&quot;" ID="ID_1613881371" CREATED="1723336228030" MODIFIED="1723371756151"/>
@@ -98,7 +98,7 @@
 </node>
 <node TEXT="Building Blocks - Tokens" POSITION="right" ID="ID_553372858" CREATED="1723355229563" MODIFIED="1723374198904">
 <edge COLOR="#7c0000"/>
-<node TEXT="ERC-20 &quot;Coins&quot;" FOLDED="true" ID="ID_903186871" CREATED="1723352009443" MODIFIED="1723371798400" LINK="https://eips.ethereum.org/EIPS/eip-20">
+<node TEXT="ERC-20 &quot;Coins&quot;" ID="ID_903186871" CREATED="1723352009443" MODIFIED="1723371798400" LINK="https://eips.ethereum.org/EIPS/eip-20">
 <cloud COLOR="#ccffcc" SHAPE="ARC"/>
 <node TEXT="data:" ID="ID_731723915" CREATED="1723353450940" MODIFIED="1723353453320">
 <node TEXT="balances:" ID="ID_1880993949" CREATED="1723352304274" MODIFIED="1723352628059">
@@ -131,7 +131,7 @@
 <node TEXT="write functions:" ID="ID_589865997" CREATED="1723353004830" MODIFIED="1723353666934">
 <node TEXT="owner -&gt; transfer(to, tokens)" ID="ID_1294649605" CREATED="1723352863959" MODIFIED="1723352880443"/>
 <node TEXT="owner -&gt; approve(spender, tokens)" ID="ID_717823118" CREATED="1723352887285" MODIFIED="1723352894374"/>
-<node TEXT="spender -&gt; transferFrom(owner, tokens)" ID="ID_688727779" CREATED="1723352895581" MODIFIED="1723352909134"/>
+<node TEXT="spender -&gt; transferFrom(from, to, tokens)" ID="ID_688727779" CREATED="1723352895581" MODIFIED="1723397031105"/>
 </node>
 <node TEXT="events:" ID="ID_947863965" CREATED="1723353342632" MODIFIED="1723353346512">
 <node TEXT="Transfer(from, to, tokens)" ID="ID_1376932129" CREATED="1723353347674" MODIFIED="1723353353129"/>

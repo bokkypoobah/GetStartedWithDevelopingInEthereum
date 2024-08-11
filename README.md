@@ -17,6 +17,8 @@ Materials for [ETHSydney August - Get started with developing in Ethereum](https
 <kbd><img src="images/Explore-ERC-20-1.png" /></kbd>
 <kbd><img src="images/Explore-ERC-20-2.png" /></kbd>
 <kbd><img src="images/Explore-ERC-20-3.png" /></kbd>
+<kbd><img src="images/Explore-ERC-20-4.png" /></kbd>
+<kbd><img src="images/Explore-ERC-20-5.png" /></kbd>
 
 <br />
 
