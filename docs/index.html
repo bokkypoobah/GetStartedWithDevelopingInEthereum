@@ -2,10 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>GetStartedWithDevelopingInEthereum</title>
+    <title>Get Started With Developing In Ethereum</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-    <meta name="description" content="GetStartedWithDevelopingInEthereum (c) Bok Consulting Pty Ltd 2023" />
+    <meta name="description" content="Get Started With Developing In Ethereum (c) Bok Consulting Pty Ltd 2023" />
     <meta name="author" content="BokkyPooBah" />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="@BokkyPooBah" />
@@ -38,15 +38,15 @@
       <b-container fluid class="m-0 p-0">
         <b-navbar toggleable="sm" variant="light" class="mx-1 my-0 p-0">
           <b-navbar-brand to="https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/" variant="primary">
-            <b-avatar rounded variant="light" size="3.0rem" src="images/ZombieBaby_004_transparentbg_zoomed.png" v-b-popover.hover.bottom="'gm'" class="ml-0"></b-avatar>
-            <em v-b-popover.hover.bottom="'gm gm gm'">GetStartedWithDevelopingInEthereum</em>
+            <b-avatar rounded variant="light" size="3.0rem" src="images/ZombieBaby_004_transparentbg_zoomed.png" v-b-popover.hover.ds500="'gm'" class="ml-0"></b-avatar>
+            <em v-b-popover.hover.ds500="'gm gm gm'">Get Started With Developing In Ethereum</em>
           </b-navbar-brand>
           <b-navbar-nav class="ml-auto">
-            <b-nav-item size="sm" @click="settings.tabIndex = 0; saveSettings();" :active="settings.tabIndex == 0" active-class="active" v-b-popover.hover="'Approvals'">Approvals</b-nav-item>
-            <b-nav-item size="sm" @click="settings.tabIndex = 1; saveSettings();" :active="settings.tabIndex == 1" active-class="active" v-b-popover.hover="'Events'">Events</b-nav-item>
-            <b-nav-item size="sm" @click="settings.tabIndex = 2; saveSettings();" :active="settings.tabIndex == 2" active-class="active" v-b-popover.hover="'Accounts'">Accounts</b-nav-item>
-            <b-avatar v-if="coinbase && coinbase != nameOrAddress(coinbase)" rounded variant="light" size="3.0rem" :src="'https://metadata.ens.domains/mainnet/avatar/' + nameOrAddress(coinbase, 100)" v-b-popover.hover="'Your ENS avatar if set'"></b-avatar>
-            <b-button size="sm" variant="outline-primary" class="ml-1" @click="connectToWeb3(); processNewBlock(0);" v-b-popover.hover.bottom="'Click to update wallet'">{{ coinbase ? nameOrAddress(coinbase, 16) : 'Connect' }}</b-button>
+            <b-nav-item size="sm" @click="settings.tabIndex = 0; saveSettings();" :active="settings.tabIndex == 0" active-class="active" v-b-popover.hover.ds500="'ERC-20 Fungible Tokens'">ERC-20</b-nav-item>
+            <b-nav-item size="sm" @click="settings.tabIndex = 1; saveSettings();" :active="settings.tabIndex == 1" active-class="active" v-b-popover.hover.ds500="'ERC-721 Non-Fungible Tokens'">ERC-721</b-nav-item>
+            <b-nav-item size="sm" @click="settings.tabIndex = 2; saveSettings();" :active="settings.tabIndex == 2" active-class="active" v-b-popover.hover.ds500="'ERC-1155 Non-Fungible Tokens'">ERC-1155</b-nav-item>
+            <b-avatar v-if="coinbase && coinbase != nameOrAddress(coinbase)" rounded variant="light" size="3.0rem" :src="'https://metadata.ens.domains/mainnet/avatar/' + nameOrAddress(coinbase, 100)" v-b-popover.hover.ds500="'Your ENS avatar if set'"></b-avatar>
+            <b-button size="sm" variant="outline-primary" class="ml-1" @click="connectToWeb3(); processNewBlock(0);" v-b-popover.hover.ds500="'Click to update wallet'">{{ coinbase ? nameOrAddress(coinbase, 16) : 'Connect' }}</b-button>
           </b-navbar-nav>
         </b-navbar>
 
@@ -68,7 +68,7 @@
             <b-form-group v-if="modalApproval.item" label-cols-lg="2" label="Contract" label-size="md" label-class="font-weight-bold pt-0" class="mt-3 mb-0">
               <b-form-group v-if="modalApproval.item.contract" label="Address:" label-for="approval-address" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
                 <font size="-1">
-                  <b-button size="sm" variant="link" id="approval-address" :href="'https://etherscan.io/address/' + modalApproval.item.contract + '#code'" v-b-popover.hover.bottom="'Click to view in etherscan.io'" target="_blank">{{ modalApproval.item.contract }}</b-button>
+                  <b-button size="sm" variant="link" id="approval-address" :href="'https://sepolia.etherscan.io/address/' + modalApproval.item.contract + '#code'" v-b-popover.hover.ds500="'Click to view in etherscan.io'" target="_blank">{{ modalApproval.item.contract }}</b-button>
                 </font>
               </b-form-group>
               <b-form-group v-if="modalApproval.item.symbol" label="Symbol:" label-for="approval-symbol" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
@@ -90,12 +90,12 @@
               </b-form-group>
               <b-form-group v-if="modalApproval.item.owner" label="Owner:" label-for="approval-owner" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
                 <font size="-1">
-                  <b-button size="sm" variant="link" id="approval-owner" :href="'https://etherscan.io/address/' + modalApproval.item.owner" v-b-popover.hover.bottom="'Click to view in etherscan.io'" target="_blank">{{ modalApproval.item.owner == coinbase ? "(Attached)" : nameOrAddress(modalApproval.item.owner, 42) }}</b-button>
+                  <b-button size="sm" variant="link" id="approval-owner" :href="'https://sepolia.etherscan.io/address/' + modalApproval.item.owner" v-b-popover.hover.ds500="'Click to view in etherscan.io'" target="_blank">{{ modalApproval.item.owner == coinbase ? "(Attached)" : nameOrAddress(modalApproval.item.owner, 42) }}</b-button>
                 </font>
               </b-form-group>
               <b-form-group v-if="modalApproval.item.spender" label="Spender:" label-for="approval-spender" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
                 <font size="-1">
-                  <b-button size="sm" variant="link" id="approval-spender" :href="'https://etherscan.io/address/' + modalApproval.item.spender" v-b-popover.hover.bottom="'Click to view in etherscan.io'" target="_blank">{{ nameOrAddress(modalApproval.item.spender, 42) }}</b-button>
+                  <b-button size="sm" variant="link" id="approval-spender" :href="'https://sepolia.etherscan.io/address/' + modalApproval.item.spender" v-b-popover.hover.ds500="'Click to view in etherscan.io'" target="_blank">{{ nameOrAddress(modalApproval.item.spender, 42) }}</b-button>
                 </font>
               </b-form-group>
               <b-form-group v-if="modalApproval.item.type == 'erc20'" label="Tokens:" label-for="approval-tokens" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
@@ -135,68 +135,68 @@
 
           <b-card class="m-0 p-0 border-0" body-class="m-1 p-0">
             <!-- :TOOLBAR -->
-            <b-card-text v-if="coinbase" class="m-0 p-0">
+            <b-card-text v-if="coinbase && false" class="m-0 p-0">
               <div class="d-flex flex-wrap m-0 p-0">
                 <div v-if="settings.tabIndex == 0 || settings.tabIndex == 1" class="mt-1 pr-1">
-                  <b-form-checkbox size="sm" :disabled="sync.section != null" v-model.trim="settings.searchAttachedAccount" @input="saveSettings" v-b-popover.hover.bottom="'Search for approval events emitted by your attached web3 account'">
+                  <b-form-checkbox size="sm" :disabled="sync.section != null" v-model.trim="settings.searchAttachedAccount" @input="saveSettings" v-b-popover.hover.ds500="'Search for approval events emitted by your attached web3 account'">
                     Attached
                   </b-form-checkbox>
                 </div>
                 <div v-if="!settings.searchAttachedAccount" class="mt-0 pr-1" style="width: 25.0rem;">
-                  <b-form-textarea :disabled="sync.section != null" size="sm" v-model.trim="settings.searchAccounts" @change="saveSettings" debounce="600" rows="3" max-rows="10" v-b-popover.hover.top="'Search for approval events emitted this list of owner addresses'" :placeholder="'0x12...34\n0x23...45 0x34...56'"></b-form-textarea>
+                  <b-form-textarea :disabled="sync.section != null" size="sm" v-model.trim="settings.searchAccounts" @change="saveSettings" debounce="600" rows="3" max-rows="10" v-b-popover.hover.ds500="'Search for approval events emitted this list of owner addresses'" :placeholder="'0x12...34\n0x23...45 0x34...56'"></b-form-textarea>
                 </div>
                 <div v-if="settings.tabIndex == 0" class="mt-1 pr-1">
-                  <b-form-checkbox size="sm" v-model.trim="settings.approvalsTable.includeInactive" @input="saveSettings" v-b-popover.hover.bottom="'Include inactive approvals'">
+                  <b-form-checkbox size="sm" v-model.trim="settings.approvalsTable.includeInactive" @input="saveSettings" v-b-popover.hover.ds500="'Include inactive approvals'">
                     Inactive
                   </b-form-checkbox>
                 </div>
                 <div v-if="settings.tabIndex == 1" class="mt-1 pr-1">
-                  <b-form-checkbox size="sm" v-model.trim="settings.eventsTable.includeFluff" @input="saveSettings" v-b-popover.hover.bottom="'Include less important events like ERC-721 Approval to Null:0x0000...0000'">
+                  <b-form-checkbox size="sm" v-model.trim="settings.eventsTable.includeFluff" @input="saveSettings" v-b-popover.hover.ds500="'Include less important events like ERC-721 Approval to Null:0x0000...0000'">
                     Fluff
                   </b-form-checkbox>
                 </div>
                 <div class="mt-0 flex-grow-1">
                 </div>
                 <div v-if="!sync.section" class="mt-0 pr-1">
-                  <b-button size="sm" :disabled="accountsToSearch.length == 0" @click="saveSettings(); syncIt(false);" variant="primary" v-b-popover.hover.bottom="'Sync blockchain approval events'">Sync</b-button>
+                  <b-button size="sm" :disabled="accountsToSearch.length == 0" @click="saveSettings(); syncIt(false);" variant="primary" v-b-popover.hover.ds500="'Sync blockchain approval events'">Sync</b-button>
                 </div>
                 <div v-if="false && !sync.section" class="mt-0 pr-1">
-                  <b-button size="sm" :disabled="accountsToSearch.length == 0" @click="saveSettings(); syncIt(true);" variant="outline-primary" v-b-popover.hover.bottom="'This will do dev things'">Dev</b-button>
+                  <b-button size="sm" :disabled="accountsToSearch.length == 0" @click="saveSettings(); syncIt(true);" variant="outline-primary" v-b-popover.hover.ds500="'This will do dev things'">Dev</b-button>
                 </div>
                 <div v-if="sync.section" class="mt-1 p-0" style="width: 300px;">
-                  <b-progress height="1.5rem" :max="sync.total" show-progress :animated="!sync.section" :variant="sync.section ? 'success' : 'secondary'" v-b-popover.hover.bottom="'Click the button on the right to stop this process'">
+                  <b-progress height="1.5rem" :max="sync.total" show-progress :animated="!sync.section" :variant="sync.section ? 'success' : 'secondary'" v-b-popover.hover.ds500="'Click the button on the right to stop this process'">
                     <b-progress-bar :value="sync.completed">
                       {{ sync.total == null || sync.total == 0 ? (sync.completed + ' ' + sync.section) : (sync.completed + '/' + sync.total + ' ' + ((sync.completed / sync.total) * 100).toFixed(0) + '% ' + sync.section) }}
                     </b-progress-bar>
                   </b-progress>
                 </div>
                 <div class="ml-0 mt-1">
-                  <b-link v-if="sync.section" size="sm" @click="halt" variant="link" v-b-popover.hover.bottom="'Click to stop. It may take a few minutes to clean up. This process can be continued later'"><b-icon-stop-fill shift-v="+1" font-scale="1.0"></b-icon-stop-fill></b-link>
+                  <b-link v-if="sync.section" size="sm" @click="halt" variant="link" v-b-popover.hover.ds500="'Click to stop. It may take a few minutes to clean up. This process can be continued later'"><b-icon-stop-fill shift-v="+1" font-scale="1.0"></b-icon-stop-fill></b-link>
                 </div>
                 <div class="mt-0 flex-grow-1">
                 </div>
                 <div class="mt-0 pl-1">
-                  <b-button size="sm" :pressed.sync="settings.showInfo" @click="saveSettings" variant="link" v-b-popover.hover.bottom="'Show info'"><span v-if="settings.showInfo"><b-icon-info-circle-fill shift-v="+1" font-scale="1.0"></b-icon-info-circle-fill></span><span v-else><b-icon-info-circle shift-v="+1" font-scale="1.0"></b-icon-info-circle></span></b-button>
+                  <b-button size="sm" :pressed.sync="settings.showInfo" @click="saveSettings" variant="link" v-b-popover.hover.ds500="'Show info'"><span v-if="settings.showInfo"><b-icon-info-circle-fill shift-v="+1" font-scale="1.0"></b-icon-info-circle-fill></span><span v-else><b-icon-info-circle shift-v="+1" font-scale="1.0"></b-icon-info-circle></span></b-button>
                 </div>
                 <div class="mt-0 flex-grow-1">
                 </div>
                 <div v-if="settings.tabIndex == 0" class="mt-0 pl-1">
-                  <b-form-select size="sm" v-model="settings.approvalsTable.sortOption" @change="saveSettings" :options="approvalsSortOptions" v-b-popover.hover.bottom="'Yeah. Sort'"></b-form-select>
+                  <b-form-select size="sm" v-model="settings.approvalsTable.sortOption" @change="saveSettings" :options="approvalsSortOptions" v-b-popover.hover.ds500="'Yeah. Sort'"></b-form-select>
                 </div>
                 <div v-if="settings.tabIndex == 1" class="mt-0 pl-1">
-                  <b-form-select size="sm" v-model="settings.eventsTable.sortOption" @change="saveSettings" :options="eventsSortOptions" v-b-popover.hover.bottom="'Yeah. Sort'"></b-form-select>
+                  <b-form-select size="sm" v-model="settings.eventsTable.sortOption" @change="saveSettings" :options="eventsSortOptions" v-b-popover.hover.ds500="'Yeah. Sort'"></b-form-select>
                 </div>
                 <div v-if="settings.tabIndex == 2" class="mt-0 pl-1">
-                  <b-form-select size="sm" v-model="settings.accountsTable.sortOption" @change="saveSettings" :options="accountsSortOptions" v-b-popover.hover.bottom="'Yeah. Sort'"></b-form-select>
+                  <b-form-select size="sm" v-model="settings.accountsTable.sortOption" @change="saveSettings" :options="accountsSortOptions" v-b-popover.hover.ds500="'Yeah. Sort'"></b-form-select>
                 </div>
                 <div v-if="settings.tabIndex == 0" class="mt-0 pl-1">
-                  <font size="-2" v-b-popover.hover.bottom="'# approvals'">{{ commify0(filteredApprovals.length) + '/' + commify0(approvals.length) }}</font>
+                  <font size="-2" v-b-popover.hover.ds500="'# approvals'">{{ commify0(filteredApprovals.length) + '/' + commify0(approvals.length) }}</font>
                 </div>
                 <div v-if="settings.tabIndex == 1" class="mt-0 pl-1">
-                  <font size="-2" v-b-popover.hover.bottom="'# events'">{{ commify0(filteredEvents.length) + '/' + commify0(totalEvents) }}</font>
+                  <font size="-2" v-b-popover.hover.ds500="'# events'">{{ commify0(filteredEvents.length) + '/' + commify0(totalEvents) }}</font>
                 </div>
                 <div v-if="settings.tabIndex == 2" class="mt-0 pl-1">
-                  <font size="-2" v-b-popover.hover.bottom="'# accounts'">{{ commify0(totalAccounts) }}</font>
+                  <font size="-2" v-b-popover.hover.ds500="'# accounts'">{{ commify0(totalAccounts) }}</font>
                 </div>
                 <div v-if="settings.tabIndex == 0" class="mt-0 pl-1">
                   <b-pagination size="sm" v-model="settings.approvalsTable.currentPage" @input="saveSettings" :total-rows="filteredSortedApprovals.length" :per-page="settings.approvalsTable.pageSize" style="height: 0;"></b-pagination>
@@ -208,13 +208,13 @@
                   <b-pagination size="sm" v-model="settings.accountsTable.currentPage" @input="saveSettings" :total-rows="filteredSortedAccounts.length" :per-page="settings.accountsTable.pageSize" style="height: 0;"></b-pagination>
                 </div>
                 <div v-if="settings.tabIndex == 0" class="mt-0 pl-1">
-                  <b-form-select size="sm" v-model="settings.approvalsTable.pageSize" @change="saveSettings();" :options="pageSizes" v-b-popover.hover.bottom="'Yeah. Page size'"></b-form-select>
+                  <b-form-select size="sm" v-model="settings.approvalsTable.pageSize" @change="saveSettings();" :options="pageSizes" v-b-popover.hover.ds500="'Yeah. Page size'"></b-form-select>
                 </div>
                 <div v-if="settings.tabIndex == 1" class="mt-0 pl-1">
-                  <b-form-select size="sm" v-model="settings.eventsTable.pageSize" @change="saveSettings();" :options="pageSizes" v-b-popover.hover.bottom="'Yeah. Page size'"></b-form-select>
+                  <b-form-select size="sm" v-model="settings.eventsTable.pageSize" @change="saveSettings();" :options="pageSizes" v-b-popover.hover.ds500="'Yeah. Page size'"></b-form-select>
                 </div>
                 <div v-if="settings.tabIndex == 2" class="mt-0 pl-1">
-                  <b-form-select size="sm" v-model="settings.accountsTable.pageSize" @change="saveSettings();" :options="pageSizes" v-b-popover.hover.bottom="'Yeah. Page size'"></b-form-select>
+                  <b-form-select size="sm" v-model="settings.accountsTable.pageSize" @change="saveSettings();" :options="pageSizes" v-b-popover.hover.ds500="'Yeah. Page size'"></b-form-select>
                 </div>
               </div>
             </b-card-text>
@@ -270,7 +270,7 @@
                 </b-card-body>
               </b-card>
 
-              <b-table v-if="settings.tabIndex == 0 && !settings.showInfo" ref="approvalsTable" small fixed striped responsive hover selectable select-mode="single" @row-selected='approvalsRowSelected' :fields="approvalsFields" :items="pagedFilteredSortedApprovals" show-empty empty-html="Click Sync above to retrieve ERC-20, ERC-721 and ERC-1155 approval events" head-variant="light" class="mx-0 my-1">
+              <b-table v-if="false && settings.tabIndex == 0 && !settings.showInfo" ref="approvalsTable" small fixed striped responsive hover selectable select-mode="single" @row-selected='approvalsRowSelected' :fields="approvalsFields" :items="pagedFilteredSortedApprovals" show-empty empty-html="Click Sync above to retrieve ERC-20, ERC-721 and ERC-1155 approval events" head-variant="light" class="mx-0 my-1">
                 <template #cell(number)="data">
                   <font size="-1">
                     {{ parseInt(data.index) + ((settings.approvalsTable.currentPage - 1) * settings.approvalsTable.pageSize) + 1 }}
@@ -283,30 +283,30 @@
                   <b-badge pill variant="transparent" class="px-0">{{ data.item.symbol }}</b-badge>
                 </template>
                 <template #cell(name)="data">
-                  <b-link :href="'https://etherscan.io/address/' + data.item.contract" target="_blank">
-                    <b-badge pill variant="transparent" v-b-popover.hover="addressDescription(data.item.contract)" class="px-0">{{ data.item.name }}</b-badge>
+                  <b-link :href="'https://sepolia.etherscan.io/address/' + data.item.contract" target="_blank">
+                    <b-badge pill variant="transparent" v-b-popover.hover.ds500="addressDescription(data.item.contract)" class="px-0">{{ data.item.name }}</b-badge>
                   </b-link>
                 </template>
                 <template #cell(approvalType)="data">
                   <b-badge pill variant="transparent" class="px-0">{{ data.item.approvalType }}</b-badge>
                 </template>
                 <template #cell(owner)="data">
-                  <b-link :href="'https://etherscan.io/address/' + data.item.owner" target="_blank">
-                    <b-badge pill variant="transparent" v-b-popover.hover="addressDescription(data.item.owner)" class="px-0">{{ data.item.owner == coinbase ? "(Attached)" : nameOrAddress(data.item.owner, 24) }}</b-badge>
+                  <b-link :href="'https://sepolia.etherscan.io/address/' + data.item.owner" target="_blank">
+                    <b-badge pill variant="transparent" v-b-popover.hover.ds500="addressDescription(data.item.owner)" class="px-0">{{ data.item.owner == coinbase ? "(Attached)" : nameOrAddress(data.item.owner, 24) }}</b-badge>
                   </b-link>
                 </template>
                 <template #cell(spender)="data">
-                  <b-link :href="'https://etherscan.io/address/' + data.item.spender" target="_blank">
-                    <b-badge pill variant="transparent" v-b-popover.hover="addressDescription(data.item.spender)" class="px-0">{{ nameOrAddress(data.item.spender, 24) }}</b-badge>
+                  <b-link :href="'https://sepolia.etherscan.io/address/' + data.item.spender" target="_blank">
+                    <b-badge pill variant="transparent" v-b-popover.hover.ds500="addressDescription(data.item.spender)" class="px-0">{{ nameOrAddress(data.item.spender, 24) }}</b-badge>
                   </b-link>
                 </template>
                 <template #cell(approved)="data">
-                  <!-- <b-link :href="'https://etherscan.io/address/' + data.item.spender" target="_blank">
-                    <b-badge pill variant="transparent" v-b-popover.hover="addressDescription(data.item.spender)" class="px-0">{{ nameOrAddress(data.item.spender, 28) }}</b-badge>
+                  <!-- <b-link :href="'https://sepolia.etherscan.io/address/' + data.item.spender" target="_blank">
+                    <b-badge pill variant="transparent" v-b-popover.hover.ds500="addressDescription(data.item.spender)" class="px-0">{{ nameOrAddress(data.item.spender, 28) }}</b-badge>
                   </b-link> -->
                   <span v-if="data.item.type == 'erc20'">
                     <span v-if="data.item.value.toString().length > 30">
-                      <b-badge pill variant="transparent" v-b-popover.hover="formatDecimals(data.item.value, data.item.decimals)" class="px-0">&infin;</b-badge>
+                      <b-badge pill variant="transparent" v-b-popover.hover.ds500="formatDecimals(data.item.value, data.item.decimals)" class="px-0">&infin;</b-badge>
                     </span>
                     <span v-else>
                       <b-badge pill variant="transparent" class="px-0">{{ formatDecimals(data.item.value, data.item.decimals) }}</b-badge>
@@ -314,7 +314,7 @@
                   </span>
                   <span v-else-if="data.item.approvalType == 'Approval'">
                     <b-link :href="'https://opensea.io/assets/ethereum/' + data.item.contract + '/' + data.item.value" target="_blank">
-                      <b-badge pill variant="transparent" v-b-popover.hover="'View in opensea.io'" class="px-0">{{ '#' + commify0(data.item.value) }}</b-badge>
+                      <b-badge pill variant="transparent" v-b-popover.hover.ds500="'View in opensea.io'" class="px-0">{{ '#' + commify0(data.item.value) }}</b-badge>
                     </b-link>
                   </span>
                   <span v-else>
@@ -323,7 +323,7 @@
                 </template>
               </b-table>
 
-              <b-table v-if="settings.tabIndex == 1 && !settings.showInfo && events" small fixed striped responsive hover :fields="eventsFields" :items="pagedFilteredSortedEvents" show-empty empty-html="Click Sync above to retrieve ERC-20, ERC-721 and ERC-1155 approval events" head-variant="light" class="mx-0 my-1">
+              <b-table v-if="false && settings.tabIndex == 1 && !settings.showInfo && events" small fixed striped responsive hover :fields="eventsFields" :items="pagedFilteredSortedEvents" show-empty empty-html="Click Sync above to retrieve ERC-20, ERC-721 and ERC-1155 approval events" head-variant="light" class="mx-0 my-1">
                 <template #cell(number)="data">
                   <font size="-1">
                     {{ parseInt(data.index) + ((settings.eventsTable.currentPage - 1) * settings.eventsTable.pageSize) + 1 }}
@@ -331,7 +331,7 @@
                 </template>
                 <template #cell(timestamp)="data">
                   <font size="-1">
-                    <b-link :href="'https://etherscan.io/tx/' + data.item.txHash" v-b-popover.hover.bottom="'Block #' + commify0(data.item.blockNumber) + ', txIndex: ' + data.item.txIndex + ', logIndex: ' + data.item.logIndex" target="_blank">
+                    <b-link :href="'https://sepolia.etherscan.io/tx/' + data.item.txHash" v-b-popover.hover.ds500="'Block #' + commify0(data.item.blockNumber) + ', txIndex: ' + data.item.txIndex + ', logIndex: ' + data.item.logIndex" target="_blank">
                       <span v-if="data.item.timestamp">
                         {{ formatTimestamp(data.item.timestamp) }}
                       </span>
@@ -342,30 +342,30 @@
                   </font>
                 </template>
                 <template #cell(owner)="data">
-                  <b-link :href="'https://etherscan.io/address/' + data.item.owner" target="_blank">
-                    <b-badge pill variant="transparent" v-b-popover.hover="addressDescription(data.item.owner)" class="px-0">{{ data.item.owner == coinbase ? "(Attached)" : nameOrAddress(data.item.owner, 28) }}</b-badge>
+                  <b-link :href="'https://sepolia.etherscan.io/address/' + data.item.owner" target="_blank">
+                    <b-badge pill variant="transparent" v-b-popover.hover.ds500="addressDescription(data.item.owner)" class="px-0">{{ data.item.owner == coinbase ? "(Attached)" : nameOrAddress(data.item.owner, 28) }}</b-badge>
                   </b-link>
                 </template>
                 <template #cell(type)="data">
                   <b-badge pill variant="transparent" class="px-0">{{ accountTypeOptions.filter(e => e.value == data.item.type)[0].text }}</b-badge>
                 </template>
                 <template #cell(contract)="data">
-                  <b-link :href="'https://etherscan.io/address/' + data.item.contract" target="_blank">
-                    <b-badge pill variant="transparent" v-b-popover.hover="addressDescription(data.item.contract)" class="px-0">{{ nameOrAddress(data.item.contract, 28) }}</b-badge>
+                  <b-link :href="'https://sepolia.etherscan.io/address/' + data.item.contract" target="_blank">
+                    <b-badge pill variant="transparent" v-b-popover.hover.ds500="addressDescription(data.item.contract)" class="px-0">{{ nameOrAddress(data.item.contract, 28) }}</b-badge>
                   </b-link>
                 </template>
                 <template #cell(eventName)="data">
                   <b-badge pill variant="transparent" class="px-0">{{ data.item.eventName }}</b-badge>
                 </template>
                 <template #cell(spender)="data">
-                  <b-link :href="'https://etherscan.io/address/' + data.item.spender" target="_blank">
-                    <b-badge pill variant="transparent" v-b-popover.hover="addressDescription(data.item.spender)" class="px-0">{{ nameOrAddress(data.item.spender, 28) }}</b-badge>
+                  <b-link :href="'https://sepolia.etherscan.io/address/' + data.item.spender" target="_blank">
+                    <b-badge pill variant="transparent" v-b-popover.hover.ds500="addressDescription(data.item.spender)" class="px-0">{{ nameOrAddress(data.item.spender, 28) }}</b-badge>
                   </b-link>
                 </template>
                 <template #cell(approved)="data">
                   <span v-if="data.item.type == 'erc20'">
                     <span v-if="data.item.value.toString().length > 30">
-                      <b-badge pill variant="transparent" v-b-popover.hover="formatDecimals(data.item.value, data.item.decimals)" class="px-0">&infin;</b-badge>
+                      <b-badge pill variant="transparent" v-b-popover.hover.ds500="formatDecimals(data.item.value, data.item.decimals)" class="px-0">&infin;</b-badge>
                     </span>
                     <span v-else>
                       <b-badge pill variant="transparent" class="px-0">{{ formatDecimals(data.item.value, data.item.decimals) }}</b-badge>
@@ -373,7 +373,7 @@
                   </span>
                   <span v-else-if="data.item.eventName == 'Approval'">
                     <b-link :href="'https://opensea.io/assets/ethereum/' + data.item.contract + '/' + data.item.value" target="_blank">
-                      <b-badge pill variant="transparent" v-b-popover.hover="'View in opensea.io'" class="px-0">{{ '#' + commify0(data.item.value) }}</b-badge>
+                      <b-badge pill variant="transparent" v-b-popover.hover.ds500="'View in opensea.io'" class="px-0">{{ '#' + commify0(data.item.value) }}</b-badge>
                     </b-link>
                   </span>
                   <span v-else>
@@ -382,41 +382,41 @@
                 </template>
               </b-table>
 
-              <b-table v-if="settings.tabIndex == 2 && !settings.showInfo && accounts" small fixed striped responsive hover :fields="accountsFields" :items="pagedFilteredSortedAccounts" show-empty empty-html="Click Sync above to retrieve ERC-20, ERC-721 and ERC-1155 approval events" head-variant="light" class="mx-0 my-1">
+              <b-table v-if="false && settings.tabIndex == 2 && !settings.showInfo && accounts" small fixed striped responsive hover :fields="accountsFields" :items="pagedFilteredSortedAccounts" show-empty empty-html="Click Sync above to retrieve ERC-20, ERC-721 and ERC-1155 approval events" head-variant="light" class="mx-0 my-1">
                 <template #cell(number)="data">
                   <font size="-1">
                     {{ parseInt(data.index) + ((settings.accountsTable.currentPage - 1) * settings.accountsTable.pageSize) + 1 }}
                   </font>
                 </template>
                 <template #cell(address)="data">
-                  <b-link :href="'https://etherscan.io/address/' + data.item.address" target="_blank">
-                    <b-badge pill variant="transparent" v-b-popover.hover="addressDescription(data.item.address)" class="px-0">{{ data.item.address.substring(0, 6) + '...' + data.item.address.substring(38) }}</b-badge>
+                  <b-link :href="'https://sepolia.etherscan.io/address/' + data.item.address" target="_blank">
+                    <b-badge pill variant="transparent" v-b-popover.hover.ds500="addressDescription(data.item.address)" class="px-0">{{ data.item.address.substring(0, 6) + '...' + data.item.address.substring(38) }}</b-badge>
                   </b-link>
                 </template>
                 <template #cell(source)="data">
-                  <b-badge pill variant="transparent" v-b-popover.hover="'Owner, contract or spender from approvals'" class="px-0">{{ data.item.source.substring(0, 1).toUpperCase() + data.item.source.substring(1) }}</b-badge>
+                  <b-badge pill variant="transparent" v-b-popover.hover.ds500="'Owner, contract or spender from approvals'" class="px-0">{{ data.item.source.substring(0, 1).toUpperCase() + data.item.source.substring(1) }}</b-badge>
                 </template>
                 <template #cell(type)="data">
-                  <b-badge pill variant="transparent" v-b-popover.hover="'Detected account type'" class="px-0">{{ accountTypeOptions.filter(e => e.value == data.item.type)[0].text }}</b-badge>
+                  <b-badge pill variant="transparent" v-b-popover.hover.ds500="'Detected account type'" class="px-0">{{ accountTypeOptions.filter(e => e.value == data.item.type)[0].text }}</b-badge>
                 </template>
                 <template #cell(customType)="data">
-                  <b-form-select size="sm" v-model="data.item.customType" @change="customTypeUpdated(data.item.address, $event)" :options="accountTypeOptions" v-b-popover.hover.bottom="'Override detected type'"></b-form-select>
+                  <b-form-select size="sm" v-model="data.item.customType" @change="customTypeUpdated(data.item.address, $event)" :options="accountTypeOptions" v-b-popover.hover.ds500="'Override detected type'"></b-form-select>
                 </template>
                 <template #cell(symbol)="data">
-                  <b-badge pill variant="transparent" v-b-popover.hover="'Symbol for ERC-20, ERC-721 and ERC-1155: ' + data.item.symbol " class="px-0">{{ data.item.symbol }}</b-badge>
+                  <b-badge pill variant="transparent" v-b-popover.hover.ds500="'Symbol for ERC-20, ERC-721 and ERC-1155: ' + data.item.symbol " class="px-0">{{ data.item.symbol }}</b-badge>
                 </template>
                 <template #cell(name)="data">
-                  <b-badge pill variant="transparent" v-b-popover.hover="'Name: ' + data.item.name" class="px-0">{{ data.item.name }}</b-badge>
+                  <b-badge pill variant="transparent" v-b-popover.hover.ds500="'Name: ' + data.item.name" class="px-0">{{ data.item.name }}</b-badge>
                 </template>
                 <template #cell(customName)="data">
-                  <b-form-input size="sm" v-model="data.item.customName" @change="customNameUpdated(data.item.address, $event)" placeholder="Custom name" v-b-popover.hover.bottom="'Override detected name'"></b-form-input>
+                  <b-form-input size="sm" v-model="data.item.customName" @change="customNameUpdated(data.item.address, $event)" placeholder="Custom name" v-b-popover.hover.ds500="'Override detected name'"></b-form-input>
                 </template>
                 <template #cell(decimals)="data">
-                  <b-badge pill variant="transparent" v-b-popover.hover="'Detected decimals'" class="px-0">{{ data.item.decimals }}</b-badge>
+                  <b-badge pill variant="transparent" v-b-popover.hover.ds500="'Detected decimals'" class="px-0">{{ data.item.decimals }}</b-badge>
                 </template>
                 <template #cell(customDecimals)="data">
                   <span v-if="(data.item.customType == null && data.item.type == 'erc20') || data.item.customType == 'erc20'">
-                    <b-form-select size="sm" v-model="data.item.customDecimals" @change="customDecimalsUpdated(data.item.address, $event)" :options="decimalsOptions" v-b-popover.hover.bottom="'Override detected decimals'"></b-form-select>
+                    <b-form-select size="sm" v-model="data.item.customDecimals" @change="customDecimalsUpdated(data.item.address, $event)" :options="decimalsOptions" v-b-popover.hover.ds500="'Override detected decimals'"></b-form-select>
                   </span>
                 </template>
               </b-table>
@@ -429,16 +429,16 @@
           <div class="d-flex flex-wrap m-0 p-0">
             <div class="ml-0 mt-1 pl-1">
               <font v-if="connected" size="-2">
-                <!-- <b-link v-if="coinbase" :href="'https://etherscan.io/address/' + coinbase" v-b-popover.hover.bottom="'Coinbase'" target="_blank">
+                <!-- <b-link v-if="coinbase" :href="'https://sepolia.etherscan.io/address/' + coinbase" v-b-popover.hover.ds500="'Coinbase'" target="_blank">
                   {{ coinbase.substring(0, 10) }}
                 </b-link> -->
-                <b-link v-if="chainId" :href="'https://etherscan.io/'" v-b-popover.hover.bottom="'Network'" target="_blank">
-                  {{ chainId == '1' ? 'Mainnet' : 'Unsupported' }}
+                <b-link v-if="chainId" :href="'https://sepolia.etherscan.io/'" v-b-popover.hover.ds500="'Network'" target="_blank">
+                  {{ chainId == '11155111' ? 'Sepolia' : 'Unsupported' }}
                 </b-link>
-                <b-link v-if="blockNumber" :href="'https://etherscan.io/block/' + blockNumber" v-b-popover.hover.bottom="'Latest block'" target="_blank">
+                <b-link v-if="blockNumber" :href="'https://sepolia.etherscan.io/block/' + blockNumber" v-b-popover.hover.ds500="'Latest block'" target="_blank">
                   {{ '#' + commify0(blockNumber) }}
                 </b-link>
-                <b-link v-if="blockNumber" :href="'https://etherscan.io/block/' + blockNumber" v-b-popover.hover.bottom="formatTimestamp(timestamp)" target="_blank">
+                <b-link v-if="blockNumber" :href="'https://sepolia.etherscan.io/block/' + blockNumber" v-b-popover.hover.ds500="formatTimestamp(timestamp)" target="_blank">
                   {{ formatTimeDiff(timestamp) }}
                 </b-link>
               </font>
