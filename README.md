@@ -9,6 +9,18 @@ Getting Started In Ethereum
 ## Sample Contracts
 
 * [contracts/ERC20Token.sol](contracts/ERC20Token.sol)
+* [contracts/ERC721Token.sol](contracts/ERC721Token.sol)
+
+<br />
+
+---
+
+## Resources
+
+### Solidity
+
+* [Remix](https://remix.ethereum.org/) Solidity compiler and deployer
+* [Solidity Documentation](https://docs.soliditylang.org/)
 
 <br />
 
