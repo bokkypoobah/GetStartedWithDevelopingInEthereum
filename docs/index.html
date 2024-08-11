@@ -61,14 +61,26 @@
 
           <b-card class="m-0 p-0 border-0" body-class="m-1 p-0">
             <b-card v-if="settings.tabIndex == 0" header="ERC-20" class="m-0 p-0">
-              <b-form-group label="Contract:" label-for="erc20-contract" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
+              <b-form-group label="contract:" label-for="erc20-contract" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
                 <b-form-input type="text" size="sm" id="erc20-contract" v-model="settings.erc20.contract" @change="saveSettings" class="w-50"></b-form-input>
               </b-form-group>
               <b-form-group label="" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
                 <b-button size="sm" @click="retrieveERC20" variant="primary">Retrieve</b-button>
               </b-form-group>
-              <b-form-group label="Symbol:" label-for="erc20-symbol" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
+              <b-form-group label="symbol:" label-for="erc20-symbol" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
                 <b-form-input type="text" size="sm" readonly id="erc20-symbol" :value="erc20.symbol" class="w-25"></b-form-input>
+              </b-form-group>
+              <b-form-group label="name:" label-for="erc20-name" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
+                <b-form-input type="text" size="sm" readonly id="erc20-name" :value="erc20.name" class="w-25"></b-form-input>
+              </b-form-group>
+              <b-form-group label="decimals:" label-for="erc20-decimals" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
+                <b-form-input type="text" size="sm" readonly id="erc20-decimals" :value="erc20.decimals" class="w-25"></b-form-input>
+              </b-form-group>
+              <b-form-group label="totalSupply:" label-for="erc20-totalsupply" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
+                <b-form-input type="text" size="sm" readonly id="erc20-totalsupply" :value="formatNumber(erc20.totalSupply)" class="w-25"></b-form-input>
+              </b-form-group>
+              <b-form-group label="" label-for="erc20-totalsupplydecimals" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
+                <b-form-input type="text" size="sm" readonly id="erc20-totalsupplydecimals" :value="formatDecimals(erc20.totalSupply, erc20.decimals)" class="w-25"></b-form-input>
               </b-form-group>
 
             </b-card>
@@ -78,7 +90,7 @@
               <b-card v-if="settings.showInfo || coinbase == null" no-body class="my-1 p-1">
                 <b-card-body class="mt-1 p-1">
                   <h4>Welcome</h4>
-                  A lightweigh web3 dapp tool to manage your approvals for ERC-20, ERC-721 and ERC-1155 token contracts on Ethereum-Virtual-Machine compatible chains.
+                  TODO
 
                   <h5 class="mt-4">How This Works</h5>
                   <ul>
@@ -185,130 +197,12 @@
           erc20: {
             symbol: null,
             name: null,
+            decimals: null,
             totalSupply: null,
             balances: {},
             allowances: {},
             events: [],
           },
-
-          // TODO: Delete below
-          sync: {
-            section: null,
-            total: null,
-            completed: null,
-            halt: false,
-          },
-          events: {},
-          accounts: {},
-          blockTimestamps: {},
-          modalApproval: {
-            item: null,
-            tokens: null, // ERC-20 Approval
-            spender: null, // ERC-721 Approval
-            tokenId: null, // ERC-721 Approval
-            approved: false, // ERC-721 & ERC-1155 ApprovalForAll
-          },
-          approvalsSortOptions: [
-            { value: 'nameasc', text: '▲ Name' },
-            { value: 'namedsc', text: '▼ Name' },
-            { value: 'typenameasc', text: '▲ Type, ▲ Name' },
-            { value: 'typenamedsc', text: '▼ Type, ▼ Name' },
-          ],
-          eventsSortOptions: [
-            { value: 'txorderasc', text: '▲ TxOrder' },
-            { value: 'txorderdsc', text: '▼ TxOrder' },
-          ],
-          accountsSortOptions: [
-            { value: 'typenameasc', text: '▲ Type, ▲ Name' },
-            { value: 'typenamedsc', text: '▼ Type, ▼ Name' },
-            { value: 'nameasc', text: '▲ Name' },
-            { value: 'namedsc', text: '▼ Name' },
-            { value: 'addressasc', text: '▲ Address' },
-            { value: 'addressdsc', text: '▼ Address' },
-          ],
-          pageSizes: [
-            { value: 5, text: '5' },
-            { value: 10, text: '10' },
-            { value: 25, text: '25' },
-            { value: 50, text: '50' },
-            { value: 100, text: '100' },
-            { value: 500, text: '500' },
-            { value: 1000, text: '1k' },
-            { value: 2500, text: '2.5k' },
-            { value: 10000, text: '10k' },
-          ],
-          falseTrueOptions: [
-            { value: false, text: 'false' },
-            { value: true, text: 'true' },
-          ],
-          accountTypeOptions: [
-            { value: null, text: '(use default)' },
-            { value: "eoa", text: 'EOA' },
-            { value: "erc20", text: 'ERC-20' },
-            { value: "erc721", text: 'ERC-721' },
-            { value: "erc1155", text: 'ERC-1155' },
-            { value: "ftexchange", text: 'FTExchange' },
-            { value: "nftexchange", text: 'NFTExchange' },
-            { value: "unknown", text: '(Unknown)' },
-          ],
-          decimalsOptions: [
-            { value: null, text: '(use default)' },
-            { value: "0", text: '0' },
-            { value: "1", text: '1' },
-            { value: "2", text: '2' },
-            { value: "3", text: '3' },
-            { value: "4", text: '4' },
-            { value: "5", text: '5' },
-            { value: "6", text: '6 (some)' },
-            { value: "7", text: '7' },
-            { value: "8", text: '8' },
-            { value: "9", text: '9' },
-            { value: "10", text: '10' },
-            { value: "11", text: '11' },
-            { value: "12", text: '12' },
-            { value: "13", text: '13' },
-            { value: "14", text: '14' },
-            { value: "15", text: '15' },
-            { value: "16", text: '16' },
-            { value: "17", text: '17' },
-            { value: "18", text: '18 (common)' },
-          ],
-          approvalsFields: [
-            { key: 'number', label: '#', sortable: false, thStyle: 'width: 5%;', tdClass: 'text-truncate' },
-            { key: 'type', label: 'Type', sortable: false, thStyle: 'width: 5%;', thClass: 'text-left', tdClass: 'text-left' },
-            { key: 'symbol', label: 'Symbol', sortable: false, thStyle: 'width: 10%;', thClass: 'text-left', tdClass: 'text-left' },
-            { key: 'name', label: 'Name', sortable: false, thStyle: 'width: 20%;', thClass: 'text-left', tdClass: 'text-left' },
-            { key: 'approvalType', label: 'Approval Type', sortable: false, thStyle: 'width: 10%;', thClass: 'text-left', tdClass: 'text-left' },
-            { key: 'owner', label: 'Owner', sortable: false, thStyle: 'width: 15%;', thClass: 'text-left', tdClass: 'text-truncate' },
-            { key: 'spender', label: 'Spender', sortable: false, thStyle: 'width: 15%;', thClass: 'text-left', tdClass: 'text-truncate' },
-            { key: 'approved', label: 'Approved', sortable: false, thStyle: 'width: 20%;', thClass: 'text-left', tdClass: 'text-left' },
-          ],
-          eventsFields: [
-            { key: 'number', label: '#', sortable: false, thStyle: 'width: 5%;', tdClass: 'text-truncate' },
-            { key: 'timestamp', label: 'When', sortable: false, thStyle: 'width: 10%;', tdClass: 'text-truncate' },
-            { key: 'type', label: 'Type', sortable: false, thStyle: 'width: 5%;', thClass: 'text-left', tdClass: 'text-left' },
-            { key: 'contract', label: 'Contract', sortable: false, thStyle: 'width: 15%;', thClass: 'text-left', tdClass: 'text-truncate' },
-            { key: 'eventName', label: 'Event', sortable: false, thStyle: 'width: 10%;', thClass: 'text-left', tdClass: 'text-left' },
-            { key: 'owner', label: 'Owner', sortable: false, thStyle: 'width: 15%;', thClass: 'text-left', tdClass: 'text-truncate' },
-            { key: 'spender', label: 'Spender', sortable: false, thStyle: 'width: 15%;', thClass: 'text-left', tdClass: 'text-truncate' },
-            { key: 'approved', label: 'Approved', /*sortable: true,*/ thStyle: 'width: 20%;', thClass: 'text-left', tdClass: 'text-left' },
-          ],
-          accountsFields: [
-            { key: 'number', label: '#', sortable: false, thStyle: 'width: 5%;', tdClass: 'text-truncate' },
-            { key: 'address', label: 'Address', sortable: false, thStyle: 'width: 10%;', thClass: 'text-left', tdClass: 'text-truncate' },
-            { key: 'source', label: 'Source', sortable: false, thStyle: 'width: 5%;', thClass: 'text-left', tdClass: 'text-left' },
-            { key: 'type', label: 'Type', sortable: false, thStyle: 'width: 10%;', thClass: 'text-left', tdClass: 'text-left' },
-            { key: 'customType', label: '', sortable: false, thStyle: 'width: 10%;', thClass: 'text-left', tdClass: 'text-left' },
-            { key: 'symbol', label: 'Symbol', sortable: false, thStyle: 'width: 10%;', thClass: 'text-left', tdClass: 'text-truncate' },
-            { key: 'name', label: 'Name', sortable: false, thStyle: 'width: 15%;', thClass: 'text-left', tdClass: 'text-truncate' },
-            { key: 'customName', label: '', sortable: false, thStyle: 'width: 15%;', thClass: 'text-left', tdClass: 'text-left' },
-            { key: 'decimals', label: 'Decimals', sortable: false, thStyle: 'width: 10%;', thClass: 'text-right', tdClass: 'text-right' },
-            { key: 'customDecimals', label: '', sortable: false, thStyle: 'width: 10%;', thClass: 'text-right', tdClass: 'text-right' },
-          ],
-          reportingDateTimeOptions: [
-            { value: 0, text: 'Local Time' },
-            { value: 1, text: 'UTC Time' },
-          ],
         },
 
         // --- COMPUTED ---
@@ -323,7 +217,13 @@
             const contract = new ethers.Contract(this.settings.erc20.contract, ERC20ABI, provider);
             const symbol = await contract.symbol();
             Vue.set(this.erc20, 'symbol', symbol);
-            console.log(moment().format("HH:mm:ss") + " retrieveERC20 END - settings.erc20: " + JSON.stringify(this.settings.erc20, null, 2));
+            const name = await contract.name();
+            Vue.set(this.erc20, 'name', name);
+            const decimals = await contract.decimals();
+            Vue.set(this.erc20, 'decimals', decimals.toString());
+            const totalSupply = await contract.totalSupply();
+            Vue.set(this.erc20, 'totalSupply', totalSupply.toString());
+            console.log(moment().format("HH:mm:ss") + " retrieveERC20 END - erc20: " + JSON.stringify(this.erc20, null, 2));
           },
 
           saveSettings() {
@@ -350,8 +250,11 @@
             }
             return e.toFixed(precision);
           },
+          formatNumber(e) {
+            return e ? e.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : null;
+          },
           formatDecimals(e, decimals = 18) {
-            return e ? ethers.utils.formatUnits(e, decimals) : null;
+            return e ? ethers.utils.formatUnits(e, decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ",") : null;
           },
           formatTimestamp(ts) {
             if (ts != null) {
