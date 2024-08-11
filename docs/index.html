@@ -832,10 +832,10 @@
             return e.toFixed(precision);
           },
           formatNumber(e) {
-            return e ? e.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : null;
+            return e ? e.toString().replace(/(?<!(\.\d*|^.{0}))(?=(\d{3})+(?!\d))/g, ',') : null;
           },
           formatDecimals(e, decimals = 18) {
-            return e ? ethers.utils.formatUnits(e, decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ",") : null;
+            return e ? ethers.utils.formatUnits(e, decimals).replace(/(?<!(\.\d*|^.{0}))(?=(\d{3})+(?!\d))/g, ',') : null;
           },
           formatTimestamp(ts) {
             if (ts != null) {
