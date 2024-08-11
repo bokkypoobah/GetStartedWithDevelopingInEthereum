@@ -48,6 +48,20 @@ e.g., Game items
 
 ---
 
+## Exercises
+
+* Install MetaMask from [https://metamask.io/](https://metamask.io/).
+* Connect to Ethereum Sepolia Testnet
+* Use [https://remix.ethereum.org/](https://remix.ethereum.org/) to deploy your smart contracts below:
+
+### Deploy ERC-20
+
+<kbd><img src="images/Deploy-ERC-20.png" /></kbd>
+
+<br />
+
+---
+
 ## Resources
 
 ### Solidity
