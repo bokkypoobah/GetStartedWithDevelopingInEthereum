@@ -4,7 +4,15 @@ Materials for [ETHSydney August - Get started with developing in Ethereum](https
 
 <kbd><img src="images/Overview.png" /></kbd>
 
-UI for testing smart contracts on Sepolia [https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/](https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/)
+<br />
+
+---
+
+## UI For Testing Smart Contracts On Sepolia
+
+[https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/](https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/)
+
+<kbd><img src="images/Explore-ERC-20.png" /></kbd>
 
 <br />
 
