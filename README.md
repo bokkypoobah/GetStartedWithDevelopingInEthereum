@@ -4,6 +4,8 @@ Materials for [ETHSydney August - Get started with developing in Ethereum](https
 
 <kbd><img src="images/Overview.png" /></kbd>
 
+UI for testing smart contracts on Sepolia [https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/](https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/)
+
 <br />
 
 ---
@@ -42,9 +44,9 @@ e.g., Game items
 
 ### Solidity
 
-* Solidity compiler and deployer - [remix.ethereum.org](https://remix.ethereum.org/)
-* Solidity Documentation - [docs.soliditylang.org](https://docs.soliditylang.org/)
-* OpenZeppelin Contracts - [github.com/OpenZeppelin/openzeppelin-contracts](https://github.com/OpenZeppelin/openzeppelin-contracts)
+* Solidity compiler and deployer - [https://remix.ethereum.org/](https://remix.ethereum.org/)
+* Solidity Documentation - [https://docs.soliditylang.org/](https://docs.soliditylang.org/)
+* OpenZeppelin Contracts - [https://github.com/OpenZeppelin/openzeppelin-contracts](https://github.com/OpenZeppelin/openzeppelin-contracts)
 
 ### Other
 
