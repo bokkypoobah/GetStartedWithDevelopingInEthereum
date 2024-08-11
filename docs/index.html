@@ -491,7 +491,7 @@
               pageSize: 100,
               sortOption: 'typenameasc',
             },
-            version: 12,
+            version: 0,
           },
           sync: {
             section: null,
@@ -944,9 +944,9 @@
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
             this.coinbase = await signer.getAddress();
-            localStorage.approvalToolCoinbase = this.coinbase;
+            localStorage.getStartedWithDevelopingInEthereumCoinbase = this.coinbase;
             const network = await provider.getNetwork();
-            localStorage.approvalToolChainId = network.chainId;
+            localStorage.getStartedWithDevelopingInEthereumChainId = network.chainId;
             const block = await provider.getBlock();
             const latestBlockNumber = block && block.number || null;
             console.log(moment().format("HH:mm:ss") + " syncIt - latestBlockNumber: " + latestBlockNumber + ", chainId: " + this.chainId);
@@ -1293,7 +1293,7 @@
           },
 
           saveSettings() {
-            localStorage.approvalToolSettings = JSON.stringify(this.settings);
+            localStorage.getStartedWithDevelopingInEthereumSettings = JSON.stringify(this.settings);
           },
           async processNewBlock(blockNumber) {
             console.log(moment().format("HH:mm:ss") + " processNewBlock[" + this.chainId + "] #" + this.commify0(blockNumber) + ", latest #" + this.commify0(this.blockNumber) + " @ " + moment.unix(this.timestamp).format("YYYY-MM-DD HH:mm:ss") + " " + moment.unix(this.timestamp).fromNow());
@@ -1422,14 +1422,14 @@
           (async() => {
             await this.connectToWeb3();
           })();
-          if ('approvalToolChainId' in localStorage) {
-            this.chainId = localStorage.approvalToolChainId;
+          if ('getStartedWithDevelopingInEthereumChainId' in localStorage) {
+            this.chainId = localStorage.getStartedWithDevelopingInEthereumChainId;
           }
-          if ('approvalToolCoinbase' in localStorage) {
-            this.coinbase = localStorage.approvalToolCoinbase;
+          if ('getStartedWithDevelopingInEthereumCoinbase' in localStorage) {
+            this.coinbase = localStorage.getStartedWithDevelopingInEthereumCoinbase;
           }
-          if ('approvalToolSettings' in localStorage) {
-            const tempSettings = JSON.parse(localStorage.approvalToolSettings);
+          if ('getStartedWithDevelopingInEthereumSettings' in localStorage) {
+            const tempSettings = JSON.parse(localStorage.getStartedWithDevelopingInEthereumSettings);
             if ('version' in tempSettings && tempSettings.version == this.settings.version) {
               this.settings = tempSettings;
               if (this.settings.approvalsTable.currentPage > 1) {
