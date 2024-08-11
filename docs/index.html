@@ -138,15 +138,20 @@
                     <template #cell(number)="data">
                         {{ parseInt(data.index) + 1 }}
                     </template>
+                    <template #cell(latestUpdate)="data">
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.balance.txHash + '#eventlog#' + data.item.balance.logIndex" variant="link" v-b-popover.hover.ds500="'blockNumber:txIndex.logIndex:txHash'" target="_blank">
+                        {{ data.item.balance.blockNumber + ':' + data.item.balance.txIndex + '.' + data.item.balance.logIndex + ':' + data.item.balance.txHash.substring(0, 8) + '...' + data.item.balance.txHash.slice(-6) }}
+                      </b-link>
+                    </template>
                     <template #cell(owner)="data">
                       <b-link size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc20.contract + '?a=' + data.item.owner" variant="link" v-b-popover.hover.ds500="data.item.owner" target="_blank">
                         {{ data.item.owner.substring(0, 6) + '...' + data.item.owner.slice(-4) }}
                       </b-link>
                     </template>
                     <template #cell(balance)="data">
-                      {{ formatDecimals(data.item.balance, data.item.decimals) }}
+                      {{ formatDecimals(data.item.balance.tokens, data.item.decimals) }}
                       <span class="text-muted">
-                        {{ formatNumber(data.item.balance) }}
+                        {{ formatNumber(data.item.balance.tokens) }}
                       </span>
                     </template>
                   </b-table>
@@ -159,7 +164,7 @@
                     <template #cell(number)="data">
                         {{ parseInt(data.index) + 1 }}
                     </template>
-                    <template #cell(when)="data">
+                    <template #cell(latestUpdate)="data">
                       <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.tokens.txHash + '#eventlog#' + data.item.tokens.logIndex" variant="link" v-b-popover.hover.ds500="'blockNumber:txIndex.logIndex:txHash'" target="_blank">
                         {{ data.item.tokens.blockNumber + ':' + data.item.tokens.txIndex + '.' + data.item.tokens.logIndex + ':' + data.item.tokens.txHash.substring(0, 8) + '...' + data.item.tokens.txHash.slice(-6) }}
                       </b-link>
@@ -425,12 +430,13 @@
           ],
           erc20BalancesFields: [
             { key: 'number', label: '#', sortable: false, thStyle: 'width: 5%;', tdClass: 'text-truncate' },
+            { key: 'latestUpdate', label: 'Latest Update', sortable: false, thStyle: 'width: 20%;', thClass: 'text-left', tdClass: 'text-left' },
             { key: 'owner', label: 'Owner', sortable: false, thStyle: 'width: 45%;', thClass: 'text-left', tdClass: 'text-left' },
-            { key: 'balance', label: 'Balance', sortable: false, thStyle: 'width: 50%;', tdClass: 'text-truncate' },
+            { key: 'balance', label: 'Balance', sortable: false, thStyle: 'width: 30%;', tdClass: 'text-truncate' },
           ],
           erc20AllowancesFields: [
             { key: 'number', label: '#', sortable: false, thStyle: 'width: 5%;', tdClass: 'text-truncate' },
-            { key: 'when', label: 'When', sortable: false, thStyle: 'width: 20%;', thClass: 'text-left', tdClass: 'text-left' },
+            { key: 'latestUpdate', label: 'Latest Update', sortable: false, thStyle: 'width: 20%;', thClass: 'text-left', tdClass: 'text-left' },
             { key: 'tokenOwner', label: 'Token Owner', sortable: false, thStyle: 'width: 25%;', thClass: 'text-left', tdClass: 'text-left' },
             { key: 'spender', label: 'Spender', sortable: false, thStyle: 'width: 25%;', thClass: 'text-left', tdClass: 'text-left' },
             { key: 'tokens', label: 'Tokens', sortable: false, thStyle: 'width: 25%;', tdClass: 'text-truncate' },
@@ -545,13 +551,37 @@
               if (event.name == "Transfer") {
                 // console.log(moment().format("HH:mm:ss") + " retrieveERC20 - Transfer event: " + JSON.stringify(event));
                 if (!(event.from in balanceCollator)) {
-                  balanceCollator[event.from] = "0";
+                  balanceCollator[event.from] = {
+                    blockNumber: event.blockNumber,
+                    txIndex: event.txIndex,
+                    txHash: event.txHash,
+                    logIndex: event.logIndex,
+                    tokens: event.tokens,
+                  };
+                } else {
+                  balanceCollator[event.from].blockNumber = event.blockNumber;
+                  balanceCollator[event.from].txIndex = event.txIndex;
+                  balanceCollator[event.from].txHash = event.txHash;
+                  balanceCollator[event.from].logIndex = event.logIndex;
+                  balanceCollator[event.from].blockNumber = event.blockNumber;
+                  balanceCollator[event.from].tokens = ethers.BigNumber.from(balanceCollator[event.from].tokens).sub(event.tokens).toString();
                 }
                 if (!(event.to in balanceCollator)) {
-                  balanceCollator[event.to] = "0";
+                  balanceCollator[event.to] = {
+                    blockNumber: event.blockNumber,
+                    txIndex: event.txIndex,
+                    txHash: event.txHash,
+                    logIndex: event.logIndex,
+                    tokens: event.tokens,
+                  };
+                } else {
+                  balanceCollator[event.to].blockNumber = event.blockNumber;
+                  balanceCollator[event.to].txIndex = event.txIndex;
+                  balanceCollator[event.to].txHash = event.txHash;
+                  balanceCollator[event.to].logIndex = event.logIndex;
+                  balanceCollator[event.to].blockNumber = event.blockNumber;
+                  balanceCollator[event.to].tokens = ethers.BigNumber.from(balanceCollator[event.to].tokens).add(event.tokens).toString();
                 }
-                balanceCollator[event.from] = ethers.BigNumber.from(balanceCollator[event.from]).sub(event.tokens).toString();
-                balanceCollator[event.to] = ethers.BigNumber.from(balanceCollator[event.to]).add(event.tokens).toString();
               } else if (event.name == "Approval") {
                 // console.log(moment().format("HH:mm:ss") + " retrieveERC20 - Approval event: " + JSON.stringify(event));
                 if (!(event.tokenOwner in allowancesCollator)) {
@@ -583,14 +613,14 @@
               balances.push({ owner, balance });
             }
             balances.sort((a, b) => {
-              if (a.balance == b.balance) {
-                return ('' + a.owner).localeCompare(b.owner);
+              if (a.balance.blockNumber == b.balance.blockNumber) {
+                return b.balance.logIndex - a.balance.logIndex;
               } else {
-                return a.balance - b.balance;
+                return b.balance.blockNumber - a.balance.blockNumber;
               }
             });
             Vue.set(this.erc20, 'balances', balances);
-            // console.log(moment().format("HH:mm:ss") + " retrieveERC20 - balances: " + JSON.stringify(balances, null, 2));
+            console.log(moment().format("HH:mm:ss") + " retrieveERC20 - balances: " + JSON.stringify(balances, null, 2));
 
             const allowances = [];
             for (const [tokenOwner, spenders] of Object.entries(allowancesCollator)) {
