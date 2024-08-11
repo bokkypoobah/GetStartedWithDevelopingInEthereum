@@ -62,7 +62,12 @@
           <b-card class="m-0 p-0 border-0" body-class="m-1 p-0">
             <b-card v-if="settings.tabIndex == 0" header="ERC-20" class="m-0 p-0">
               <b-form-group label="contract:" label-for="erc20-contract" label-size="sm" label-cols-sm="2" label-align-sm="right" description="e.g., '0xc21d97673B9E0B3AA53a06439F71fDc1facE393B' for XEENUS and '0x7439E9Bb6D8a84dd3A23fe621A30F95403F87fB9' for WEENUS on Sepolia" class="mx-0 my-1 p-0">
-                <b-form-input type="text" size="sm" id="erc20-contract" v-model="settings.erc20.contract" @change="saveSettings" class="w-50"></b-form-input>
+                <b-input-group size="sm" class="w-50">
+                  <b-form-input type="text" size="sm" id="erc20-contract" v-model="settings.erc20.contract" @change="saveSettings"></b-form-input>
+                  <b-input-group-append>
+                    <b-button size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc20.contract + '#code'" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                  </b-input-group-append>
+                </b-input-group>
               </b-form-group>
               <b-form-group label="" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
                 <b-button size="sm" @click="retrieveERC20" variant="primary">Retrieve</b-button>
@@ -76,12 +81,13 @@
               <b-form-group label="decimals:" label-for="erc20-decimals" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
                 <b-form-input type="text" size="sm" readonly id="erc20-decimals" :value="erc20.decimals" class="w-25"></b-form-input>
               </b-form-group>
-              <b-form-group label="totalSupply:" label-for="erc20-totalsupply" label-size="sm" label-cols-sm="2" label-align-sm="right" :description="formatNumber(erc20.totalSupply)" class="mx-0 my-1 p-0">
+              <b-form-group label="totalSupply:" label-for="erc20-totalsupply" label-size="sm" label-cols-sm="2" label-align-sm="right" :description="erc20.totalSupply ? 'Raw value: ' + formatNumber(erc20.totalSupply) : null" class="mx-0 my-1 p-0">
                 <b-form-input type="text" size="sm" readonly id="erc20-totalsupplydecimals" :value="formatDecimals(erc20.totalSupply, erc20.decimals)" class="w-25"></b-form-input>
               </b-form-group>
+
               <b-form-group label="events:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
                 <font size="-2">
-                  <b-table small fixed striped sticky-header="200px" :fields="erc20EventFields" :items="erc20.events" head-variant="light">
+                  <b-table small fixed striped sticky-header="200px" :fields="erc20EventsFields" :items="erc20.events" head-variant="light">
                     <template #cell(number)="data">
                         {{ parseInt(data.index) + 1 }}
                     </template>
@@ -121,6 +127,27 @@
                           {{ formatNumber(data.item.tokens) }}
                         </span>
                       </div>
+                    </template>
+                  </b-table>
+                </font>
+              </b-form-group>
+
+              <b-form-group label="balances:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
+                <font size="-2">
+                  <b-table small fixed striped sticky-header="200px" :fields="erc20BalancesFields" :items="erc20.balances" head-variant="light">
+                    <template #cell(number)="data">
+                        {{ parseInt(data.index) + 1 }}
+                    </template>
+                    <template #cell(owner)="data">
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc20.contract + '?a=' + data.item.owner" variant="link" v-b-popover.hover.ds500="data.item.owner" target="_blank">
+                        {{ data.item.owner.substring(0, 6) + '...' + data.item.owner.slice(-4) }}
+                      </b-link>
+                    </template>
+                    <template #cell(balance)="data">
+                      {{ formatDecimals(data.item.balance, data.item.decimals) }}
+                      <span class="text-muted">
+                        {{ formatNumber(data.item.balance) }}
+                      </span>
                     </template>
                   </b-table>
                 </font>
@@ -242,15 +269,20 @@
             name: null,
             decimals: null,
             totalSupply: null,
-            balances: {},
-            allowances: {},
+            balances: [],
+            allowances: [],
             events: [],
           },
-          erc20EventFields: [
+          erc20EventsFields: [
             { key: 'number', label: '#', sortable: false, thStyle: 'width: 5%;', tdClass: 'text-truncate' },
             { key: 'when', label: 'When', sortable: false, thStyle: 'width: 20%;', thClass: 'text-left', tdClass: 'text-left' },
             { key: 'name', label: 'Name', sortable: false, thStyle: 'width: 15%;', tdClass: 'text-truncate' },
             { key: 'info', label: 'Info', sortable: false, thStyle: 'width: 60%;', tdClass: 'text-truncate' },
+          ],
+          erc20BalancesFields: [
+            { key: 'number', label: '#', sortable: false, thStyle: 'width: 5%;', tdClass: 'text-truncate' },
+            { key: 'owner', label: 'Owner', sortable: false, thStyle: 'width: 45%;', thClass: 'text-left', tdClass: 'text-left' },
+            { key: 'balance', label: 'Balance', sortable: false, thStyle: 'width: 50%;', tdClass: 'text-truncate' },
           ],
         },
 
@@ -267,6 +299,8 @@
             const block = await provider.getBlock("latest");
             const latestBlockNumber = parseInt(block.number);
             const timestamp = parseInt(block.timestamp);
+
+            // Token Contract Info
             const symbol = await contract.symbol();
             Vue.set(this.erc20, 'symbol', symbol);
             const name = await contract.name();
@@ -275,6 +309,8 @@
             Vue.set(this.erc20, 'decimals', decimals.toString());
             const totalSupply = await contract.totalSupply();
             Vue.set(this.erc20, 'totalSupply', totalSupply.toString());
+
+            // Retrieve Event Logs
             const events = [];
             const t = this; // async function has a new `this`, so use `t` to represent the original `this`
             async function getLogs(fromBlock, toBlock) {
@@ -348,6 +384,31 @@
             // const startBlock = latestBlockNumber - 10000;
             await getLogs(startBlock, latestBlockNumber);
             Vue.set(this.erc20, 'events', events);
+
+            // Compute Balances
+            const balanceCollator = {};
+            for (const event of events) {
+              console.log(moment().format("HH:mm:ss") + " retrieveERC20 - event: " + JSON.stringify(event));
+              if (event.name == "Transfer") {
+                if (!(event.from in balanceCollator)) {
+                  balanceCollator[event.from] = "0";
+                }
+                if (!(event.to in balanceCollator)) {
+                  balanceCollator[event.to] = "0";
+                }
+                balanceCollator[event.from] = ethers.BigNumber.from(balanceCollator[event.from]).sub(event.tokens).toString();
+                balanceCollator[event.to] = ethers.BigNumber.from(balanceCollator[event.to]).add(event.tokens).toString();
+              }
+            }
+            console.log(moment().format("HH:mm:ss") + " retrieveERC20 - balanceCollator: " + JSON.stringify(balanceCollator, null, 2));
+            const balances = [];
+            for (const [owner, balance] of Object.entries(balanceCollator)) {
+              console.log(owner + " => " + balance);
+              balances.push({ owner, balance });
+              // console.log(moment().format("HH:mm:ss") + " retrieveERC20 - owner: " + owner + " => balance: " + balance.toString());
+            }
+            Vue.set(this.erc20, 'balances', balances);
+
             console.log(moment().format("HH:mm:ss") + " retrieveERC20 END - erc20: " + JSON.stringify(this.erc20, null, 2));
           },
 
