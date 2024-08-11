@@ -12,6 +12,8 @@ Materials for [ETHSydney August - Get started with developing in Ethereum](https
 
 [https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/](https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/)
 
+### ERC-20 Explorer
+
 <kbd><img src="images/Explore-ERC-20.png" /></kbd>
 
 <br />

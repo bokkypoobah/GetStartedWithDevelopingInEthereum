@@ -61,7 +61,7 @@
 
           <b-card class="m-0 p-0 border-0" body-class="m-1 p-0">
             <b-card v-if="settings.tabIndex == 0" header="ERC-20" class="m-0 p-0">
-              <b-form-group label="contract:" label-for="erc20-contract" label-size="sm" label-cols-sm="2" label-align-sm="right" description="e.g., '0x7439E9Bb6D8a84dd3A23fe621A30F95403F87fB9' for WEENUS on Sepolia" class="mx-0 my-1 p-0">
+              <b-form-group label="contract:" label-for="erc20-contract" label-size="sm" label-cols-sm="2" label-align-sm="right" description="e.g., '0xc21d97673B9E0B3AA53a06439F71fDc1facE393B' for XEENUS and '0x7439E9Bb6D8a84dd3A23fe621A30F95403F87fB9' for WEENUS on Sepolia" class="mx-0 my-1 p-0">
                 <b-form-input type="text" size="sm" id="erc20-contract" v-model="settings.erc20.contract" @change="saveSettings" class="w-50"></b-form-input>
               </b-form-group>
               <b-form-group label="" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
@@ -76,19 +76,12 @@
               <b-form-group label="decimals:" label-for="erc20-decimals" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
                 <b-form-input type="text" size="sm" readonly id="erc20-decimals" :value="erc20.decimals" class="w-25"></b-form-input>
               </b-form-group>
-              <b-form-group label="totalSupply:" label-for="erc20-totalsupply" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
-                <b-row>
-                  <b-col cols="4">
-                    <b-form-input type="text" size="sm" readonly id="erc20-totalsupply" :value="formatNumber(erc20.totalSupply)"></b-form-input>
-                  </b-col>
-                  <b-col cols="4">
-                    <b-form-input type="text" size="sm" readonly id="erc20-totalsupplydecimals" :value="formatDecimals(erc20.totalSupply, erc20.decimals)"></b-form-input>
-                  </b-col>
-                </b-row>
+              <b-form-group label="totalSupply:" label-for="erc20-totalsupply" label-size="sm" label-cols-sm="2" label-align-sm="right" :description="formatNumber(erc20.totalSupply)" class="mx-0 my-1 p-0">
+                <b-form-input type="text" size="sm" readonly id="erc20-totalsupplydecimals" :value="formatDecimals(erc20.totalSupply, erc20.decimals)" class="w-25"></b-form-input>
               </b-form-group>
               <b-form-group label="events:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
                 <font size="-2">
-                  <b-table small fixed striped :fields="erc20EventFields" :items="erc20.events" head-variant="light">
+                  <b-table small fixed striped sticky-header="200px" :fields="erc20EventFields" :items="erc20.events" head-variant="light">
                     <template #cell(number)="data">
                         {{ parseInt(data.index) + 1 }}
                     </template>
@@ -108,7 +101,10 @@
                           {{ data.item.to.substring(0, 6) + '...' + data.item.to.slice(-4) }}
                         </b-link>
                         tokens:
-                        {{ data.item.tokens + ' = ' + formatDecimals(data.item.tokens, data.item.decimals) + ' ' + erc20.symbol }}
+                        {{ formatDecimals(data.item.tokens, data.item.decimals) }}
+                        <span class="text-muted">
+                          {{ formatNumber(data.item.tokens) }}
+                        </span>
                       </div>
                       <div v-else-if="data.item.name == 'Approval'">
                         tokenOwner:
@@ -120,7 +116,10 @@
                           {{ data.item.spender.substring(0, 6) + '...' + data.item.spender.slice(-4) }}
                         </b-link>
                         tokens:
-                        {{ data.item.tokens + ' = ' + formatDecimals(data.item.tokens, data.item.decimals) + ' ' + erc20.symbol }}
+                        {{ formatDecimals(data.item.tokens, data.item.decimals) }}
+                        <span class="text-muted">
+                          {{ formatNumber(data.item.tokens) }}
+                        </span>
                       </div>
                     </template>
                   </b-table>
