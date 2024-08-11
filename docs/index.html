@@ -87,7 +87,7 @@
 
               <b-form-group label="events:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
                 <font size="-2">
-                  <b-table small fixed striped sticky-header="100px" :fields="erc20EventsFields" :items="erc20.events" show-empty empty-html="Click [Retrieve] above" head-variant="light">
+                  <b-table small fixed striped sticky-header="200px" :fields="erc20EventsFields" :items="erc20.events" show-empty empty-html="Click [Retrieve] above" head-variant="light">
                     <template #cell(number)="data">
                         {{ parseInt(data.index) + 1 }}
                     </template>
@@ -134,7 +134,7 @@
 
               <b-form-group label="balances:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
                 <font size="-2">
-                  <b-table small fixed striped sticky-header="100px" :fields="erc20BalancesFields" :items="erc20.balances" show-empty empty-html="Click [Retrieve] above" head-variant="light">
+                  <b-table small fixed striped sticky-header="200px" :fields="erc20BalancesFields" :items="erc20.balances" show-empty empty-html="Click [Retrieve] above" head-variant="light">
                     <template #cell(number)="data">
                         {{ parseInt(data.index) + 1 }}
                     </template>
@@ -155,7 +155,7 @@
 
               <b-form-group label="allowances:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
                 <font size="-2">
-                  <b-table small fixed striped sticky-header="100px" :fields="erc20AllowancesFields" :items="erc20.allowances" show-empty empty-html="Click [Retrieve] above" head-variant="light">
+                  <b-table small fixed striped sticky-header="200px" :fields="erc20AllowancesFields" :items="erc20.allowances" show-empty empty-html="Click [Retrieve] above" head-variant="light">
                     <template #cell(number)="data">
                         {{ parseInt(data.index) + 1 }}
                     </template>
