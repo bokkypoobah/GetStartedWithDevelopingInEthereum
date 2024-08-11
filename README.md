@@ -1,4 +1,4 @@
-# Getting Started In Ethereum
+# Get Started With Developing In Ethereum
 
 Materials for [ETHSydney August - Get started with developing in Ethereum](https://lu.ma/42iq2h0p) Tuesday Aug 13 2024.
 
@@ -48,7 +48,7 @@ e.g., Game items
 
 ### Other
 
-* [mindmap/GettingStartedInEthereum-202408.mm](mindmap/GettingStartedInEthereum-202408.mm) that can be viewed in [FreePlane](https://docs.freeplane.org/)
+* [mindmap/GetStartedWithDevelopingInEthereum-202408.mm](mindmap/GetStartedWithDevelopingInEthereum-202408.mm) that can be viewed in [FreePlane](https://docs.freeplane.org/)
 
 <br />
 
