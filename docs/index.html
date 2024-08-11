@@ -87,7 +87,7 @@
 
               <b-form-group label="events:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
                 <font size="-2">
-                  <b-table small fixed striped sticky-header="200px" :fields="erc20EventsFields" :items="erc20.events" head-variant="light">
+                  <b-table small fixed striped sticky-header="100px" :fields="erc20EventsFields" :items="erc20.events" head-variant="light">
                     <template #cell(number)="data">
                         {{ parseInt(data.index) + 1 }}
                     </template>
@@ -134,7 +134,7 @@
 
               <b-form-group label="balances:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
                 <font size="-2">
-                  <b-table small fixed striped sticky-header="200px" :fields="erc20BalancesFields" :items="erc20.balances" head-variant="light">
+                  <b-table small fixed striped sticky-header="100px" :fields="erc20BalancesFields" :items="erc20.balances" head-variant="light">
                     <template #cell(number)="data">
                         {{ parseInt(data.index) + 1 }}
                     </template>
@@ -147,6 +147,32 @@
                       {{ formatDecimals(data.item.balance, data.item.decimals) }}
                       <span class="text-muted">
                         {{ formatNumber(data.item.balance) }}
+                      </span>
+                    </template>
+                  </b-table>
+                </font>
+              </b-form-group>
+
+              <b-form-group label="allowances:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
+                <font size="-2">
+                  <b-table small fixed striped sticky-header="100px" :fields="erc20AllowancesFields" :items="erc20.allowances" head-variant="light">
+                    <template #cell(number)="data">
+                        {{ parseInt(data.index) + 1 }}
+                    </template>
+                    <template #cell(tokenOwner)="data">
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc20.contract + '?a=' + data.item.tokenOwner" variant="link" v-b-popover.hover.ds500="data.item.tokenOwner" target="_blank">
+                        {{ data.item.tokenOwner.substring(0, 6) + '...' + data.item.tokenOwner.slice(-4) }}
+                      </b-link>
+                    </template>
+                    <template #cell(spender)="data">
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc20.contract + '?a=' + data.item.spender" variant="link" v-b-popover.hover.ds500="data.item.spender" target="_blank">
+                        {{ data.item.spender.substring(0, 6) + '...' + data.item.spender.slice(-4) }}
+                      </b-link>
+                    </template>
+                    <template #cell(tokens)="data">
+                      {{ formatDecimals(data.item.tokens, data.item.decimals) }}
+                      <span class="text-muted">
+                        {{ formatNumber(data.item.tokens) }}
                       </span>
                     </template>
                   </b-table>
@@ -284,6 +310,12 @@
             { key: 'owner', label: 'Owner', sortable: false, thStyle: 'width: 45%;', thClass: 'text-left', tdClass: 'text-left' },
             { key: 'balance', label: 'Balance', sortable: false, thStyle: 'width: 50%;', tdClass: 'text-truncate' },
           ],
+          erc20AllowancesFields: [
+            { key: 'number', label: '#', sortable: false, thStyle: 'width: 5%;', tdClass: 'text-truncate' },
+            { key: 'tokenOwner', label: 'Token Owner', sortable: false, thStyle: 'width: 25%;', thClass: 'text-left', tdClass: 'text-left' },
+            { key: 'spender', label: 'Spender', sortable: false, thStyle: 'width: 25%;', thClass: 'text-left', tdClass: 'text-left' },
+            { key: 'tokens', label: 'Tokens', sortable: false, thStyle: 'width: 45%;', tdClass: 'text-truncate' },
+          ],
         },
 
         // --- COMPUTED ---
@@ -387,9 +419,10 @@
 
             // Compute Balances
             const balanceCollator = {};
+            const allowancesCollator = {};
             for (const event of events) {
-              console.log(moment().format("HH:mm:ss") + " retrieveERC20 - event: " + JSON.stringify(event));
               if (event.name == "Transfer") {
+                // console.log(moment().format("HH:mm:ss") + " retrieveERC20 - Transfer event: " + JSON.stringify(event));
                 if (!(event.from in balanceCollator)) {
                   balanceCollator[event.from] = "0";
                 }
@@ -398,16 +431,33 @@
                 }
                 balanceCollator[event.from] = ethers.BigNumber.from(balanceCollator[event.from]).sub(event.tokens).toString();
                 balanceCollator[event.to] = ethers.BigNumber.from(balanceCollator[event.to]).add(event.tokens).toString();
+              } else if (event.name == "Approval") {
+                console.log(moment().format("HH:mm:ss") + " retrieveERC20 - Approval event: " + JSON.stringify(event));
+                if (!(event.tokenOwner in allowancesCollator)) {
+                  allowancesCollator[event.tokenOwner] = {};
+                }
+                allowancesCollator[event.tokenOwner][event.spender] = event.tokens;
               }
             }
-            console.log(moment().format("HH:mm:ss") + " retrieveERC20 - balanceCollator: " + JSON.stringify(balanceCollator, null, 2));
+            // console.log(moment().format("HH:mm:ss") + " retrieveERC20 - balanceCollator: " + JSON.stringify(balanceCollator, null, 2));
+            console.log(moment().format("HH:mm:ss") + " retrieveERC20 - allowancesCollator: " + JSON.stringify(allowancesCollator, null, 2));
             const balances = [];
             for (const [owner, balance] of Object.entries(balanceCollator)) {
-              console.log(owner + " => " + balance);
               balances.push({ owner, balance });
-              // console.log(moment().format("HH:mm:ss") + " retrieveERC20 - owner: " + owner + " => balance: " + balance.toString());
             }
             Vue.set(this.erc20, 'balances', balances);
+            // console.log(moment().format("HH:mm:ss") + " retrieveERC20 - balances: " + JSON.stringify(balances, null, 2));
+
+            const allowances = [];
+            for (const [tokenOwner, spenders] of Object.entries(allowancesCollator)) {
+              // console.log(tokenOwner + " => " + JSON.stringify(spenders));
+              for (const [spender, tokens] of Object.entries(spenders)) {
+                // console.log(tokenOwner + "/" + spender + " => " + tokens);
+                allowances.push({ tokenOwner, spender, tokens });
+              }
+            }
+            Vue.set(this.erc20, 'allowances', allowances);
+            // console.log(moment().format("HH:mm:ss") + " retrieveERC20 - allowances: " + JSON.stringify(allowances, null, 2));
 
             console.log(moment().format("HH:mm:ss") + " retrieveERC20 END - erc20: " + JSON.stringify(this.erc20, null, 2));
           },
