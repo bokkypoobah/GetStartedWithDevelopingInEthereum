@@ -77,10 +77,14 @@
                 <b-form-input type="text" size="sm" readonly id="erc20-decimals" :value="erc20.decimals" class="w-25"></b-form-input>
               </b-form-group>
               <b-form-group label="totalSupply:" label-for="erc20-totalsupply" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
-                <b-form-input type="text" size="sm" readonly id="erc20-totalsupply" :value="formatNumber(erc20.totalSupply)" class="w-25"></b-form-input>
-              </b-form-group>
-              <b-form-group label="" label-for="erc20-totalsupplydecimals" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
-                <b-form-input type="text" size="sm" readonly id="erc20-totalsupplydecimals" :value="formatDecimals(erc20.totalSupply, erc20.decimals)" class="w-25"></b-form-input>
+                <b-row>
+                  <b-col cols="4">
+                    <b-form-input type="text" size="sm" readonly id="erc20-totalsupply" :value="formatNumber(erc20.totalSupply)"></b-form-input>
+                  </b-col>
+                  <b-col cols="4">
+                    <b-form-input type="text" size="sm" readonly id="erc20-totalsupplydecimals" :value="formatDecimals(erc20.totalSupply, erc20.decimals)"></b-form-input>
+                  </b-col>
+                </b-row>
               </b-form-group>
 
             </b-card>
