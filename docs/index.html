@@ -232,8 +232,40 @@
                 </b-card>
               </b-form-group>
 
+              <b-form-group label="transfer:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
+                <b-card bg-variant="light">
+                  <b-form-group label="coinbase:" label-for="erc20-transfer-coinbase" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
+                    <b-input-group size="sm" class="w-50">
+                      <b-form-input type="text" size="sm" readonly id="erc20-transfer-coinbase" v-model="coinbase"></b-form-input>
+                      <b-input-group-append>
+                        <b-button size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc20.contract + '?a=' + coinbase" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                      </b-input-group-append>
+                    </b-input-group>
+                  </b-form-group>
+                  <b-form-group label="" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
+                    <b-button size="sm" @click="retrieveERC20" variant="primary">Retrieve</b-button>
+                  </b-form-group>
+                  <b-form-group label="balanceOf(coinbase):" label-for="erc20-transfer-coinbasebalanceof" label-size="sm" label-cols-sm="3" label-align-sm="right" :description="erc20.coinbaseBalanceOf ? 'Raw value: ' + formatNumber(erc20.coinbaseBalanceOf) : 'Click [Retrieve] above'" class="mx-0 my-1 p-0">
+                    <b-form-input type="text" size="sm" readonly id="erc20-transfer-coinbasebalanceof" :value="formatDecimals(erc20.coinbaseBalanceOf, erc20.decimals)" class="w-25"></b-form-input>
+                  </b-form-group>
+                  <b-form-group label="to:" label-for="erc20-transfer-to" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
+                    <b-input-group size="sm" class="w-50">
+                      <b-form-input type="text" size="sm" id="erc20-transfer-to" v-model="settings.erc20.transferTo" @change="saveSettings"></b-form-input>
+                      <b-input-group-append>
+                        <b-button size="sm" :href="'https://sepolia.etherscan.io/address/' + settings.erc20.transferTo" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                      </b-input-group-append>
+                    </b-input-group>
+                  </b-form-group>
+                  <b-form-group label="tokens:" label-for="erc20-transfer-tokens" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
+                    <b-form-input type="text" size="sm" id="erc20-transfer-tokens" v-model="settings.erc20.transferTokens" @change="saveSettings" class="w-50"></b-form-input>
+                  </b-form-group>
+                  <b-form-group label="" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
+                    <b-button size="sm" @click="transferERC20" variant="warning">Transfer</b-button>
+                  </b-form-group>
+                </b-card>
+              </b-form-group>
+
             </b-card>
-          </b-card>
             <b-card-text class="m-0 p-0">
               <!-- :INFO -->
               <b-card v-if="settings.showInfo || coinbase == null" no-body class="my-1 p-1">
@@ -336,6 +368,8 @@
               balanceOfOwner: null,
               allowanceTokenOwner: null,
               allowanceSpender: null,
+              transferTo: null,
+              transferTokens: null,
             },
             erc721: {
               contract: null,
@@ -343,7 +377,7 @@
             erc1155: {
               contract: null,
             },
-            version: 1,
+            version: 2,
           },
           erc20: {
             symbol: null,
@@ -353,6 +387,7 @@
             balances: [],
             allowances: [],
             events: [],
+            coinbaseBalanceOf: null,
             balanceOf: null,
             allowance: null,
           },
@@ -398,6 +433,9 @@
             Vue.set(this.erc20, 'decimals', decimals.toString());
             const totalSupply = await contract.totalSupply();
             Vue.set(this.erc20, 'totalSupply', totalSupply.toString());
+            const coinbaseBalanceOf = await contract.balanceOf(this.coinbase);
+            Vue.set(this.erc20, 'coinbaseBalanceOf', coinbaseBalanceOf.toString());
+            console.log(moment().format("HH:mm:ss") + " retrieveERC20 - coinbaseBalanceOf: " + coinbaseBalanceOf);
 
             // Retrieve Event Logs
             const events = [];
@@ -502,6 +540,7 @@
             }
             // console.log(moment().format("HH:mm:ss") + " retrieveERC20 - balanceCollator: " + JSON.stringify(balanceCollator, null, 2));
             console.log(moment().format("HH:mm:ss") + " retrieveERC20 - allowancesCollator: " + JSON.stringify(allowancesCollator, null, 2));
+
             const balances = [];
             for (const [owner, balance] of Object.entries(balanceCollator)) {
               balances.push({ owner, balance });
@@ -511,15 +550,12 @@
 
             const allowances = [];
             for (const [tokenOwner, spenders] of Object.entries(allowancesCollator)) {
-              // console.log(tokenOwner + " => " + JSON.stringify(spenders));
               for (const [spender, tokens] of Object.entries(spenders)) {
-                // console.log(tokenOwner + "/" + spender + " => " + tokens);
                 allowances.push({ tokenOwner, spender, tokens });
               }
             }
             Vue.set(this.erc20, 'allowances', allowances);
-            console.log(moment().format("HH:mm:ss") + " retrieveERC20 - allowances: " + JSON.stringify(allowances, null, 2));
-
+            // console.log(moment().format("HH:mm:ss") + " retrieveERC20 - allowances: " + JSON.stringify(allowances, null, 2));
             // console.log(moment().format("HH:mm:ss") + " retrieveERC20 END - erc20: " + JSON.stringify(this.erc20, null, 2));
           },
 
@@ -537,7 +573,7 @@
             const balanceOf = await contract.balanceOf(this.settings.erc20.balanceOfOwner);
             Vue.set(this.erc20, 'balanceOf', balanceOf);
             // console.log(moment().format("HH:mm:ss") + " retrieveERC20BalanceOf - erc20.balanceOf: " + balanceOf);
-            console.log(moment().format("HH:mm:ss") + " retrieveERC20BalanceOf END - erc20: " + JSON.stringify(this.erc20, null, 2));
+            // console.log(moment().format("HH:mm:ss") + " retrieveERC20BalanceOf END - erc20: " + JSON.stringify(this.erc20, null, 2));
           },
 
           async retrieveERC20Allowance() {
@@ -553,8 +589,52 @@
 
             const allowance = await contract.allowance(this.settings.erc20.allowanceTokenOwner, this.settings.erc20.allowanceSpender);
             Vue.set(this.erc20, 'allowance', allowance);
-            console.log(moment().format("HH:mm:ss") + " retrieveERC20Allowance - erc20.allowance: " + allowance);
-            console.log(moment().format("HH:mm:ss") + " retrieveERC20Allowance END - erc20: " + JSON.stringify(this.erc20, null, 2));
+            // console.log(moment().format("HH:mm:ss") + " retrieveERC20Allowance - erc20.allowance: " + allowance);
+            // console.log(moment().format("HH:mm:ss") + " retrieveERC20Allowance END - erc20: " + JSON.stringify(this.erc20, null, 2));
+          },
+
+          async transferERC20() {
+            console.log(moment().format("HH:mm:ss") + " transferERC20 - settings.erc20: " + JSON.stringify(this.settings.erc20));
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            // const signer = provider.getSigner();
+            // const item = this.modalApproval.item;
+            // if (item.type == 'erc20') {
+            //   const contract = new ethers.Contract(item.contract, ERC20ABI, provider);
+            //   const contractWithSigner = contract.connect(provider.getSigner());
+            //   try {
+            //     const tx = await contractWithSigner.approve(item.spender, ethers.utils.parseUnits(this.modalApproval.tokens, item.decimals));
+            //     console.log("tx: " + JSON.stringify(tx));
+            //   } catch (e) {
+            //     console.log("transferERC20 ERC-20.approve(...) error: " + JSON.stringify(e));
+            //   }
+            // } else if (item.type == 'erc721' && item.approvalType == 'Approval') {
+            //   const contract = new ethers.Contract(item.contract, ERC721ABI, provider);
+            //   const contractWithSigner = contract.connect(provider.getSigner());
+            //   try {
+            //     const tx = await contractWithSigner.approve(this.modalApproval.spender, this.modalApproval.tokenId);
+            //     console.log("tx: " + JSON.stringify(tx));
+            //   } catch (e) {
+            //     console.log("transferERC20 ERC-721 approve(...) error: " + JSON.stringify(e));
+            //   }
+            // } else if (item.type == 'erc721' && item.approvalType == 'ApprovalForAll') {
+            //   const contract = new ethers.Contract(item.contract, ERC721ABI, provider);
+            //   const contractWithSigner = contract.connect(provider.getSigner());
+            //   try {
+            //     const tx = await contractWithSigner.setApprovalForAll(item.spender, this.modalApproval.approved);
+            //     console.log("tx: " + JSON.stringify(tx));
+            //   } catch (e) {
+            //     console.log("transferERC20 ERC-721 setApprovalForAll(...) error: " + JSON.stringify(e));
+            //   }
+            // } else if (item.type == 'erc1155' && item.approvalType == 'ApprovalForAll') {
+            //   const contract = new ethers.Contract(item.contract, ERC1155ABI, provider);
+            //   const contractWithSigner = contract.connect(provider.getSigner());
+            //   try {
+            //     const tx = await contractWithSigner.setApprovalForAll(this.modalApproval.item.spender, this.modalApproval.approved);
+            //     console.log("tx: " + JSON.stringify(tx));
+            //   } catch (e) {
+            //     console.log("transferERC20 ERC-1155 setApprovalForAll(...) error: " + JSON.stringify(e));
+            //   }
+            // }
           },
 
           saveSettings() {
