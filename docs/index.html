@@ -170,9 +170,16 @@
                       </b-link>
                     </template>
                     <template #cell(tokens)="data">
-                      {{ formatDecimals(data.item.tokens, data.item.decimals) }}
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.tokens.txHash + '#eventlog#' + data.item.tokens.logIndex" variant="link" v-b-popover.hover.ds500="formatDecimals(data.item.tokens.tokens, data.item.decimals)" target="_blank">
+                        <span v-if="data.item.tokens.tokens.toString().length > 30">
+                          &infin;
+                        </span>
+                        <span v-else>
+                          {{ formatDecimals(data.item.tokens.tokens, data.item.decimals) }}
+                        </span>
+                      </b-link>
                       <span class="text-muted">
-                        {{ formatNumber(data.item.tokens) }}
+                        {{ formatNumber(data.item.tokens.tokens) }}
                       </span>
                     </template>
                   </b-table>
@@ -436,7 +443,11 @@
                 if (!(event.tokenOwner in allowancesCollator)) {
                   allowancesCollator[event.tokenOwner] = {};
                 }
-                allowancesCollator[event.tokenOwner][event.spender] = event.tokens;
+                allowancesCollator[event.tokenOwner][event.spender] = {
+                  tokens: event.tokens,
+                  txHash: event.txHash,
+                  logIndex: event.logIndex,
+                };
               }
             }
             // console.log(moment().format("HH:mm:ss") + " retrieveERC20 - balanceCollator: " + JSON.stringify(balanceCollator, null, 2));
@@ -457,9 +468,9 @@
               }
             }
             Vue.set(this.erc20, 'allowances', allowances);
-            // console.log(moment().format("HH:mm:ss") + " retrieveERC20 - allowances: " + JSON.stringify(allowances, null, 2));
+            console.log(moment().format("HH:mm:ss") + " retrieveERC20 - allowances: " + JSON.stringify(allowances, null, 2));
 
-            console.log(moment().format("HH:mm:ss") + " retrieveERC20 END - erc20: " + JSON.stringify(this.erc20, null, 2));
+            // console.log(moment().format("HH:mm:ss") + " retrieveERC20 END - erc20: " + JSON.stringify(this.erc20, null, 2));
           },
 
           saveSettings() {
