@@ -12,17 +12,23 @@ Materials for [ETHSydney August - Get started with developing in Ethereum](https
 
 ### ERC-20 Fungible Tokens - "Coins"
 
+e.g., Bank balance, Opal card balance, transfers
+
 <kbd><img src="images/Overview-ERC-20.png" /></kbd>
 
 * [contracts/ERC20Token.sol](contracts/ERC20Token.sol)
 
 ### ERC-721 Non-Fungible Tokens - "Pictures"
 
+e.g., Bank account number, Opal card number, drivers license, registry item
+
 <kbd><img src="images/Overview-ERC-721.png" /></kbd>
 
 * [contracts/ERC721Token.sol](contracts/ERC721Token.sol)
 
 ### ERC-1155 Non-Fungible Tokens - "Coins & Pictures"
+
+e.g., Game items
 
 <kbd><img src="images/Overview-ERC-1155.png" /></kbd>
 
