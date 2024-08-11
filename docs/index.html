@@ -381,6 +381,10 @@
               allowanceSpender: null,
               transferTo: null,
               transferTokens: null,
+              approveSpender: null,
+              approveTokens: null,
+              transferFromOwner: null,
+              transferFromTokens: null,
             },
             erc721: {
               contract: null,
@@ -388,7 +392,7 @@
             erc1155: {
               contract: null,
             },
-            version: 2,
+            version: 3,
           },
           erc20: {
             symbol: null,
@@ -403,6 +407,10 @@
             allowance: null,
             transferTxHash: null,
             transferTxResult: null,
+            approveTxHash: null,
+            approveTxResult: null,
+            transferFromTxHash: null,
+            transferFromTxResult: null,
           },
           erc20EventsFields: [
             { key: 'number', label: '#', sortable: false, thStyle: 'width: 5%;', tdClass: 'text-truncate' },
