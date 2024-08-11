@@ -186,6 +186,52 @@
                 </font>
               </b-form-group>
 
+              <b-form-group label="balanceOf:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
+                <b-card bg-variant="light">
+                  <b-form-group label="owner:" label-for="erc20-balanceof-owner" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
+                    <b-input-group size="sm" class="w-50">
+                      <b-form-input type="text" size="sm" id="erc20-balanceof-owner" v-model="settings.erc20.balanceOfOwner" @change="saveSettings"></b-form-input>
+                      <b-input-group-append>
+                        <b-button size="sm" :href="'https://sepolia.etherscan.io/address/' + settings.erc20.balanceOfOwner" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                      </b-input-group-append>
+                    </b-input-group>
+                  </b-form-group>
+                  <b-form-group label="" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
+                    <b-button size="sm" @click="retrieveERC20BalanceOf" variant="primary">Retrieve</b-button>
+                  </b-form-group>
+                  <b-form-group label="balanceOf(owner):" label-for="erc20-balanceof-balance" label-size="sm" label-cols-sm="3" label-align-sm="right" :description="erc20.balanceOf ? 'Raw value: ' + formatNumber(erc20.balanceOf) : null" class="mx-0 my-1 p-0">
+                    <b-form-input type="text" size="sm" readonly id="erc20-balanceof-balance" :value="formatDecimals(erc20.balanceOf, erc20.decimals)" class="w-25"></b-form-input>
+                  </b-form-group>
+                </b-card>
+              </b-form-group>
+
+              <b-form-group label="allowance:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
+                <b-card bg-variant="light">
+                  <b-form-group label="tokenOwner:" label-for="erc20-allowance-tokenowner" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
+                    <b-input-group size="sm" class="w-50">
+                      <b-form-input type="text" size="sm" id="erc20-allowance-tokenowner" v-model="settings.erc20.allowanceTokenOwner" @change="saveSettings"></b-form-input>
+                      <b-input-group-append>
+                        <b-button size="sm" :href="'https://sepolia.etherscan.io/address/' + settings.erc20.allowanceTokenOwner" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                      </b-input-group-append>
+                    </b-input-group>
+                  </b-form-group>
+                  <b-form-group label="spender:" label-for="erc20-allowance-spender" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
+                    <b-input-group size="sm" class="w-50">
+                      <b-form-input type="text" size="sm" id="erc20-allowance-spender" v-model="settings.erc20.allowanceSpender" @change="saveSettings"></b-form-input>
+                      <b-input-group-append>
+                        <b-button size="sm" :href="'https://sepolia.etherscan.io/address/' + settings.erc20.allowanceSpender" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                      </b-input-group-append>
+                    </b-input-group>
+                  </b-form-group>
+                  <b-form-group label="" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
+                    <b-button size="sm" @click="retrieveERC20Allowance" variant="primary">Retrieve</b-button>
+                  </b-form-group>
+                  <b-form-group label="allowance(tokenOwner, spender):" label-for="erc20-allowance-tokens" label-size="sm" label-cols-sm="3" label-align-sm="right" :description="erc20.allowance ? 'Raw value: ' + formatNumber(erc20.allowance) : null" class="mx-0 my-1 p-0">
+                    <b-form-input type="text" size="sm" readonly id="erc20-allowance-tokens" :value="formatDecimals(erc20.allowance, erc20.decimals)" class="w-25"></b-form-input>
+                  </b-form-group>
+                </b-card>
+              </b-form-group>
+
             </b-card>
           </b-card>
             <b-card-text class="m-0 p-0">
@@ -285,9 +331,11 @@
 
           settings: {
             tabIndex: 0,
-
             erc20: {
               contract: null,
+              balanceOfOwner: null,
+              allowanceTokenOwner: null,
+              allowanceSpender: null,
             },
             erc721: {
               contract: null,
@@ -295,7 +343,7 @@
             erc1155: {
               contract: null,
             },
-            version: 0,
+            version: 1,
           },
           erc20: {
             symbol: null,
@@ -305,6 +353,8 @@
             balances: [],
             allowances: [],
             events: [],
+            balanceOf: null,
+            allowance: null,
           },
           erc20EventsFields: [
             { key: 'number', label: '#', sortable: false, thStyle: 'width: 5%;', tdClass: 'text-truncate' },
@@ -471,6 +521,40 @@
             console.log(moment().format("HH:mm:ss") + " retrieveERC20 - allowances: " + JSON.stringify(allowances, null, 2));
 
             // console.log(moment().format("HH:mm:ss") + " retrieveERC20 END - erc20: " + JSON.stringify(this.erc20, null, 2));
+          },
+
+          async retrieveERC20BalanceOf() {
+            console.log(moment().format("HH:mm:ss") + " retrieveERC20BalanceOf BEGIN - settings.erc20: " + JSON.stringify(this.settings.erc20, null, 2));
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const contract = new ethers.Contract(this.settings.erc20.contract, ERC20ABI, provider);
+            const block = await provider.getBlock("latest");
+            const latestBlockNumber = parseInt(block.number);
+            const timestamp = parseInt(block.timestamp);
+
+            const decimals = await contract.decimals();
+            Vue.set(this.erc20, 'decimals', decimals.toString());
+
+            const balanceOf = await contract.balanceOf(this.settings.erc20.balanceOfOwner);
+            Vue.set(this.erc20, 'balanceOf', balanceOf);
+            // console.log(moment().format("HH:mm:ss") + " retrieveERC20BalanceOf - erc20.balanceOf: " + balanceOf);
+            console.log(moment().format("HH:mm:ss") + " retrieveERC20BalanceOf END - erc20: " + JSON.stringify(this.erc20, null, 2));
+          },
+
+          async retrieveERC20Allowance() {
+            console.log(moment().format("HH:mm:ss") + " retrieveERC20Allowance BEGIN - settings.erc20: " + JSON.stringify(this.settings.erc20, null, 2));
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const contract = new ethers.Contract(this.settings.erc20.contract, ERC20ABI, provider);
+            const block = await provider.getBlock("latest");
+            const latestBlockNumber = parseInt(block.number);
+            const timestamp = parseInt(block.timestamp);
+
+            const decimals = await contract.decimals();
+            Vue.set(this.erc20, 'decimals', decimals.toString());
+
+            const allowance = await contract.allowance(this.settings.erc20.allowanceTokenOwner, this.settings.erc20.allowanceSpender);
+            Vue.set(this.erc20, 'allowance', allowance);
+            console.log(moment().format("HH:mm:ss") + " retrieveERC20Allowance - erc20.allowance: " + allowance);
+            console.log(moment().format("HH:mm:ss") + " retrieveERC20Allowance END - erc20: " + JSON.stringify(this.erc20, null, 2));
           },
 
           saveSettings() {
