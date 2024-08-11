@@ -58,7 +58,10 @@ e.g., Game items
 
 * Install MetaMask from [https://metamask.io/](https://metamask.io/).
 * Connect to Ethereum Sepolia Testnet
+* Get some Sepolia Testnet tokens
 * Use [https://remix.ethereum.org/](https://remix.ethereum.org/) to deploy your smart contracts below:
+* View and interact with your ERC-20 token contract on [https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/](https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/)
+
 
 ### Deploy ERC-20
 
