@@ -266,7 +266,7 @@
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
-                  <b-form-group label="tokens:" label-for="erc20-transfer-tokens" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
+                  <b-form-group label="tokens:" label-for="erc20-transfer-tokens" label-size="sm" label-cols-sm="3" label-align-sm="right" :state="!settings.erc20.transfer.tokens || validNumber(settings.erc20.transfer.tokens)" :invalid-feedback="'Invalid number'" class="mx-0 my-1 p-0">
                     <b-form-input type="text" size="sm" id="erc20-transfer-tokens" v-model="settings.erc20.transfer.tokens" @change="saveSettings" class="w-25"></b-form-input>
                   </b-form-group>
                   <b-form-group label="" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
@@ -304,7 +304,7 @@
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
-                  <b-form-group label="tokens:" label-for="erc20-approve-tokens" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
+                  <b-form-group label="tokens:" label-for="erc20-approve-tokens" label-size="sm" label-cols-sm="3" label-align-sm="right" :state="!settings.erc20.approve.tokens || validNumber(settings.erc20.approve.tokens)" :invalid-feedback="'Invalid number'"class="mx-0 my-1 p-0">
                     <b-form-input type="text" size="sm" id="erc20-approve-tokens" v-model="settings.erc20.approve.tokens" @change="saveSettings" class="w-25"></b-form-input>
                   </b-form-group>
                   <b-form-group label="" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
@@ -350,7 +350,7 @@
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
-                  <b-form-group label="tokens:" label-for="erc20-transferfrom-tokens" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
+                  <b-form-group label="tokens:" label-for="erc20-transferfrom-tokens" label-size="sm" label-cols-sm="3" label-align-sm="right" :state="!settings.erc20.transferFrom.tokens || validNumber(settings.erc20.transferFrom.tokens)" :invalid-feedback="'Invalid number'"class="mx-0 my-1 p-0">
                     <b-form-input type="text" size="sm" id="erc20-transferfrom-tokens" v-model="settings.erc20.transferFrom.tokens" @change="saveSettings" class="w-25"></b-form-input>
                   </b-form-group>
                   <b-form-group label="" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
