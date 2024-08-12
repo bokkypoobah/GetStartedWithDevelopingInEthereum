@@ -116,7 +116,7 @@
                   </template>
                   <template #cell(when)="data">
                     <font size="-1">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.txHash + '#eventlog#' + data.item.logIndex" variant="link" v-b-popover.hover.ds500="(timestamps[chainId] && timestamps[chainId][data.item.blockNumber]) ? 'Timestamp' : 'blockNumber:txIndex'" target="_blank">
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.txHash + '#eventlog#' + data.item.logIndex" variant="link" v-b-popover.hover.ds500="(timestamps[chainId] && timestamps[chainId][data.item.blockNumber]) ? ('Block ' + formatNumber(data.item.blockNumber)) : 'blockNumber:txIndex'" target="_blank">
                         <span v-if="timestamps[chainId] && timestamps[chainId][data.item.blockNumber]">
                           {{ formatTimestamp(timestamps[chainId][data.item.blockNumber]) }}
                         </span>
@@ -191,7 +191,7 @@
                       <font size="-1" class="text-muted">{{ parseInt(data.index) + ((settings.erc20.balancesTable.currentPage - 1) * settings.erc20.balancesTable.pageSize) + 1 }}</font>
                   </template>
                   <template #cell(latestUpdate)="data">
-                    <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.balance.txHash + '#eventlog#' + data.item.balance.logIndex" variant="link" v-b-popover.hover.ds500="(timestamps[chainId] && timestamps[chainId][data.item.balance.blockNumber]) ? 'Timestamp' : 'blockNumber:txIndex'" target="_blank">
+                    <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.balance.txHash + '#eventlog#' + data.item.balance.logIndex" variant="link" v-b-popover.hover.ds500="(timestamps[chainId] && timestamps[chainId][data.item.balance.blockNumber]) ? ('Block ' + formatNumber(data.item.balance.blockNumber)) : 'blockNumber:txIndex'" target="_blank">
                       <font size="-1">
                         <span v-if="timestamps[chainId] && timestamps[chainId][data.item.balance.blockNumber]">
                           {{ formatTimestamp(timestamps[chainId][data.item.balance.blockNumber]) }}
@@ -249,7 +249,7 @@
                   </template>
                   <template #cell(latestUpdate)="data">
                     <font size="-1">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.tokens.txHash + '#eventlog#' + data.item.tokens.logIndex" variant="link" v-b-popover.hover.ds500="(timestamps[chainId] && timestamps[chainId][data.item.tokens.blockNumber]) ? 'Timestamp' : 'blockNumber:txIndex.logIndex'" target="_blank">
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.tokens.txHash + '#eventlog#' + data.item.tokens.logIndex" variant="link" v-b-popover.hover.ds500="(timestamps[chainId] && timestamps[chainId][data.item.tokens.blockNumber]) ? ('Block ' + formatNumber(data.item.tokens.blockNumber)) : 'blockNumber:txIndex.logIndex'" target="_blank">
                         <span v-if="timestamps[chainId] && timestamps[chainId][data.item.tokens.blockNumber]">
                           {{ formatTimestamp(timestamps[chainId][data.item.tokens.blockNumber]) }}
                         </span>
