@@ -273,15 +273,15 @@
                     <b-button size="sm" @click="transferERC20" variant="warning">Transfer</b-button>
                   </b-form-group>
                   <b-form-group label="txHash:" label-for="erc20-transfer-txhash" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
-                    <b-input-group size="sm" class="w-50">
-                      <b-form-input type="text" size="sm" readonly id="erc20-transfer-txhash" v-model="erc20.transferTxHash"></b-form-input>
+                    <b-input-group size="sm" class="w-75">
+                      <b-form-input type="text" size="sm" readonly id="erc20-transfer-txhash" v-model="erc20.transferTx.txHash"></b-form-input>
                       <b-input-group-append>
-                        <b-button size="sm" :disabled="!erc20.transferTxHash" :href="'https://sepolia.etherscan.io/tx/' + erc20.transferTxHash" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                        <b-button size="sm" :disabled="!erc20.transferTx.txHash" :href="'https://sepolia.etherscan.io/tx/' + erc20.transferTx.txHash" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
                   <b-form-group label="results:" label-for="erc20-transfer-results" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
-                    <b-form-textarea size="sm" plaintext id="erc20-transfer-results" :value="erc20.transferTxResult" rows="3" max-rows="10" style="background: white; " class="w-100"></b-form-textarea>
+                    <b-form-textarea size="sm" plaintext id="erc20-transfer-results" :value="erc20.transferTx.result" rows="3" max-rows="10" style="background: white; " class="w-100"></b-form-textarea>
                   </b-form-group>
                 </b-card>
               </b-form-group>
@@ -311,15 +311,15 @@
                     <b-button size="sm" @click="approveERC20" variant="warning">Approve</b-button>
                   </b-form-group>
                   <b-form-group label="txHash:" label-for="erc20-approve-txhash" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
-                    <b-input-group size="sm" class="w-50">
-                      <b-form-input type="text" size="sm" readonly id="erc20-approve-txhash" v-model="erc20.approveTxHash"></b-form-input>
+                    <b-input-group size="sm" class="w-75">
+                      <b-form-input type="text" size="sm" readonly id="erc20-approve-txhash" v-model="erc20.approveTx.txHash"></b-form-input>
                       <b-input-group-append>
-                        <b-button size="sm" :disabled="!erc20.approveTxHash" :href="'https://sepolia.etherscan.io/tx/' + erc20.approveTxHash" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                        <b-button size="sm" :disabled="!erc20.approveTx.txHash" :href="'https://sepolia.etherscan.io/tx/' + erc20.approveTx.txHash" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
                   <b-form-group label="results:" label-for="erc20-approve-results" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
-                    <b-form-textarea size="sm" plaintext id="erc20-approve-results" :value="erc20.approveTxResult" rows="3" max-rows="10" style="background: white; " class="w-100"></b-form-textarea>
+                    <b-form-textarea size="sm" plaintext id="erc20-approve-results" :value="erc20.approveTx.result" rows="3" max-rows="10" style="background: white; " class="w-100"></b-form-textarea>
                   </b-form-group>
                 </b-card>
               </b-form-group>
@@ -357,15 +357,15 @@
                     <b-button size="sm" @click="transferFromERC20" variant="warning">Transfer From</b-button>
                   </b-form-group>
                   <b-form-group label="txHash:" label-for="erc20-transferfrom-txhash" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
-                    <b-input-group size="sm" class="w-50">
-                      <b-form-input type="text" size="sm" readonly id="erc20-transferfrom-txhash" v-model="erc20.transferFromTxHash"></b-form-input>
+                    <b-input-group size="sm" class="w-75">
+                      <b-form-input type="text" size="sm" readonly id="erc20-transferfrom-txhash" v-model="erc20.transferFromTx.txHash"></b-form-input>
                       <b-input-group-append>
-                        <b-button size="sm" :disabled="!erc20.transferFromTxHash" :href="'https://sepolia.etherscan.io/tx/' + erc20.transferFromTxHash" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                        <b-button size="sm" :disabled="!erc20.transferFromTx.txHash" :href="'https://sepolia.etherscan.io/tx/' + erc20.transferFromTx.txHash" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
                   <b-form-group label="results:" label-for="erc20-transferfrom-results" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
-                    <b-form-textarea size="sm" plaintext id="erc20-transferfrom-results" :value="erc20.transferFromTxResult" rows="3" max-rows="10" style="background: white; " class="w-100"></b-form-textarea>
+                    <b-form-textarea size="sm" plaintext id="erc20-transferfrom-results" :value="erc20.transferFromTx.result" rows="3" max-rows="10" style="background: white; " class="w-100"></b-form-textarea>
                   </b-form-group>
                 </b-card>
               </b-form-group>
@@ -510,12 +510,18 @@
             coinbaseBalanceOf: null,
             balanceOf: null,
             allowance: null,
-            transferTxHash: null,
-            transferTxResult: null,
-            approveTxHash: null,
-            approveTxResult: null,
-            transferFromTxHash: null,
-            transferFromTxResult: null,
+            transferTx: {
+              txHash: null,
+              result: null,
+            },
+            approveTx: {
+              txHash: null,
+              result: null,
+            },
+            transferFromTx: {
+              txHash: null,
+              result: null,
+            },
           },
           erc20EventsFields: [
             { key: 'number', label: '#', sortable: false, thStyle: 'width: 5%;', tdClass: 'text-truncate' },
@@ -715,7 +721,7 @@
               }
             });
             Vue.set(this.erc20, 'balances', balances);
-            console.log(moment().format("HH:mm:ss") + " retrieveERC20 - balances: " + JSON.stringify(balances, null, 2));
+            // console.log(moment().format("HH:mm:ss") + " retrieveERC20 - balances: " + JSON.stringify(balances, null, 2));
 
             const allowances = [];
             for (const [owner, spenders] of Object.entries(allowancesCollator)) {
@@ -780,15 +786,14 @@
             try {
               const tx = await contractWithSigner.transfer(this.settings.erc20.transfer.to, ethers.utils.parseUnits(this.settings.erc20.transfer.tokens, decimals));
               console.log(moment().format("HH:mm:ss") + " transferERC20 - tx: " + JSON.stringify(tx));
-              Vue.set(this.erc20, 'transferTxHash', tx && tx.hash || null);
-              Vue.set(this.erc20, 'transferTxResult', JSON.stringify(tx, null, 2));
+              Vue.set(this.erc20.transferTx, 'txHash', tx && tx.hash || null);
+              Vue.set(this.erc20.transferTx, 'result', JSON.stringify(tx, null, 2));
             } catch (e) {
               console.log(moment().format("HH:mm:ss") + " transferERC20 - ERROR: " + JSON.stringify(e));
-              Vue.set(this.erc20, 'transferTxHash', null);
-              Vue.set(this.erc20, 'transferTxResult', JSON.stringify(e, null, 2));
+              Vue.set(this.erc20.transferTx, 'txHash', null);
+              Vue.set(this.erc20.transferTx, 'result', JSON.stringify(e, null, 2));
             }
-            console.log(moment().format("HH:mm:ss") + " transferERC20 END - erc20.transferTxHash: " + this.erc20.transferTxHash);
-            console.log(moment().format("HH:mm:ss") + " transferERC20 END - erc20.transferTxResult: " + this.erc20.transferTxResult);
+            console.log(moment().format("HH:mm:ss") + " transferERC20 END - erc20.transferTx: " + JSON.stringify(this.erc20.transferTx));
           },
 
           async approveERC20() {
@@ -801,15 +806,14 @@
             try {
               const tx = await contractWithSigner.approve(this.settings.erc20.approve.spender, ethers.utils.parseUnits(this.settings.erc20.approve.tokens, decimals));
               console.log(moment().format("HH:mm:ss") + " approveERC20 - tx: " + JSON.stringify(tx));
-              Vue.set(this.erc20, 'approveTxHash', tx && tx.hash || null);
-              Vue.set(this.erc20, 'approveTxResult', JSON.stringify(tx, null, 2));
+              Vue.set(this.erc20.approveTx, 'txHash', tx && tx.hash || null);
+              Vue.set(this.erc20.approveTx, 'result', JSON.stringify(tx, null, 2));
             } catch (e) {
               console.log(moment().format("HH:mm:ss") + " approveERC20 - ERROR: " + JSON.stringify(e));
-              Vue.set(this.erc20, 'approveTxHash', null);
-              Vue.set(this.erc20, 'approveTxResult', JSON.stringify(e, null, 2));
+              Vue.set(this.erc20.approveTx, 'txHash', null);
+              Vue.set(this.erc20.approveTx, 'result', JSON.stringify(e, null, 2));
             }
-            console.log(moment().format("HH:mm:ss") + " approveERC20 END - erc20.approveTxHash: " + this.erc20.approveTxHash);
-            console.log(moment().format("HH:mm:ss") + " approveERC20 END - erc20.approveTxResult: " + this.erc20.approveTxResult);
+            console.log(moment().format("HH:mm:ss") + " approveERC20 END - erc20.approveTx: " + JSON.stringify(this.erc20.approveTxHash));
           },
 
           async transferFromERC20() {
@@ -822,15 +826,14 @@
             try {
               const tx = await contractWithSigner.transferFrom(this.settings.erc20.transferFrom.from, this.settings.erc20.transferFrom.to, ethers.utils.parseUnits(this.settings.erc20.transferFrom.tokens, decimals));
               console.log(moment().format("HH:mm:ss") + " transferFromERC20 - tx: " + JSON.stringify(tx));
-              Vue.set(this.erc20, 'transferFromTxHash', tx && tx.hash || null);
-              Vue.set(this.erc20, 'transferFromTxResult', JSON.stringify(tx, null, 2));
+              Vue.set(this.erc20.transferFromTx, 'txHash', tx && tx.hash || null);
+              Vue.set(this.erc20.transferFromTx, 'result', JSON.stringify(tx, null, 2));
             } catch (e) {
               console.log(moment().format("HH:mm:ss") + " transferFromERC20 - ERROR: " + JSON.stringify(e));
-              Vue.set(this.erc20, 'transferFromTxHash', null);
-              Vue.set(this.erc20, 'transferFromTxResult', JSON.stringify(e, null, 2));
+              Vue.set(this.erc20.transferFromTx, 'txHash', null);
+              Vue.set(this.erc20.transferFromTx, 'result', JSON.stringify(e, null, 2));
             }
-            console.log(moment().format("HH:mm:ss") + " transferFromERC20 END - erc20.transferFromTxHash: " + this.erc20.transferFromTxHash);
-            console.log(moment().format("HH:mm:ss") + " transferFromERC20 END - erc20.transferFromTxResult: " + this.erc20.transferFromTxResult);
+            console.log(moment().format("HH:mm:ss") + " transferFromERC20 END - erc20.transferFromTx: " + JSON.stringify(this.erc20.transferFromTx));
           },
 
           saveSettings() {
