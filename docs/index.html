@@ -45,7 +45,7 @@
             <b-nav-item size="sm" @click="settings.tabIndex = 0; saveSettings();" :active="settings.tabIndex == 0" active-class="active" v-b-popover.hover.ds500="'ERC-20 Fungible Tokens'">ERC-20</b-nav-item>
             <b-nav-item size="sm" disabled @click="settings.tabIndex = 1; saveSettings();" :active="settings.tabIndex == 1" active-class="active" v-b-popover.hover.ds500="'ERC-721 Non-Fungible Tokens - TODO'">ERC-721</b-nav-item>
             <b-nav-item size="sm" disabled @click="settings.tabIndex = 2; saveSettings();" :active="settings.tabIndex == 2" active-class="active" v-b-popover.hover.ds500="'ERC-1155 Non-Fungible Tokens - TODO'">ERC-1155</b-nav-item>
-            <b-button size="sm" variant="outline-primary" class="ml-1" @click="connectToWeb3(); processNewBlock(0);" v-b-popover.hover.ds500="'Click to update wallet'">{{ coinbase && (coinbase.substring(0, 6) + '...' + coinbase.slice(-4)) || 'Connect' }}</b-button>
+            <b-button size="sm" variant="outline-primary" class="ml-1" @click="connectToWeb3(); processNewBlock(0);" v-b-popover.hover.ds500="'Click to update wallet'">{{ coinbase && (coinbase.substring(0, 8) + '...' + coinbase.slice(-6)) || 'Connect' }}</b-button>
           </b-navbar-nav>
         </b-navbar>
 
@@ -118,24 +118,24 @@
                   <template #cell(fromOwner)="data">
                     <div v-if="data.item.name == 'Transfer'">
                       <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.from" variant="link" v-b-popover.hover.ds500="'Transfer from ' + data.item.from" target="_blank">
-                        {{ data.item.from.substring(0, 6) + '...' + data.item.from.slice(-4) }}
+                        {{ data.item.from.substring(0, 8) + '...' + data.item.from.slice(-6) }}
                       </b-link>
                     </div>
                     <div v-else-if="data.item.name == 'Approval'">
                       <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.owner" variant="link" v-b-popover.hover.ds500="'Approval owner ' + data.item.owner" target="_blank">
-                        {{ data.item.owner.substring(0, 6) + '...' + data.item.owner.slice(-4) }}
+                        {{ data.item.owner.substring(0, 8) + '...' + data.item.owner.slice(-6) }}
                       </b-link>
                     </div>
                   </template>
                   <template #cell(toSpender)="data">
                     <div v-if="data.item.name == 'Transfer'">
                       <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.to" variant="link" v-b-popover.hover.ds500="'Transfer to ' + data.item.to" target="_blank">
-                        {{ data.item.to.substring(0, 6) + '...' + data.item.to.slice(-4) }}
+                        {{ data.item.to.substring(0, 8) + '...' + data.item.to.slice(-6) }}
                       </b-link>
                     </div>
                     <div v-else-if="data.item.name == 'Approval'">
                       <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.spender" variant="link" v-b-popover.hover.ds500="'Approval spender ' + data.item.spender" target="_blank">
-                        {{ data.item.spender.substring(0, 6) + '...' + data.item.spender.slice(-4) }}
+                        {{ data.item.spender.substring(0, 8) + '...' + data.item.spender.slice(-6) }}
                       </b-link>
                     </div>
                   </template>
@@ -180,7 +180,7 @@
                   </template>
                   <template #cell(owner)="data">
                     <b-link size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc20.contract + '?a=' + data.item.owner" variant="link" v-b-popover.hover.ds500="data.item.owner" target="_blank">
-                      {{ data.item.owner.substring(0, 6) + '...' + data.item.owner.slice(-4) }}
+                      {{ data.item.owner.substring(0, 8) + '...' + data.item.owner.slice(-6) }}
                     </b-link>
                   </template>
                   <template #cell(balance)="data">
@@ -224,12 +224,12 @@
                   </template>
                   <template #cell(owner)="data">
                     <b-link size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc20.contract + '?a=' + data.item.owner" variant="link" v-b-popover.hover.ds500="data.item.owner" target="_blank">
-                      {{ data.item.owner.substring(0, 6) + '...' + data.item.owner.slice(-4) }}
+                      {{ data.item.owner.substring(0, 8) + '...' + data.item.owner.slice(-6) }}
                     </b-link>
                   </template>
                   <template #cell(spender)="data">
                     <b-link size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc20.contract + '?a=' + data.item.spender" variant="link" v-b-popover.hover.ds500="data.item.spender" target="_blank">
-                      {{ data.item.spender.substring(0, 6) + '...' + data.item.spender.slice(-4) }}
+                      {{ data.item.spender.substring(0, 8) + '...' + data.item.spender.slice(-6) }}
                     </b-link>
                   </template>
                   <template #cell(tokens)="data">
@@ -483,7 +483,7 @@
             <div class="ml-0 mt-1 pl-1">
               <font v-if="connected" size="-2">
                 <b-link v-if="coinbase" :href="'https://sepolia.etherscan.io/address/' + coinbase" v-b-popover.hover.ds500="'Coinbase'" target="_blank">
-                  {{ coinbase && (coinbase.substring(0, 6) + '...' + coinbase.slice(-4)) || 'Connect' }}
+                  {{ coinbase && (coinbase.substring(0, 8) + '...' + coinbase.slice(-6)) || 'Connect' }}
                 </b-link>
                 <b-link v-if="chainId" :href="'https://sepolia.etherscan.io/'" v-b-popover.hover.ds500="'Network'" target="_blank">
                   {{ chainId == '11155111' ? 'Sepolia' : 'Unsupported' }}
