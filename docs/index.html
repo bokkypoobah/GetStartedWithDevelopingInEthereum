@@ -140,7 +140,7 @@
                     </div>
                   </template>
                   <template #cell(tokens)="data">
-                    <font size="-1" class="text-muted">
+                    <font size="-2" class="text-muted">
                       {{ formatNumber(data.item.tokens) }}
                     </font>
                     {{ formatDecimals(data.item.tokens, data.item.decimals) }}
@@ -173,7 +173,7 @@
                       <font size="-1" class="text-muted">{{ parseInt(data.index) + ((settings.erc20.balancesTable.currentPage - 1) * settings.erc20.balancesTable.pageSize) + 1 }}</font>
                   </template>
                   <template #cell(latestUpdate)="data">
-                    <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.txHash + '#eventlog#' + data.item.logIndex" variant="link" v-b-popover.hover.ds500="'blockNumber:txIndex.logIndex'" target="_blank">
+                    <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.balance.txHash + '#eventlog#' + data.item.balance.logIndex" variant="link" v-b-popover.hover.ds500="'blockNumber:txIndex.logIndex'" target="_blank">
                       {{ data.item.balance.blockNumber + ':' + data.item.balance.txIndex + '.' + data.item.balance.logIndex }}
                     </b-link>
                     <font size="-1" v-b-popover.hover.ds500="'txHash'" class="text-muted">{{ data.item.balance.txHash.substring(0, 8) + '...' + data.item.balance.txHash.slice(-6) }}</font>
@@ -184,7 +184,7 @@
                     </b-link>
                   </template>
                   <template #cell(balance)="data">
-                    <font size="-1" class="text-muted">
+                    <font size="-2" class="text-muted">
                       {{ formatNumber(data.item.balance.tokens) }}
                     </font>
                     {{ formatDecimals(data.item.balance.tokens, data.item.decimals) }}
@@ -193,41 +193,59 @@
               </b-form-group>
 
               <b-form-group label="allowances:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
-                <font size="-2">
-                  <b-table small fixed striped sticky-header="200px" :fields="erc20AllowancesFields" :items="erc20.allowances" show-empty empty-html="Click [Retrieve] above" head-variant="light">
-                    <template #cell(number)="data">
-                        {{ parseInt(data.index) + 1 }}
-                    </template>
-                    <template #cell(latestUpdate)="data">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.tokens.txHash + '#eventlog#' + data.item.tokens.logIndex" variant="link" v-b-popover.hover.ds500="'blockNumber:txIndex.logIndex:txHash'" target="_blank">
-                        {{ data.item.tokens.blockNumber + ':' + data.item.tokens.txIndex + '.' + data.item.tokens.logIndex + ':' + data.item.tokens.txHash.substring(0, 8) + '...' + data.item.tokens.txHash.slice(-6) }}
-                      </b-link>
-                    </template>
-                    <template #cell(owner)="data">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc20.contract + '?a=' + data.item.owner" variant="link" v-b-popover.hover.ds500="data.item.owner" target="_blank">
-                        {{ data.item.owner.substring(0, 6) + '...' + data.item.owner.slice(-4) }}
-                      </b-link>
-                    </template>
-                    <template #cell(spender)="data">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc20.contract + '?a=' + data.item.spender" variant="link" v-b-popover.hover.ds500="data.item.spender" target="_blank">
-                        {{ data.item.spender.substring(0, 6) + '...' + data.item.spender.slice(-4) }}
-                      </b-link>
-                    </template>
-                    <template #cell(tokens)="data">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.tokens.txHash + '#eventlog#' + data.item.tokens.logIndex" variant="link" v-b-popover.hover.ds500="formatDecimals(data.item.tokens.tokens, data.item.decimals)" target="_blank">
-                        <span v-if="data.item.tokens.tokens.toString().length > 30">
-                          &infin;
-                        </span>
-                        <span v-else>
-                          {{ formatDecimals(data.item.tokens.tokens, data.item.decimals) }}
-                        </span>
-                      </b-link>
-                      <span class="text-muted">
-                        {{ formatNumber(data.item.tokens.tokens) }}
+                <div class="d-flex flex-wrap m-0 p-0">
+                  <div class="mt-0 pr-1" style="width: 20.0rem;">
+                    <b-form-input type="text" size="sm" v-model.trim="settings.erc20.allowancesTable.filter" @change="saveSettings" debounce="600" placeholder="🔍 address/blocknumber/txhash regex"></b-form-input>
+                  </div>
+                  <div class="mt-0 flex-grow-1">
+                  </div>
+                  <div class="mt-0 pl-1">
+                    <b-form-select size="sm" v-model="settings.erc20.allowancesTable.sortOption" @change="saveSettings" :options="balancesAndAllowancesSortOptions" v-b-popover.hover.bottom="'Yeah. Sort'"></b-form-select>
+                  </div>
+                  <div class="mt-0 pl-1">
+                    <font size="-2" v-b-popover.hover.bottom="'# filtered / total events'">{{ formatNumber(sortedFilteredAllowances.length) + '/' + formatNumber(erc20.allowances.length) }}</font>
+                  </div>
+                  <div class="mt-0 pl-1">
+                    <b-pagination size="sm" v-model="settings.erc20.allowancesTable.currentPage" @input="saveSettings" :total-rows="sortedFilteredAllowances.length" :per-page="settings.erc20.allowancesTable.pageSize" style="height: 0;"></b-pagination>
+                  </div>
+                  <div class="mt-0 pl-1">
+                    <b-form-select size="sm" v-model="settings.erc20.allowancesTable.pageSize" @change="saveSettings();" :options="pageSizes" v-b-popover.hover.bottom="'Yeah. Page size'"></b-form-select>
+                  </div>
+                </div>
+                <b-table small fixed striped :fields="erc20AllowancesFields" :items="pagedSortedFilteredAllowances" show-empty empty-html="Click [Retrieve] above" head-variant="light" class="mt-1">
+                  <template #cell(number)="data">
+                      <font size="-1" class="text-muted">{{ parseInt(data.index) + ((settings.erc20.allowancesTable.currentPage - 1) * settings.erc20.allowancesTable.pageSize) + 1 }}</font>
+                  </template>
+                  <template #cell(latestUpdate)="data">
+                    <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.tokens.txHash + '#eventlog#' + data.item.tokens.logIndex" variant="link" v-b-popover.hover.ds500="'blockNumber:txIndex.logIndex'" target="_blank">
+                      {{ data.item.tokens.blockNumber + ':' + data.item.tokens.txIndex + '.' + data.item.tokens.logIndex }}
+                    </b-link>
+                    <font size="-1" v-b-popover.hover.ds500="'txHash'" class="text-muted">{{ data.item.tokens.txHash.substring(0, 8) + '...' + data.item.tokens.txHash.slice(-6) }}</font>
+                  </template>
+                  <template #cell(owner)="data">
+                    <b-link size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc20.contract + '?a=' + data.item.owner" variant="link" v-b-popover.hover.ds500="data.item.owner" target="_blank">
+                      {{ data.item.owner.substring(0, 6) + '...' + data.item.owner.slice(-4) }}
+                    </b-link>
+                  </template>
+                  <template #cell(spender)="data">
+                    <b-link size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc20.contract + '?a=' + data.item.spender" variant="link" v-b-popover.hover.ds500="data.item.spender" target="_blank">
+                      {{ data.item.spender.substring(0, 6) + '...' + data.item.spender.slice(-4) }}
+                    </b-link>
+                  </template>
+                  <template #cell(tokens)="data">
+                    <font size="-2" class="text-muted">
+                      {{ formatNumber(data.item.tokens.tokens) }}
+                    </font>
+                    <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.tokens.txHash + '#eventlog#' + data.item.tokens.logIndex" variant="link" v-b-popover.hover.ds500="formatDecimals(data.item.tokens.tokens, data.item.decimals)" target="_blank">
+                      <span v-if="data.item.tokens.tokens.toString().length > 30">
+                        &infin;
                       </span>
-                    </template>
-                  </b-table>
-                </font>
+                      <span v-else>
+                        {{ formatDecimals(data.item.tokens.tokens, data.item.decimals) }}
+                      </span>
+                    </b-link>
+                  </template>
+                </b-table>
               </b-form-group>
 
               <b-form-group label="balanceOf:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
@@ -610,10 +628,10 @@
           ],
           erc20AllowancesFields: [
             { key: 'number', label: '#', sortable: false, thStyle: 'width: 5%;', tdClass: 'text-truncate' },
-            { key: 'latestUpdate', label: 'Latest Update', sortable: false, thStyle: 'width: 20%;', thClass: 'text-left', tdClass: 'text-left' },
-            { key: 'owner', label: 'Token Owner', sortable: false, thStyle: 'width: 25%;', thClass: 'text-left', tdClass: 'text-left' },
-            { key: 'spender', label: 'Spender', sortable: false, thStyle: 'width: 25%;', thClass: 'text-left', tdClass: 'text-left' },
-            { key: 'tokens', label: 'Tokens', sortable: false, thStyle: 'width: 25%;', tdClass: 'text-truncate' },
+            { key: 'latestUpdate', label: 'Latest Update', sortable: false, thStyle: 'width: 30%;', thClass: 'text-left', tdClass: 'text-left' },
+            { key: 'owner', label: 'Token Owner', sortable: false, thStyle: 'width: 20%;', thClass: 'text-left', tdClass: 'text-left' },
+            { key: 'spender', label: 'Spender', sortable: false, thStyle: 'width: 20%;', thClass: 'text-left', tdClass: 'text-left' },
+            { key: 'tokens', label: 'Tokens', sortable: false, thStyle: 'width: 25%;', thClass: 'text-right', tdClass: 'text-right' },
           ],
         },
 
@@ -715,6 +733,52 @@
           },
           pagedSortedFilteredBalances() {
             return this.sortedFilteredBalances.slice((this.settings.erc20.balancesTable.currentPage - 1) * this.settings.erc20.balancesTable.pageSize, this.settings.erc20.balancesTable.currentPage * this.settings.erc20.balancesTable.pageSize);
+          },
+          sortedFilteredAllowances() {
+            console.log(moment().format("HH:mm:ss") + " sortedFilteredAllowances - this.settings.erc20.allowancesTable: " + JSON.stringify(this.settings.erc20.allowancesTable));
+            const results = [];
+            let regex = null;
+            if (this.settings.erc20.allowancesTable.filter != null && this.settings.erc20.allowancesTable.filter.length > 0) {
+              try {
+                regex = new RegExp(this.settings.erc20.allowancesTable.filter, 'i');
+              } catch (e) {
+                console.log(moment().format("HH:mm:ss") + " sortedFilteredAllowances - regex error: " + e.message);
+                regex = new RegExp(/thequickbrowndogjumpsoverthelazyfox/, 'i');
+              }
+            }
+            for (const allowance of this.erc20.allowances) {
+              let include = true;
+              if (regex) {
+                if (!(regex.test(allowance.owner) || regex.test(allowance.spender) || regex.test(allowance.tokens.txHash) || regex.test(allowance.tokens.blockNumber))) {
+                  include = false;
+                }
+              }
+              if (include) {
+                results.push(allowance);
+              }
+            }
+            console.log("this.settings.erc20.allowancesTable.sortOption: " + this.settings.erc20.allowancesTable.sortOption);
+            if (this.settings.erc20.allowancesTable.sortOption == "txorderasc") {
+              results.sort((a, b) => {
+                if (a.tokens.blockNumber == b.tokens.blockNumber) {
+                  return a.tokens.logIndex - b.tokens.logIndex;
+                } else {
+                  return a.tokens.blockNumber - b.tokens.blockNumber;
+                }
+              });
+            } else if (this.settings.erc20.allowancesTable.sortOption == "txorderdsc") {
+              results.sort((a, b) => {
+                if (a.tokens.blockNumber == b.tokens.blockNumber) {
+                  return b.tokens.logIndex - a.tokens.logIndex;
+                } else {
+                  return b.tokens.blockNumber - a.tokens.blockNumber;
+                }
+              });
+            }
+            return results;
+          },
+          pagedSortedFilteredAllowances() {
+            return this.sortedFilteredAllowances.slice((this.settings.erc20.allowancesTable.currentPage - 1) * this.settings.erc20.allowancesTable.pageSize, this.settings.erc20.allowancesTable.currentPage * this.settings.erc20.allowancesTable.pageSize);
           },
         },
 
