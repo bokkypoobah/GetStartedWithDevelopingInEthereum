@@ -65,12 +65,12 @@
                 <b-input-group size="sm" class="w-50">
                   <b-form-input type="text" size="sm" id="erc20-contract" v-model="settings.erc20.contract" @change="saveSettings"></b-form-input>
                   <b-input-group-append>
-                    <b-button size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc20.contract + '#code'" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                    <b-button size="sm" :disabled="!validAddress(settings.erc20.contract)" :href="'https://sepolia.etherscan.io/token/' + settings.erc20.contract + '#code'" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                   </b-input-group-append>
                 </b-input-group>
               </b-form-group>
               <b-form-group label="" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
-                <b-button size="sm" @click="retrieveERC20" variant="primary">Retrieve</b-button>
+                <b-button size="sm" :disabled="!validAddress(settings.erc20.contract)" @click="retrieveERC20" variant="primary">Retrieve</b-button>
               </b-form-group>
               <b-form-group label="symbol:" label-for="erc20-symbol" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
                 <b-form-input type="text" size="sm" readonly id="erc20-symbol" :value="erc20.symbol" class="w-25"></b-form-input>
@@ -85,7 +85,7 @@
                 <b-form-input type="text" size="sm" readonly id="erc20-totalsupplydecimals" :value="formatDecimals(erc20.totalSupply, erc20.decimals)" class="w-25"></b-form-input>
               </b-form-group>
 
-              <b-form-group label="events:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
+              <b-form-group label="events:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
                 <font size="-2">
                   <b-table small fixed striped sticky-header="200px" :fields="erc20EventsFields" :items="erc20.events" show-empty empty-html="Click [Retrieve] above" head-variant="light">
                     <template #cell(number)="data">
@@ -132,7 +132,7 @@
                 </font>
               </b-form-group>
 
-              <b-form-group label="balances:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
+              <b-form-group label="balances:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
                 <font size="-2">
                   <b-table small fixed striped sticky-header="200px" :fields="erc20BalancesFields" :items="erc20.balances" show-empty empty-html="Click [Retrieve] above" head-variant="light">
                     <template #cell(number)="data">
@@ -158,7 +158,7 @@
                 </font>
               </b-form-group>
 
-              <b-form-group label="allowances:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
+              <b-form-group label="allowances:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
                 <font size="-2">
                   <b-table small fixed striped sticky-header="200px" :fields="erc20AllowancesFields" :items="erc20.allowances" show-empty empty-html="Click [Retrieve] above" head-variant="light">
                     <template #cell(number)="data">
@@ -196,18 +196,18 @@
                 </font>
               </b-form-group>
 
-              <b-form-group label="balanceOf:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
+              <b-form-group label="balanceOf:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
                 <b-card bg-variant="light">
                   <b-form-group label="owner:" label-for="erc20-balanceof-owner" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
                     <b-input-group size="sm" class="w-50">
                       <b-form-input type="text" size="sm" id="erc20-balanceof-owner" v-model="settings.erc20.balanceOf.owner" @change="saveSettings"></b-form-input>
                       <b-input-group-append>
-                        <b-button size="sm" :href="'https://sepolia.etherscan.io/address/' + settings.erc20.balanceOf.owner" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                        <b-button size="sm" :disabled="!validAddress(settings.erc20.balanceOf.owner)" :href="'https://sepolia.etherscan.io/address/' + settings.erc20.balanceOf.owner" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
                   <b-form-group label="" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
-                    <b-button size="sm" @click="retrieveERC20BalanceOf" variant="primary">Retrieve</b-button>
+                    <b-button size="sm" :disabled="!validAddress(settings.erc20.contract) || !validAddress(settings.erc20.balanceOf.owner)" @click="retrieveERC20BalanceOf" variant="primary">Retrieve</b-button>
                   </b-form-group>
                   <b-form-group label="balanceOf(owner):" label-for="erc20-balanceof-balance" label-size="sm" label-cols-sm="3" label-align-sm="right" :description="erc20.balanceOf ? 'Raw value: ' + formatNumber(erc20.balanceOf) : null" class="mx-0 my-1 p-0">
                     <b-form-input type="text" size="sm" readonly id="erc20-balanceof-balance" :value="formatDecimals(erc20.balanceOf, erc20.decimals)" class="w-25"></b-form-input>
@@ -215,13 +215,13 @@
                 </b-card>
               </b-form-group>
 
-              <b-form-group label="allowance:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
+              <b-form-group label="allowance:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
                 <b-card bg-variant="light">
-                  <b-form-group label="owner:" label-for="erc20-allowance-tokenowner" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
+                  <b-form-group label="owner:" label-for="erc20-allowance-owner" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
                     <b-input-group size="sm" class="w-50">
-                      <b-form-input type="text" size="sm" id="erc20-allowance-tokenowner" v-model="settings.erc20.allowance.owner" @change="saveSettings"></b-form-input>
+                      <b-form-input type="text" size="sm" id="erc20-allowance-owner" v-model="settings.erc20.allowance.owner" @change="saveSettings"></b-form-input>
                       <b-input-group-append>
-                        <b-button size="sm" :href="'https://sepolia.etherscan.io/address/' + settings.erc20.allowance.owner" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                        <b-button size="sm" :disabled="!validAddress(settings.erc20.allowance.owner)" :href="'https://sepolia.etherscan.io/address/' + settings.erc20.allowance.owner" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
@@ -229,12 +229,12 @@
                     <b-input-group size="sm" class="w-50">
                       <b-form-input type="text" size="sm" id="erc20-allowance-spender" v-model="settings.erc20.allowance.spender" @change="saveSettings"></b-form-input>
                       <b-input-group-append>
-                        <b-button size="sm" :href="'https://sepolia.etherscan.io/address/' + settings.erc20.allowance.spender" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                        <b-button size="sm" :disabled="!validAddress(settings.erc20.allowance.spender)" :href="'https://sepolia.etherscan.io/address/' + settings.erc20.allowance.spender" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
                   <b-form-group label="" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
-                    <b-button size="sm" @click="retrieveERC20Allowance" variant="primary">Retrieve</b-button>
+                    <b-button size="sm" :disabled="!validAddress(settings.erc20.contract) || !validAddress(settings.erc20.allowance.owner) || !validAddress(settings.erc20.allowance.spender)" @click="retrieveERC20Allowance" variant="primary">Retrieve</b-button>
                   </b-form-group>
                   <b-form-group label="allowance(owner, spender):" label-for="erc20-allowance-tokens" label-size="sm" label-cols-sm="3" label-align-sm="right" :description="erc20.allowance ? 'Raw value: ' + formatNumber(erc20.allowance) : null" class="mx-0 my-1 p-0">
                     <b-form-input type="text" size="sm" readonly id="erc20-allowance-tokens" :value="formatDecimals(erc20.allowance, erc20.decimals)" class="w-25"></b-form-input>
@@ -242,7 +242,7 @@
                 </b-card>
               </b-form-group>
 
-              <b-form-group label="transfer:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
+              <b-form-group label="transfer:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
                 <b-card bg-variant="light">
                   <b-form-group label="msg.sender:" label-for="erc20-transfer-coinbase" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
                     <b-input-group size="sm" class="w-50">
@@ -255,22 +255,22 @@
                   <b-form-group label="" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
                     <b-button size="sm" @click="retrieveERC20" variant="primary">Retrieve</b-button>
                   </b-form-group>
-                  <b-form-group label="balanceOf(coinbase):" label-for="erc20-transfer-coinbasebalanceof" label-size="sm" label-cols-sm="3" label-align-sm="right" :description="erc20.coinbaseBalanceOf ? 'Raw value: ' + formatNumber(erc20.coinbaseBalanceOf) : 'Click [Retrieve] above'" class="mx-0 my-1 p-0">
+                  <b-form-group label="balanceOf(msg.sender):" label-for="erc20-transfer-coinbasebalanceof" label-size="sm" label-cols-sm="3" label-align-sm="right" :description="erc20.coinbaseBalanceOf ? 'Raw value: ' + formatNumber(erc20.coinbaseBalanceOf) : 'Click [Retrieve] above'" class="mx-0 my-1 p-0">
                     <b-form-input type="text" size="sm" readonly id="erc20-transfer-coinbasebalanceof" :value="formatDecimals(erc20.coinbaseBalanceOf, erc20.decimals)" class="w-25"></b-form-input>
                   </b-form-group>
                   <b-form-group label="to:" label-for="erc20-transfer-to" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
                     <b-input-group size="sm" class="w-50">
                       <b-form-input type="text" size="sm" id="erc20-transfer-to" v-model="settings.erc20.transfer.to" @change="saveSettings"></b-form-input>
                       <b-input-group-append>
-                        <b-button size="sm" :href="'https://sepolia.etherscan.io/address/' + settings.erc20.transfer.to" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                        <b-button size="sm" :disabled="!validAddress(settings.erc20.transfer.to)" :href="'https://sepolia.etherscan.io/address/' + settings.erc20.transfer.to" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
                   <b-form-group label="tokens:" label-for="erc20-transfer-tokens" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
-                    <b-form-input type="text" size="sm" id="erc20-transfer-tokens" v-model="settings.erc20.transfer.tokens" @change="saveSettings" class="w-50"></b-form-input>
+                    <b-form-input type="text" size="sm" id="erc20-transfer-tokens" v-model="settings.erc20.transfer.tokens" @change="saveSettings" class="w-25"></b-form-input>
                   </b-form-group>
                   <b-form-group label="" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
-                    <b-button size="sm" @click="transferERC20" variant="warning">Transfer</b-button>
+                    <b-button size="sm" :disabled="!validAddress(settings.erc20.contract) || !validAddress(settings.erc20.transfer.to)" @click="transferERC20" variant="warning">Transfer</b-button>
                   </b-form-group>
                   <b-form-group label="txHash:" label-for="erc20-transfer-txhash" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
                     <b-input-group size="sm" class="w-75">
@@ -286,7 +286,7 @@
                 </b-card>
               </b-form-group>
 
-              <b-form-group label="approve:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
+              <b-form-group label="approve:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
                 <b-card bg-variant="light">
                   <b-form-group label="msg.sender:" label-for="erc20-approve-coinbase" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
                     <b-input-group size="sm" class="w-50">
@@ -305,7 +305,7 @@
                     </b-input-group>
                   </b-form-group>
                   <b-form-group label="tokens:" label-for="erc20-approve-tokens" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
-                    <b-form-input type="text" size="sm" id="erc20-approve-tokens" v-model="settings.erc20.approve.tokens" @change="saveSettings" class="w-50"></b-form-input>
+                    <b-form-input type="text" size="sm" id="erc20-approve-tokens" v-model="settings.erc20.approve.tokens" @change="saveSettings" class="w-25"></b-form-input>
                   </b-form-group>
                   <b-form-group label="" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
                     <b-button size="sm" @click="approveERC20" variant="warning">Approve</b-button>
@@ -324,7 +324,7 @@
                 </b-card>
               </b-form-group>
 
-              <b-form-group label="transferfrom:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
+              <b-form-group label="transferfrom:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
                 <b-card bg-variant="light">
                   <b-form-group label="msg.sender:" label-for="erc20-transferfrom-coinbase" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
                     <b-input-group size="sm" class="w-50">
@@ -351,7 +351,7 @@
                     </b-input-group>
                   </b-form-group>
                   <b-form-group label="tokens:" label-for="erc20-transferfrom-tokens" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
-                    <b-form-input type="text" size="sm" id="erc20-transferfrom-tokens" v-model="settings.erc20.transferFrom.tokens" @change="saveSettings" class="w-50"></b-form-input>
+                    <b-form-input type="text" size="sm" id="erc20-transferfrom-tokens" v-model="settings.erc20.transferFrom.tokens" @change="saveSettings" class="w-25"></b-form-input>
                   </b-form-group>
                   <b-form-group label="" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
                     <b-button size="sm" @click="transferFromERC20" variant="warning">Transfer From</b-button>
@@ -437,7 +437,7 @@
                   {{ chainId == '11155111' ? 'Sepolia' : 'Unsupported' }}
                 </b-link>
                 <b-link v-if="blockNumber" :href="'https://sepolia.etherscan.io/block/' + blockNumber" v-b-popover.hover.ds500="'Latest block'" target="_blank">
-                  {{ '#' + commify0(blockNumber) }}
+                  {{ '#' + formatNumber(blockNumber) }}
                 </b-link>
                 <b-link v-if="blockNumber" :href="'https://sepolia.etherscan.io/block/' + blockNumber" v-b-popover.hover.ds500="formatTimestamp(timestamp)" target="_blank">
                   {{ formatTimeDiff(timestamp) }}
@@ -747,16 +747,11 @@
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const contract = new ethers.Contract(this.settings.erc20.contract, ERC20ABI, provider);
             const block = await provider.getBlock("latest");
-            const latestBlockNumber = parseInt(block.number);
-            const timestamp = parseInt(block.timestamp);
-
             const decimals = await contract.decimals();
             Vue.set(this.erc20, 'decimals', decimals.toString());
-
             const balanceOf = await contract.balanceOf(this.settings.erc20.balanceOf.owner);
             Vue.set(this.erc20, 'balanceOf', balanceOf);
             // console.log(moment().format("HH:mm:ss") + " retrieveERC20BalanceOf - erc20.balanceOf: " + balanceOf);
-            // console.log(moment().format("HH:mm:ss") + " retrieveERC20BalanceOf END - erc20: " + JSON.stringify(this.erc20, null, 2));
           },
 
           async retrieveERC20Allowance() {
@@ -764,16 +759,11 @@
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const contract = new ethers.Contract(this.settings.erc20.contract, ERC20ABI, provider);
             const block = await provider.getBlock("latest");
-            const latestBlockNumber = parseInt(block.number);
-            const timestamp = parseInt(block.timestamp);
-
             const decimals = await contract.decimals();
             Vue.set(this.erc20, 'decimals', decimals.toString());
-
             const allowance = await contract.allowance(this.settings.erc20.allowance.owner, this.settings.erc20.allowance.spender);
             Vue.set(this.erc20, 'allowance', allowance);
             // console.log(moment().format("HH:mm:ss") + " retrieveERC20Allowance - erc20.allowance: " + allowance);
-            // console.log(moment().format("HH:mm:ss") + " retrieveERC20Allowance END - erc20: " + JSON.stringify(this.erc20, null, 2));
           },
 
           async transferERC20() {
@@ -836,18 +826,23 @@
             console.log(moment().format("HH:mm:ss") + " transferFromERC20 END - erc20.transferFromTx: " + JSON.stringify(this.erc20.transferFromTx));
           },
 
+          validAddress(a) {
+            if (a) {
+              try {
+                const address = ethers.utils.getAddress(a);
+                return true;
+              } catch (e) {
+              }
+            }
+            return false;
+          },
+
           saveSettings() {
             console.log(moment().format("HH:mm:ss") + " saveSettings: " + JSON.stringify(this.settings, null, 2));
             localStorage.getStartedWithDevelopingInEthereumSettings = JSON.stringify(this.settings);
           },
           async processNewBlock(blockNumber) {
-            console.log(moment().format("HH:mm:ss") + " processNewBlock[" + this.chainId + "] #" + this.commify0(blockNumber) + ", latest #" + this.commify0(this.blockNumber) + " @ " + moment.unix(this.timestamp).format("YYYY-MM-DD HH:mm:ss") + " " + moment.unix(this.timestamp).fromNow());
-          },
-          commify0(n) {
-            if (n != null) {
-              return Number(n).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-            }
-            return null;
+            console.log(moment().format("HH:mm:ss") + " processNewBlock[" + this.chainId + "] #" + this.formatNumber(blockNumber) + ", latest #" + this.formatNumber(this.blockNumber) + " @ " + moment.unix(this.timestamp).format("YYYY-MM-DD HH:mm:ss") + " " + moment.unix(this.timestamp).fromNow());
           },
           formatETH(e, precision = 9) {
             try {
