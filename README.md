@@ -55,6 +55,8 @@ Use [https://remix.ethereum.org/](https://remix.ethereum.org/) to deploy your sm
 
 <kbd><img src="images/Deploy-ERC-20.png" /></kbd>
 
+Example [contracts/ERC20Token.sol](contracts/ERC20Token.sol) deployed to Sepolia at [https://sepolia.etherscan.io/address/0x1e5df6db242d07cc40a37b634022c02f73a74d59](https://sepolia.etherscan.io/address/0x1e5df6db242d07cc40a37b634022c02f73a74d59#code)
+
 ### View And Interact With Your ERC-20 Contract
 
 View and interact with your ERC-20 token contract on [https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/](https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/)

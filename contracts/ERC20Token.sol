@@ -1,9 +1,15 @@
+/**
+ *Submitted for verification at Etherscan.io on 2024-08-12
+*/
+
 pragma solidity ^0.8.0;
 
 // ----------------------------------------------------------------------------
 // ERC-20 Token
 //
 // https://github.com/bokkypoobah/GettingStartedInEthereum
+//
+// Deployed to Sepolia 0x1e5Df6dB242d07cc40a37b634022c02F73A74D59
 //
 // https://eips.ethereum.org/EIPS/eip-20
 //
@@ -12,7 +18,7 @@ pragma solidity ^0.8.0;
 // Enjoy. (c) BokkyPooBah / Bok Consulting Pty Ltd 2024. The MIT Licence.
 // ----------------------------------------------------------------------------
 
-interface ERC20 {
+interface IERC20 {
     event Transfer(address indexed from, address indexed to, uint tokens);
     event Approval(address indexed owner, address indexed spender, uint tokens);
 
@@ -28,7 +34,7 @@ interface ERC20 {
     function transferFrom(address from, address to, uint tokens) external returns (bool success);
 }
 
-contract ERC20Token is ERC20 {
+contract ERC20 is IERC20 {
     string public symbol;
     string public name;
     uint8 public decimals;
@@ -71,5 +77,14 @@ contract ERC20Token is ERC20 {
     }
     function allowance(address owner, address spender) external view override returns (uint remaining) {
         return allowed[owner][spender];
+    }
+}
+
+contract ERC20Token is ERC20 {
+    string _symbol = "MYERC20TOKEN";
+    string _name = "My ERC-20 Token";
+    uint8 _decimals = 18;
+    uint _fixedSupply = 10**24;
+    constructor() ERC20(_symbol, _name, _decimals, _fixedSupply) {
     }
 }
