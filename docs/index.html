@@ -93,7 +93,7 @@
                   <div class="mt-0 flex-grow-1">
                   </div>
                   <div class="mt-0 pr-1">
-                    <b-button size="sm" @click="retrieveERC20Timestamps(pagedSortedFilteredEvents)" variant="link" v-b-popover.hover.ds500="'Retrieve timestamps for events below'"><b-icon-clock-history shift-v="+1" font-scale="1.2"></b-icon-clock-history></b-button>
+                    <b-button size="sm" @click="retrieveERC20Timestamps(pagedSortedFilteredEvents.map(e => e.blockNumber))" variant="link" v-b-popover.hover.ds500="'Retrieve timestamps for events below'"><b-icon-clock-history shift-v="+1" font-scale="1.2"></b-icon-clock-history></b-button>
                   </div>
                   <div class="mt-0 flex-grow-1">
                   </div>
@@ -168,6 +168,11 @@
                   </div>
                   <div class="mt-0 flex-grow-1">
                   </div>
+                  <div class="mt-0 pr-1">
+                    <b-button size="sm" @click="retrieveERC20Timestamps(pagedSortedFilteredBalances.map(e => e.balance.blockNumber))" variant="link" v-b-popover.hover.ds500="'Retrieve timestamps for balances below'"><b-icon-clock-history shift-v="+1" font-scale="1.2"></b-icon-clock-history></b-button>
+                  </div>
+                  <div class="mt-0 flex-grow-1">
+                  </div>
                   <div class="mt-0 pl-1">
                     <b-form-select size="sm" v-model="settings.erc20.balancesTable.sortOption" @change="saveSettings" :options="balancesAndAllowancesSortOptions" v-b-popover.hover.bottom="'Yeah. Sort'"></b-form-select>
                   </div>
@@ -217,6 +222,11 @@
                 <div class="d-flex flex-wrap m-0 p-0">
                   <div class="mt-0 pr-1" style="width: 20.0rem;">
                     <b-form-input type="text" size="sm" v-model.trim="settings.erc20.allowancesTable.filter" @change="saveSettings" debounce="600" placeholder="🔍 address/blocknumber/txhash regex"></b-form-input>
+                  </div>
+                  <div class="mt-0 flex-grow-1">
+                  </div>
+                  <div class="mt-0 pr-1">
+                    <b-button size="sm" @click="retrieveERC20Timestamps(pagedSortedFilteredAllowances.map(e => e.tokens.blockNumber))" variant="link" v-b-popover.hover.ds500="'Retrieve timestamps for allowances below'"><b-icon-clock-history shift-v="+1" font-scale="1.2"></b-icon-clock-history></b-button>
                   </div>
                   <div class="mt-0 flex-grow-1">
                   </div>
@@ -668,7 +678,7 @@
         // --- COMPUTED ---
         computed: {
           sortedFilteredEvents() {
-            console.log(moment().format("HH:mm:ss") + " sortedFilteredEvents - this.settings.erc20.eventsTable: " + JSON.stringify(this.settings.erc20.eventsTable));
+            // console.log(moment().format("HH:mm:ss") + " sortedFilteredEvents - this.settings.erc20.eventsTable: " + JSON.stringify(this.settings.erc20.eventsTable));
             const results = [];
             let regex = null;
             if (this.settings.erc20.eventsTable.filter != null && this.settings.erc20.eventsTable.filter.length > 0) {
@@ -719,7 +729,7 @@
             return this.sortedFilteredEvents.slice((this.settings.erc20.eventsTable.currentPage - 1) * this.settings.erc20.eventsTable.pageSize, this.settings.erc20.eventsTable.currentPage * this.settings.erc20.eventsTable.pageSize);
           },
           sortedFilteredBalances() {
-            console.log(moment().format("HH:mm:ss") + " sortedFilteredBalances - this.settings.erc20.balancesTable: " + JSON.stringify(this.settings.erc20.balancesTable));
+            // console.log(moment().format("HH:mm:ss") + " sortedFilteredBalances - this.settings.erc20.balancesTable: " + JSON.stringify(this.settings.erc20.balancesTable));
             const results = [];
             let regex = null;
             if (this.settings.erc20.balancesTable.filter != null && this.settings.erc20.balancesTable.filter.length > 0) {
@@ -741,7 +751,6 @@
                 results.push(balance);
               }
             }
-            console.log("this.settings.erc20.balancesTable.sortOption: " + this.settings.erc20.balancesTable.sortOption);
             if (this.settings.erc20.balancesTable.sortOption == "txorderasc") {
               results.sort((a, b) => {
                 if (a.balance.blockNumber == b.balance.blockNumber) {
@@ -765,7 +774,7 @@
             return this.sortedFilteredBalances.slice((this.settings.erc20.balancesTable.currentPage - 1) * this.settings.erc20.balancesTable.pageSize, this.settings.erc20.balancesTable.currentPage * this.settings.erc20.balancesTable.pageSize);
           },
           sortedFilteredAllowances() {
-            console.log(moment().format("HH:mm:ss") + " sortedFilteredAllowances - this.settings.erc20.allowancesTable: " + JSON.stringify(this.settings.erc20.allowancesTable));
+            // console.log(moment().format("HH:mm:ss") + " sortedFilteredAllowances - this.settings.erc20.allowancesTable: " + JSON.stringify(this.settings.erc20.allowancesTable));
             const results = [];
             let regex = null;
             if (this.settings.erc20.allowancesTable.filter != null && this.settings.erc20.allowancesTable.filter.length > 0) {
@@ -787,7 +796,6 @@
                 results.push(allowance);
               }
             }
-            console.log("this.settings.erc20.allowancesTable.sortOption: " + this.settings.erc20.allowancesTable.sortOption);
             if (this.settings.erc20.allowancesTable.sortOption == "txorderasc") {
               results.sort((a, b) => {
                 if (a.tokens.blockNumber == b.tokens.blockNumber) {
@@ -1030,25 +1038,25 @@
             // console.log(moment().format("HH:mm:ss") + " retrieveERC20Allowance - erc20.allowance: " + allowance);
           },
 
-          async retrieveERC20Timestamps(events) {
-            console.log(moment().format("HH:mm:ss") + " retrieveERC20Timestamps BEGIN - events: " + JSON.stringify(events, null, 2));
+          async retrieveERC20Timestamps(blockNumbers) {
+            console.log(moment().format("HH:mm:ss") + " retrieveERC20Timestamps BEGIN - blockNumbers: " + JSON.stringify(blockNumbers, null, 2));
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const contract = new ethers.Contract(this.settings.erc20.contract, ERC20ABI, provider);
             if (!(this.chainId in this.timestamps)) {
               Vue.set(this.timestamps, this.chainId, {});
             }
-            for (const event of events) {
-              if (!(event.blockNumber in this.timestamps[this.chainId])) {
+            for (const blockNumber of blockNumbers) {
+              if (!(blockNumber in this.timestamps[this.chainId])) {
                 try {
-                  const block = await provider.getBlock(event.blockNumber);
-                  Vue.set(this.timestamps[this.chainId], event.blockNumber, parseInt(block.timestamp));
+                  const block = await provider.getBlock(blockNumber);
+                  Vue.set(this.timestamps[this.chainId], blockNumber, parseInt(block.timestamp));
                 } catch (e) {
                   console.log(moment().format("HH:mm:ss") + " retrieveERC20Timestamps ERROR: " + e.message);
                 }
               }
             }
             localStorage.getStartedWithDevelopingInEthereumTimestamps = JSON.stringify(this.timestamps);
-            console.log(moment().format("HH:mm:ss") + " retrieveERC20Timestamps END - timestamps: " + JSON.stringify(this.timestamps, null, 2));
+            // console.log(moment().format("HH:mm:ss") + " retrieveERC20Timestamps END - timestamps: " + JSON.stringify(this.timestamps, null, 2));
           },
 
           async transferERC20() {
@@ -1125,7 +1133,7 @@
             return n && !isNaN(n) || false;
           },
           saveSettings() {
-            console.log(moment().format("HH:mm:ss") + " saveSettings: " + JSON.stringify(this.settings, null, 2));
+            // console.log(moment().format("HH:mm:ss") + " saveSettings: " + JSON.stringify(this.settings, null, 2));
             localStorage.getStartedWithDevelopingInEthereumSettings = JSON.stringify(this.settings);
           },
           async processNewBlock(blockNumber) {
