@@ -96,16 +96,16 @@
                     <b-form-select size="sm" v-model="settings.erc20.eventsTable.sortOption" @change="saveSettings" :options="eventsSortOptions" v-b-popover.hover.bottom="'Yeah. Sort'"></b-form-select>
                   </div>
                   <div class="mt-0 pl-1">
-                    <font size="-2" v-b-popover.hover.bottom="'# filtered / total events'">{{ formatNumber(filteredEvents.length) + '/' + formatNumber(erc20.events.length) }}</font>
+                    <font size="-2" v-b-popover.hover.bottom="'# filtered / total events'">{{ formatNumber(sortedFilteredEvents.length) + '/' + formatNumber(erc20.events.length) }}</font>
                   </div>
                   <div class="mt-0 pl-1">
-                    <b-pagination size="sm" v-model="settings.erc20.eventsTable.currentPage" @input="saveSettings" :total-rows="filteredEvents.length" :per-page="settings.erc20.eventsTable.pageSize" style="height: 0;"></b-pagination>
+                    <b-pagination size="sm" v-model="settings.erc20.eventsTable.currentPage" @input="saveSettings" :total-rows="sortedFilteredEvents.length" :per-page="settings.erc20.eventsTable.pageSize" style="height: 0;"></b-pagination>
                   </div>
                   <div class="mt-0 pl-1">
                     <b-form-select size="sm" v-model="settings.erc20.eventsTable.pageSize" @change="saveSettings();" :options="pageSizes" v-b-popover.hover.bottom="'Yeah. Page size'"></b-form-select>
                   </div>
                 </div>
-                <b-table small fixed striped :fields="erc20EventsFields" :items="pagedFilteredEvents" show-empty empty-html="Click [Retrieve] above" head-variant="light" class="mt-1">
+                <b-table small fixed striped :fields="erc20EventsFields" :items="pagedSortedFilteredEvents" show-empty empty-html="Click [Retrieve] above" head-variant="light" class="mt-1">
                   <template #cell(number)="data">
                       <font size="-1" class="text-muted">{{ parseInt(data.index) + ((settings.erc20.eventsTable.currentPage - 1) * settings.erc20.eventsTable.pageSize) + 1 }}</font>
                   </template>
@@ -151,29 +151,47 @@
               </b-form-group>
 
               <b-form-group label="balances:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
-                <font size="-2">
-                  <b-table small fixed striped sticky-header="200px" :fields="erc20BalancesFields" :items="erc20.balances" show-empty empty-html="Click [Retrieve] above" head-variant="light">
-                    <template #cell(number)="data">
-                        {{ parseInt(data.index) + 1 }}
-                    </template>
-                    <template #cell(latestUpdate)="data">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.balance.txHash + '#eventlog#' + data.item.balance.logIndex" variant="link" v-b-popover.hover.ds500="'blockNumber:txIndex.logIndex:txHash'" target="_blank">
-                        {{ data.item.balance.blockNumber + ':' + data.item.balance.txIndex + '.' + data.item.balance.logIndex + ':' + data.item.balance.txHash.substring(0, 8) + '...' + data.item.balance.txHash.slice(-6) }}
-                      </b-link>
-                    </template>
-                    <template #cell(owner)="data">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc20.contract + '?a=' + data.item.owner" variant="link" v-b-popover.hover.ds500="data.item.owner" target="_blank">
-                        {{ data.item.owner.substring(0, 6) + '...' + data.item.owner.slice(-4) }}
-                      </b-link>
-                    </template>
-                    <template #cell(balance)="data">
-                      {{ formatDecimals(data.item.balance.tokens, data.item.decimals) }}
-                      <span class="text-muted">
-                        {{ formatNumber(data.item.balance.tokens) }}
-                      </span>
-                    </template>
-                  </b-table>
-                </font>
+                <div class="d-flex flex-wrap m-0 p-0">
+                  <div class="mt-0 pr-1" style="width: 10.0rem;">
+                    <b-form-input type="text" size="sm" v-model.trim="settings.erc20.balancesTable.filter" @change="saveSettings" debounce="600" placeholder="🔍 address regex"></b-form-input>
+                  </div>
+                  <div class="mt-0 flex-grow-1">
+                  </div>
+                  <div class="mt-0 pl-1">
+                    <b-form-select size="sm" v-model="settings.erc20.balancesTable.sortOption" @change="saveSettings" :options="balancesAndAllowancesSortOptions" v-b-popover.hover.bottom="'Yeah. Sort'"></b-form-select>
+                  </div>
+                  <div class="mt-0 pl-1">
+                    <font size="-2" v-b-popover.hover.bottom="'# filtered / total events'">{{ formatNumber(sortedFilteredBalances.length) + '/' + formatNumber(erc20.balances.length) }}</font>
+                  </div>
+                  <div class="mt-0 pl-1">
+                    <b-pagination size="sm" v-model="settings.erc20.balancesTable.currentPage" @input="saveSettings" :total-rows="sortedFilteredBalances.length" :per-page="settings.erc20.balancesTable.pageSize" style="height: 0;"></b-pagination>
+                  </div>
+                  <div class="mt-0 pl-1">
+                    <b-form-select size="sm" v-model="settings.erc20.balancesTable.pageSize" @change="saveSettings();" :options="pageSizes" v-b-popover.hover.bottom="'Yeah. Page size'"></b-form-select>
+                  </div>
+                </div>
+                <b-table small fixed striped :fields="erc20BalancesFields" :items="pagedSortedFilteredBalances" show-empty empty-html="Click [Retrieve] above" head-variant="light" class="mt-1">
+                  <template #cell(number)="data">
+                      <font size="-1" class="text-muted">{{ parseInt(data.index) + ((settings.erc20.balancesTable.currentPage - 1) * settings.erc20.balancesTable.pageSize) + 1 }}</font>
+                  </template>
+                  <template #cell(latestUpdate)="data">
+                    <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.txHash + '#eventlog#' + data.item.logIndex" variant="link" v-b-popover.hover.ds500="'blockNumber:txIndex.logIndex'" target="_blank">
+                      {{ data.item.balance.blockNumber + ':' + data.item.balance.txIndex + '.' + data.item.balance.logIndex }}
+                    </b-link>
+                    <font size="-1" v-b-popover.hover.ds500="'txHash'" class="text-muted">{{ data.item.balance.txHash.substring(0, 8) + '...' + data.item.balance.txHash.slice(-6) }}</font>
+                  </template>
+                  <template #cell(owner)="data">
+                    <b-link size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc20.contract + '?a=' + data.item.owner" variant="link" v-b-popover.hover.ds500="data.item.owner" target="_blank">
+                      {{ data.item.owner.substring(0, 6) + '...' + data.item.owner.slice(-4) }}
+                    </b-link>
+                  </template>
+                  <template #cell(balance)="data">
+                    {{ formatDecimals(data.item.balance.tokens, data.item.decimals) }}
+                    <font size="-1" class="text-muted">
+                      {{ formatNumber(data.item.balance.tokens) }}
+                    </font>
+                  </template>
+                </b-table>
               </b-form-group>
 
               <b-form-group label="allowances:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
@@ -494,6 +512,18 @@
                 pageSize: 10,
                 sortOption: 'txorderdsc',
               },
+              balancesTable: {
+                filter: null,
+                currentPage: 1,
+                pageSize: 10,
+                sortOption: 'txorderdsc',
+              },
+              allowancesTable: {
+                filter: null,
+                currentPage: 1,
+                pageSize: 10,
+                sortOption: 'txorderdsc',
+              },
               balanceOf: {
                 owner: null,
               },
@@ -521,7 +551,7 @@
             erc1155: {
               contract: null,
             },
-            version: 6,
+            version: 7,
           },
           erc20: {
             symbol: null,
@@ -551,6 +581,10 @@
             { value: 'txorderasc', text: '▲ TxOrder' },
             { value: 'txorderdsc', text: '▼ TxOrder' },
           ],
+          balancesAndAllowancesSortOptions: [
+            { value: 'txorderasc', text: '▲ Latest TxOrder' },
+            { value: 'txorderdsc', text: '▼ Latest TxOrder' },
+          ],
           pageSizes: [
             { value: 5, text: '5' },
             { value: 10, text: '10' },
@@ -570,9 +604,9 @@
           ],
           erc20BalancesFields: [
             { key: 'number', label: '#', sortable: false, thStyle: 'width: 5%;', tdClass: 'text-truncate' },
-            { key: 'latestUpdate', label: 'Latest Update', sortable: false, thStyle: 'width: 20%;', thClass: 'text-left', tdClass: 'text-left' },
-            { key: 'owner', label: 'Owner', sortable: false, thStyle: 'width: 45%;', thClass: 'text-left', tdClass: 'text-left' },
-            { key: 'balance', label: 'Balance', sortable: false, thStyle: 'width: 30%;', tdClass: 'text-truncate' },
+            { key: 'latestUpdate', label: 'Latest Update', sortable: false, thStyle: 'width: 30%;', thClass: 'text-left', tdClass: 'text-left' },
+            { key: 'owner', label: 'Owner', sortable: false, thStyle: 'width: 25%;', thClass: 'text-left', tdClass: 'text-left' },
+            { key: 'balance', label: 'Balance', sortable: false, thStyle: 'width: 40%;', tdClass: 'text-truncate' },
           ],
           erc20AllowancesFields: [
             { key: 'number', label: '#', sortable: false, thStyle: 'width: 5%;', tdClass: 'text-truncate' },
@@ -585,15 +619,15 @@
 
         // --- COMPUTED ---
         computed: {
-          filteredEvents() {
-            console.log(moment().format("HH:mm:ss") + " pagedFilteredEvents");
+          sortedFilteredEvents() {
+            // console.log(moment().format("HH:mm:ss") + " sortedFilteredEvents");
             const results = [];
             let regex = null;
             if (this.settings.erc20.eventsTable.filter != null && this.settings.erc20.eventsTable.filter > 0) {
               try {
                 regex = new RegExp(this.settings.erc20.eventsTable.filter, 'i');
               } catch (e) {
-                console.log(moment().format("HH:mm:ss") + " pagedFilteredEvents - regex error: " + e.message);
+                console.log(moment().format("HH:mm:ss") + " sortedFilteredEvents - regex error: " + e.message);
                 regex = new RegExp(/thequickbrowndogjumpsoverthelazyfox/, 'i');
               }
             }
@@ -633,8 +667,55 @@
             }
             return results;
           },
-          pagedFilteredEvents() {
-            return this.filteredEvents.slice((this.settings.erc20.eventsTable.currentPage - 1) * this.settings.erc20.eventsTable.pageSize, this.settings.erc20.eventsTable.currentPage * this.settings.erc20.eventsTable.pageSize);
+          pagedSortedFilteredEvents() {
+            return this.sortedFilteredEvents.slice((this.settings.erc20.eventsTable.currentPage - 1) * this.settings.erc20.eventsTable.pageSize, this.settings.erc20.eventsTable.currentPage * this.settings.erc20.eventsTable.pageSize);
+          },
+          sortedFilteredBalances() {
+            console.log(moment().format("HH:mm:ss") + " sortedFilteredBalances");
+            const results = [];
+            let regex = null;
+            if (this.settings.erc20.balancesTable.filter != null && this.settings.erc20.balancesTable.filter > 0) {
+              try {
+                regex = new RegExp(this.settings.erc20.balancesTable.filter, 'i');
+              } catch (e) {
+                console.log(moment().format("HH:mm:ss") + " sortedFilteredBalances - regex error: " + e.message);
+                regex = new RegExp(/thequickbrowndogjumpsoverthelazyfox/, 'i');
+              }
+            }
+            for (const balance of this.erc20.balances) {
+              let include = true;
+              if (regex) {
+                console.log(JSON.stringify(balance));
+                if (!(regex.test(balance.owner) || regex.test(balance.txHash) || regex.test(balance.blockNumber))) {
+                  include = false;
+                }
+              }
+              if (include) {
+                results.push(balance);
+              }
+            }
+            console.log("this.settings.erc20.balancesTable.sortOption: " + this.settings.erc20.balancesTable.sortOption);
+            if (this.settings.erc20.balancesTable.sortOption == "txorderasc") {
+              results.sort((a, b) => {
+                if (a.balance.blockNumber == b.balance.blockNumber) {
+                  return a.balance.logIndex - b.balance.logIndex;
+                } else {
+                  return a.balance.blockNumber - b.balance.blockNumber;
+                }
+              });
+            } else if (this.settings.erc20.balancesTable.sortOption == "txorderdsc") {
+              results.sort((a, b) => {
+                if (a.balance.blockNumber == b.balance.blockNumber) {
+                  return b.balance.logIndex - a.balance.logIndex;
+                } else {
+                  return b.balance.blockNumber - a.balance.blockNumber;
+                }
+              });
+            }
+            return results;
+          },
+          pagedSortedFilteredBalances() {
+            return this.sortedFilteredBalances.slice((this.settings.erc20.balancesTable.currentPage - 1) * this.settings.erc20.balancesTable.pageSize, this.settings.erc20.balancesTable.currentPage * this.settings.erc20.balancesTable.pageSize);
           },
         },
 
