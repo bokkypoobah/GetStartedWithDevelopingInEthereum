@@ -61,7 +61,7 @@
 
           <b-card class="m-0 p-0 border-0" body-class="m-1 p-0">
             <b-card v-if="settings.tabIndex == 0" header="ERC-20" class="m-0 p-0">
-              <b-form-group label="contract:" label-for="erc20-contract" label-size="sm" label-cols-sm="2" label-align-sm="right" description="e.g., '0xc21d97673B9E0B3AA53a06439F71fDc1facE393B' for XEENUS and '0x7439E9Bb6D8a84dd3A23fe621A30F95403F87fB9' for WEENUS on Sepolia" class="mx-0 my-1 p-0">
+              <b-form-group label="contract:" label-for="erc20-contract" label-size="sm" label-cols-sm="2" label-align-sm="right" description="e.g., '0xc21d97673B9E0B3AA53a06439F71fDc1facE393B' for XEENUS and '0x7439E9Bb6D8a84dd3A23fe621A30F95403F87fB9' for WEENUS on Sepolia" :state="!settings.erc20.contract || validAddress(settings.erc20.contract)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
                 <b-input-group size="sm" class="w-50">
                   <b-form-input type="text" size="sm" id="erc20-contract" v-model="settings.erc20.contract" @change="saveSettings"></b-form-input>
                   <b-input-group-append>
@@ -198,7 +198,7 @@
 
               <b-form-group label="balanceOf:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
                 <b-card bg-variant="light">
-                  <b-form-group label="owner:" label-for="erc20-balanceof-owner" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
+                  <b-form-group label="owner:" label-for="erc20-balanceof-owner" label-size="sm" label-cols-sm="3" label-align-sm="right" :state="!settings.erc20.balanceOf.owner || validAddress(settings.erc20.balanceOf.owner)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
                     <b-input-group size="sm" class="w-50">
                       <b-form-input type="text" size="sm" id="erc20-balanceof-owner" v-model="settings.erc20.balanceOf.owner" @change="saveSettings"></b-form-input>
                       <b-input-group-append>
@@ -217,7 +217,7 @@
 
               <b-form-group label="allowance:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
                 <b-card bg-variant="light">
-                  <b-form-group label="owner:" label-for="erc20-allowance-owner" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
+                  <b-form-group label="owner:" label-for="erc20-allowance-owner" label-size="sm" label-cols-sm="3" label-align-sm="right" :state="!settings.erc20.allowance.owner || validAddress(settings.erc20.allowance.owner)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
                     <b-input-group size="sm" class="w-50">
                       <b-form-input type="text" size="sm" id="erc20-allowance-owner" v-model="settings.erc20.allowance.owner" @change="saveSettings"></b-form-input>
                       <b-input-group-append>
@@ -225,7 +225,7 @@
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
-                  <b-form-group label="spender:" label-for="erc20-allowance-spender" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
+                  <b-form-group label="spender:" label-for="erc20-allowance-spender" label-size="sm" label-cols-sm="3" label-align-sm="right" :state="!settings.erc20.allowance.spender || validAddress(settings.erc20.allowance.spender)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
                     <b-input-group size="sm" class="w-50">
                       <b-form-input type="text" size="sm" id="erc20-allowance-spender" v-model="settings.erc20.allowance.spender" @change="saveSettings"></b-form-input>
                       <b-input-group-append>
@@ -258,7 +258,7 @@
                   <b-form-group label="balanceOf(msg.sender):" label-for="erc20-transfer-coinbasebalanceof" label-size="sm" label-cols-sm="3" label-align-sm="right" :description="erc20.coinbaseBalanceOf ? 'Raw value: ' + formatNumber(erc20.coinbaseBalanceOf) : 'Click [Retrieve] above'" class="mx-0 my-1 p-0">
                     <b-form-input type="text" size="sm" readonly id="erc20-transfer-coinbasebalanceof" :value="formatDecimals(erc20.coinbaseBalanceOf, erc20.decimals)" class="w-25"></b-form-input>
                   </b-form-group>
-                  <b-form-group label="to:" label-for="erc20-transfer-to" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
+                  <b-form-group label="to:" label-for="erc20-transfer-to" label-size="sm" label-cols-sm="3" label-align-sm="right" :state="!settings.erc20.transfer.to || validAddress(settings.erc20.transfer.to)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
                     <b-input-group size="sm" class="w-50">
                       <b-form-input type="text" size="sm" id="erc20-transfer-to" v-model="settings.erc20.transfer.to" @change="saveSettings"></b-form-input>
                       <b-input-group-append>
@@ -296,7 +296,7 @@
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
-                  <b-form-group label="spender:" label-for="erc20-approve-spender" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
+                  <b-form-group label="spender:" label-for="erc20-approve-spender" label-size="sm" label-cols-sm="3" label-align-sm="right" :state="!settings.erc20.approve.spender || validAddress(settings.erc20.approve.spender)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
                     <b-input-group size="sm" class="w-50">
                       <b-form-input type="text" size="sm" id="erc20-approve-spender" v-model="settings.erc20.approve.spender" @change="saveSettings"></b-form-input>
                       <b-input-group-append>
@@ -334,7 +334,7 @@
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
-                  <b-form-group label="from:" label-for="erc20-transferfrom-from" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
+                  <b-form-group label="from:" label-for="erc20-transferfrom-from" label-size="sm" label-cols-sm="3" label-align-sm="right" :state="!settings.erc20.transferFrom.from || validAddress(settings.erc20.transferFrom.from)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
                     <b-input-group size="sm" class="w-50">
                       <b-form-input type="text" size="sm" id="erc20-transferfrom-from" v-model="settings.erc20.transferFrom.from" @change="saveSettings"></b-form-input>
                       <b-input-group-append>
@@ -342,7 +342,7 @@
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
-                  <b-form-group label="to:" label-for="erc20-transferfrom-to" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
+                  <b-form-group label="to:" label-for="erc20-transferfrom-to" label-size="sm" label-cols-sm="3" label-align-sm="right" :state="!settings.erc20.transferFrom.to || validAddress(settings.erc20.transferFrom.to)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
                     <b-input-group size="sm" class="w-50">
                       <b-form-input type="text" size="sm" id="erc20-transferfrom-to" v-model="settings.erc20.transferFrom.to" @change="saveSettings"></b-form-input>
                       <b-input-group-append>
