@@ -929,7 +929,7 @@
                     txIndex: event.txIndex,
                     txHash: event.txHash,
                     logIndex: event.logIndex,
-                    tokens: event.tokens,
+                    tokens: ethers.BigNumber.from(0).sub(event.tokens).toString(),
                   };
                 } else {
                   balanceCollator[event.from].blockNumber = event.blockNumber;
