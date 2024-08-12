@@ -67,6 +67,8 @@ Events below show:
 * Transfer of 1 token from account1 to account2
 * account1 approves for account2 to spend 100 tokens
 * account2 transfers from account1 0.12345 tokens
+
+
 <kbd><img src="images/Exercise-ERC-20-1.png" /></kbd>
 
 <kbd><img src="images/Exercise-ERC-20-2.png" /></kbd>
