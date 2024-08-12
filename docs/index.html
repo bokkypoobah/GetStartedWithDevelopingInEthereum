@@ -92,6 +92,11 @@
                   </div>
                   <div class="mt-0 flex-grow-1">
                   </div>
+                  <div class="mt-0 pr-1">
+                    <b-button size="sm" @click="retrieveERC20Timestamps(pagedSortedFilteredEvents)" variant="link" v-b-popover.hover.ds500="'Retrieve timestamps for events below'"><b-icon-clock-history shift-v="+1" font-scale="1.2"></b-icon-clock-history></b-button>
+                  </div>
+                  <div class="mt-0 flex-grow-1">
+                  </div>
                   <div class="mt-0 pl-1">
                     <b-form-select size="sm" v-model="settings.erc20.eventsTable.sortOption" @change="saveSettings" :options="eventsSortOptions" v-b-popover.hover.bottom="'Yeah. Sort'"></b-form-select>
                   </div>
@@ -593,6 +598,7 @@
               result: null,
             },
           },
+          timestamps: {},
           eventsSortOptions: [
             { value: 'txorderasc', text: '▲ TxOrder' },
             { value: 'txorderdsc', text: '▼ TxOrder' },
@@ -1000,6 +1006,24 @@
             // console.log(moment().format("HH:mm:ss") + " retrieveERC20Allowance - erc20.allowance: " + allowance);
           },
 
+          async retrieveERC20Timestamps(events) {
+            console.log(moment().format("HH:mm:ss") + " retrieveERC20Timestamps BEGIN - events: " + JSON.stringify(events, null, 2));
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const contract = new ethers.Contract(this.settings.erc20.contract, ERC20ABI, provider);
+            for (const event of events) {
+              if (!(event.blockNumber in this.timestamps)) {
+                try {
+                  const block = await provider.getBlock(event.blockNumber);
+                  Vue.set(this.timestamps, event.blockNumber, parseInt(block.timestamp));
+                } catch (e) {
+                  console.log(moment().format("HH:mm:ss") + " retrieveERC20Timestamps ERROR: " + e.message);
+                }
+              }
+            }
+            localStorage.getStartedWithDevelopingInEthereumTimestamps = JSON.stringify(this.timestamps);
+            console.log(moment().format("HH:mm:ss") + " retrieveERC20Timestamps END - timestamps: " + JSON.stringify(this.timestamps, null, 2));
+          },
+
           async transferERC20() {
             console.log(moment().format("HH:mm:ss") + " transferERC20 - settings.erc20: " + JSON.stringify(this.settings.erc20));
             const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -1175,6 +1199,10 @@
           }
           if ('getStartedWithDevelopingInEthereumCoinbase' in localStorage) {
             this.coinbase = localStorage.getStartedWithDevelopingInEthereumCoinbase;
+          }
+          if ('getStartedWithDevelopingInEthereumTimestamps' in localStorage) {
+            this.timestamps = JSON.parse(localStorage.getStartedWithDevelopingInEthereumTimestamps);
+            console.log(moment().format("HH:mm:ss") + " mounted timestamps: " + JSON.stringify(this.timestamps));
           }
           if ('getStartedWithDevelopingInEthereumSettings' in localStorage) {
             const tempSettings = JSON.parse(localStorage.getStartedWithDevelopingInEthereumSettings);
