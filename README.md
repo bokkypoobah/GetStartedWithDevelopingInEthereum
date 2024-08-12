@@ -81,6 +81,35 @@ Events below show:
 
 ---
 
+### Set up Hardhat Environment
+
+```bash
+npx hardhat init
+# Create a JavaScript project
+# Hardhat project root: {current directory}
+# Add .gitignore? (Y/n) · y
+# Do you want to install this sample project's dependencies with npm (hardhat @nomicfoundation/hardhat-toolbox)? (Y/n) · y
+
+npx hardhat test
+# Downloading compiler 0.8.24
+# Error: Cannot find module '@openzeppelin/test-helpers'
+
+# https://docs.openzeppelin.com/test-helpers/0.5/
+npm install --save-dev @openzeppelin/test-helpers
+
+#npm install --save-dev @nomiclabs/hardhat-truffle5 @nomiclabs/hardhat-web3 web3
+
+# npm install --save-dev @nomiclabs/hardhat-ethers 'ethers@^5.0.0'
+
+# npm install --save-dev @openzeppelin/test-helpers
+# npm install --save-dev solidity-coverage
+```
+
+
+<br />
+
+---
+
 <!--
 ## Screenshots of ERC-20 Explorer
 
@@ -107,6 +136,7 @@ Events below show:
 * Solidity compiler and deployer - [https://remix.ethereum.org/](https://remix.ethereum.org/)
 * Solidity Documentation - [https://docs.soliditylang.org/](https://docs.soliditylang.org/)
 * OpenZeppelin Contracts - [https://github.com/OpenZeppelin/openzeppelin-contracts](https://github.com/OpenZeppelin/openzeppelin-contracts)
+* Hardhat development environment - [https://hardhat.org/](https://hardhat.org/)
 
 ### Other
 
