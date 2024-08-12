@@ -115,37 +115,38 @@
                     </b-link>
                     <font size="-1" v-b-popover.hover.ds500="'txHash'" class="text-muted">{{ data.item.txHash.substring(0, 8) + '...' + data.item.txHash.slice(-6) }}</font>
                   </template>
-                  <template #cell(info)="data">
+
+                  <template #cell(fromOwner)="data">
                     <div v-if="data.item.name == 'Transfer'">
-                      <font size="-1" class="text-muted">from:</font>
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.from" variant="link" v-b-popover.hover.ds500="data.item.from" target="_blank">
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.from" variant="link" v-b-popover.hover.ds500="'Transfer from ' + data.item.from" target="_blank">
                         {{ data.item.from.substring(0, 6) + '...' + data.item.from.slice(-4) }}
                       </b-link>
-                      <font size="-1" class="text-muted">to:</font>
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.to" variant="link" v-b-popover.hover.ds500="data.item.to" target="_blank">
-                        {{ data.item.to.substring(0, 6) + '...' + data.item.to.slice(-4) }}
-                      </b-link>
-                      <font size="-1" class="text-muted">tokens:</font>
-                      {{ formatDecimals(data.item.tokens, data.item.decimals) }}
-                      <font size="-1" class="text-muted">
-                        {{ formatNumber(data.item.tokens) }}
-                      </font>
                     </div>
                     <div v-else-if="data.item.name == 'Approval'">
-                      <font size="-1" class="text-muted">owner:</font>
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.owner" variant="link" v-b-popover.hover.ds500="data.item.owner" target="_blank">
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.owner" variant="link" v-b-popover.hover.ds500="'Approval owner ' + data.item.owner" target="_blank">
                         {{ data.item.owner.substring(0, 6) + '...' + data.item.owner.slice(-4) }}
                       </b-link>
-                      <font size="-1" class="text-muted">spender:</font>
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.spender" variant="link" v-b-popover.hover.ds500="data.item.spender" target="_blank">
+                    </div>
+                  </template>
+
+                  <template #cell(toSpender)="data">
+                    <div v-if="data.item.name == 'Transfer'">
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.to" variant="link" v-b-popover.hover.ds500="'Transfer to ' + data.item.to" target="_blank">
+                        {{ data.item.to.substring(0, 6) + '...' + data.item.to.slice(-4) }}
+                      </b-link>
+                    </div>
+                    <div v-else-if="data.item.name == 'Approval'">
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.spender" variant="link" v-b-popover.hover.ds500="'Approval spender ' + data.item.spender" target="_blank">
                         {{ data.item.spender.substring(0, 6) + '...' + data.item.spender.slice(-4) }}
                       </b-link>
-                      <font size="-1" class="text-muted">tokens:</font>
-                      {{ formatDecimals(data.item.tokens, data.item.decimals) }}
-                      <font size="-1" class="text-muted">
-                        {{ formatNumber(data.item.tokens) }}
-                      </font>
                     </div>
+                  </template>
+
+                  <template #cell(tokens)="data">
+                    <font size="-1" class="text-muted">
+                      {{ formatNumber(data.item.tokens) }}
+                    </font>
+                    {{ formatDecimals(data.item.tokens, data.item.decimals) }}
                   </template>
                 </b-table>
               </b-form-group>
@@ -600,7 +601,9 @@
             { key: 'number', label: '#', sortable: false, thStyle: 'width: 5%;', tdClass: 'text-truncate' },
             { key: 'when', label: 'When', sortable: false, thStyle: 'width: 25%;', thClass: 'text-left', tdClass: 'text-left' },
             { key: 'name', label: 'Name', sortable: false, thStyle: 'width: 10%;', tdClass: 'text-truncate' },
-            { key: 'info', label: 'Info', sortable: false, thStyle: 'width: 60%;', tdClass: 'text-truncate' },
+            { key: 'fromOwner', label: 'From / Owner', sortable: false, thStyle: 'width: 15%;', tdClass: 'text-truncate' },
+            { key: 'toSpender', label: 'To / Spender', sortable: false, thStyle: 'width: 15%;', tdClass: 'text-truncate' },
+            { key: 'tokens', label: 'Tokens', sortable: false, thStyle: 'width: 30%;', thClass: 'text-right', tdClass: 'text-right' },
           ],
           erc20BalancesFields: [
             { key: 'number', label: '#', sortable: false, thStyle: 'width: 5%;', tdClass: 'text-truncate' },
