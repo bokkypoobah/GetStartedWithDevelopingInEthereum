@@ -63,7 +63,7 @@
             <b-card v-if="settings.tabIndex == 0" header="ERC-20" class="m-0 p-0">
               <b-form-group label="contract:" label-for="erc20-contract" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" description="e.g., '0xc21d97673B9E0B3AA53a06439F71fDc1facE393B' for XEENUS and '0x1e5df6db242d07cc40a37b634022c02f73a74d59' for MYERC20TOKEN on Sepolia" :state="!settings.erc20.contract || validAddress(settings.erc20.contract)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
                 <b-input-group size="sm" class="w-50">
-                  <b-form-input type="text" size="sm" id="erc20-contract" v-model="settings.erc20.contract" @change="saveSettings"></b-form-input>
+                  <b-form-input type="text" size="sm" id="erc20-contract" v-model="settings.erc20.contract" @change="saveSettings" placeholder="ERC-20 token contract address"></b-form-input>
                   <b-input-group-append>
                     <b-button size="sm" :disabled="!validAddress(settings.erc20.contract)" :href="'https://sepolia.etherscan.io/token/' + settings.erc20.contract + '#code'" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                   </b-input-group-append>
@@ -929,7 +929,7 @@
                     txIndex: event.txIndex,
                     txHash: event.txHash,
                     logIndex: event.logIndex,
-                    tokens: ethers.BigNumber.from(0).sub(event.tokens).toString(),
+                    tokens: event.from == ADDRESS0 ? "0" : ethers.BigNumber.from(0).sub(event.tokens).toString(),
                   };
                 } else {
                   balanceCollator[event.from].blockNumber = event.blockNumber;
