@@ -115,7 +115,6 @@
                     </b-link>
                     <font size="-1" v-b-popover.hover.ds500="'txHash'" class="text-muted">{{ data.item.txHash.substring(0, 8) + '...' + data.item.txHash.slice(-6) }}</font>
                   </template>
-
                   <template #cell(fromOwner)="data">
                     <div v-if="data.item.name == 'Transfer'">
                       <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.from" variant="link" v-b-popover.hover.ds500="'Transfer from ' + data.item.from" target="_blank">
@@ -128,7 +127,6 @@
                       </b-link>
                     </div>
                   </template>
-
                   <template #cell(toSpender)="data">
                     <div v-if="data.item.name == 'Transfer'">
                       <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.to" variant="link" v-b-popover.hover.ds500="'Transfer to ' + data.item.to" target="_blank">
@@ -141,7 +139,6 @@
                       </b-link>
                     </div>
                   </template>
-
                   <template #cell(tokens)="data">
                     <font size="-1" class="text-muted">
                       {{ formatNumber(data.item.tokens) }}
@@ -187,10 +184,10 @@
                     </b-link>
                   </template>
                   <template #cell(balance)="data">
-                    {{ formatDecimals(data.item.balance.tokens, data.item.decimals) }}
                     <font size="-1" class="text-muted">
                       {{ formatNumber(data.item.balance.tokens) }}
                     </font>
+                    {{ formatDecimals(data.item.balance.tokens, data.item.decimals) }}
                   </template>
                 </b-table>
               </b-form-group>
@@ -609,7 +606,7 @@
             { key: 'number', label: '#', sortable: false, thStyle: 'width: 5%;', tdClass: 'text-truncate' },
             { key: 'latestUpdate', label: 'Latest Update', sortable: false, thStyle: 'width: 30%;', thClass: 'text-left', tdClass: 'text-left' },
             { key: 'owner', label: 'Owner', sortable: false, thStyle: 'width: 25%;', thClass: 'text-left', tdClass: 'text-left' },
-            { key: 'balance', label: 'Balance', sortable: false, thStyle: 'width: 40%;', tdClass: 'text-truncate' },
+            { key: 'balance', label: 'Balance', sortable: false, thStyle: 'width: 40%;', thClass: 'text-right', tdClass: 'text-right' },
           ],
           erc20AllowancesFields: [
             { key: 'number', label: '#', sortable: false, thStyle: 'width: 5%;', tdClass: 'text-truncate' },
