@@ -61,7 +61,7 @@
 
           <b-card class="m-0 p-0 border-0" body-class="m-1 p-0">
             <b-card v-if="settings.tabIndex == 0" header="ERC-20" class="m-0 p-0">
-              <b-form-group label="contract:" label-for="erc20-contract" label-size="sm" label-cols-sm="2" label-align-sm="right" description="e.g., '0xc21d97673B9E0B3AA53a06439F71fDc1facE393B' for XEENUS and '0x7439E9Bb6D8a84dd3A23fe621A30F95403F87fB9' for WEENUS on Sepolia" :state="!settings.erc20.contract || validAddress(settings.erc20.contract)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
+              <b-form-group label="contract:" label-for="erc20-contract" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" description="e.g., '0xc21d97673B9E0B3AA53a06439F71fDc1facE393B' for XEENUS and '0x7439E9Bb6D8a84dd3A23fe621A30F95403F87fB9' for WEENUS on Sepolia" :state="!settings.erc20.contract || validAddress(settings.erc20.contract)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
                 <b-input-group size="sm" class="w-50">
                   <b-form-input type="text" size="sm" id="erc20-contract" v-model="settings.erc20.contract" @change="saveSettings"></b-form-input>
                   <b-input-group-append>
@@ -85,7 +85,7 @@
                 <b-form-input type="text" size="sm" readonly id="erc20-totalsupplydecimals" :value="formatDecimals(erc20.totalSupply, erc20.decimals)" class="w-25"></b-form-input>
               </b-form-group>
 
-              <b-form-group label="events:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
+              <b-form-group label="events:" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
                 <div class="d-flex flex-wrap m-0 p-0">
                   <div class="mt-0 pr-1" style="width: 20.0rem;">
                     <b-form-input type="text" size="sm" v-model.trim="settings.erc20.eventsTable.filter" @change="saveSettings" debounce="600" placeholder="🔍 address/blocknumber/txhash regex"></b-form-input>
@@ -148,7 +148,7 @@
                 </b-table>
               </b-form-group>
 
-              <b-form-group label="balances:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
+              <b-form-group label="balances:" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
                 <div class="d-flex flex-wrap m-0 p-0">
                   <div class="mt-0 pr-1" style="width: 20.0rem;">
                     <b-form-input type="text" size="sm" v-model.trim="settings.erc20.balancesTable.filter" @change="saveSettings" debounce="600" placeholder="🔍 address/blocknumber/txhash regex"></b-form-input>
@@ -192,7 +192,7 @@
                 </b-table>
               </b-form-group>
 
-              <b-form-group label="allowances:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
+              <b-form-group label="allowances:" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
                 <div class="d-flex flex-wrap m-0 p-0">
                   <div class="mt-0 pr-1" style="width: 20.0rem;">
                     <b-form-input type="text" size="sm" v-model.trim="settings.erc20.allowancesTable.filter" @change="saveSettings" debounce="600" placeholder="🔍 address/blocknumber/txhash regex"></b-form-input>
@@ -248,7 +248,7 @@
                 </b-table>
               </b-form-group>
 
-              <b-form-group label="balanceOf:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
+              <b-form-group label="balanceOf:" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
                 <b-card bg-variant="light">
                   <b-form-group label="owner:" label-for="erc20-balanceof-owner" label-size="sm" label-cols-sm="3" label-align-sm="right" :state="!settings.erc20.balanceOf.owner || validAddress(settings.erc20.balanceOf.owner)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
                     <b-input-group size="sm" class="w-50">
@@ -267,7 +267,7 @@
                 </b-card>
               </b-form-group>
 
-              <b-form-group label="allowance:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
+              <b-form-group label="allowance:" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
                 <b-card bg-variant="light">
                   <b-form-group label="owner:" label-for="erc20-allowance-owner" label-size="sm" label-cols-sm="3" label-align-sm="right" :state="!settings.erc20.allowance.owner || validAddress(settings.erc20.allowance.owner)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
                     <b-input-group size="sm" class="w-50">
@@ -294,7 +294,7 @@
                 </b-card>
               </b-form-group>
 
-              <b-form-group label="transfer:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
+              <b-form-group label="transfer:" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
                 <b-card bg-variant="light">
                   <b-form-group label="msg.sender:" label-for="erc20-transfer-coinbase" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
                     <b-input-group size="sm" class="w-50">
@@ -338,7 +338,7 @@
                 </b-card>
               </b-form-group>
 
-              <b-form-group label="approve:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
+              <b-form-group label="approve:" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
                 <b-card bg-variant="light">
                   <b-form-group label="msg.sender:" label-for="erc20-approve-coinbase" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
                     <b-input-group size="sm" class="w-50">
@@ -376,7 +376,7 @@
                 </b-card>
               </b-form-group>
 
-              <b-form-group label="transferfrom:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
+              <b-form-group label="transferfrom:" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
                 <b-card bg-variant="light">
                   <b-form-group label="msg.sender:" label-for="erc20-transferfrom-coinbase" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
                     <b-input-group size="sm" class="w-50">
