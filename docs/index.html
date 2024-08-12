@@ -156,7 +156,7 @@
                     <font size="-2" class="text-muted">
                       {{ formatNumber(data.item.tokens) }}
                     </font>
-                    {{ formatDecimals(data.item.tokens, data.item.decimals) }}
+                    {{ formatDecimals(data.item.tokens, erc20.decimals) }}
                   </template>
                 </b-table>
               </b-form-group>
@@ -213,7 +213,7 @@
                     <font size="-2" class="text-muted">
                       {{ formatNumber(data.item.balance.tokens) }}
                     </font>
-                    {{ formatDecimals(data.item.balance.tokens, data.item.decimals) }}
+                    {{ formatDecimals(data.item.balance.tokens, erc20.decimals) }}
                   </template>
                 </b-table>
               </b-form-group>
@@ -280,7 +280,7 @@
                         &infin;
                       </span>
                       <span v-else>
-                        {{ formatDecimals(data.item.tokens.tokens, data.item.decimals) }}
+                        {{ formatDecimals(data.item.tokens.tokens, erc20.decimals) }}
                       </span>
                     </b-link>
                   </template>
