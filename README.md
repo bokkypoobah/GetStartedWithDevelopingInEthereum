@@ -61,10 +61,25 @@ Example [contracts/ERC20Token.sol](contracts/ERC20Token.sol) deployed to Sepolia
 
 View and interact with your ERC-20 token contract on [https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/](https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/)
 
+Events below show:
+* Initial mint of 1,000,000 tokens to account1
+* Transfer of 10 tokens from account1 to account2
+* Transfer of 1 token from account1 to account2
+* account1 approves for account2 to spend 100 tokens
+* account2 transfers from account1 0.12345 tokens
+<kbd><img src="images/Exercise-ERC-20-1.png" /></kbd>
+
+<kbd><img src="images/Exercise-ERC-20-2.png" /></kbd>
+
+<kbd><img src="images/Exercise-ERC-20-3.png" /></kbd>
+
+<kbd><img src="images/Exercise-ERC-20-4.png" /></kbd>
+
 <br />
 
 ---
 
+<!--
 ## Screenshots of ERC-20 Explorer
 
 [https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/](https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/)
@@ -80,6 +95,8 @@ View and interact with your ERC-20 token contract on [https://bokkypoobah.github
 <br />
 
 ---
+
+-->
 
 ## Resources
 
