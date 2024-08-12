@@ -4,21 +4,10 @@ Materials for [ETHSydney August - Get started with developing in Ethereum](https
 
 <kbd><img src="images/Overview.png" /></kbd>
 
-<br />
 
----
-
-## UI For Testing Smart Contracts On Sepolia
+###### UI For Testing Smart Contracts On Sepolia
 
 [https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/](https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/)
-
-### ERC-20 Explorer
-
-<kbd><img src="images/Explore-ERC-20-1.png" /></kbd>
-<kbd><img src="images/Explore-ERC-20-2.png" /></kbd>
-<kbd><img src="images/Explore-ERC-20-3.png" /></kbd>
-<kbd><img src="images/Explore-ERC-20-4.png" /></kbd>
-<kbd><img src="images/Explore-ERC-20-5.png" /></kbd>
 
 <br />
 
@@ -58,14 +47,33 @@ e.g., Game items
 
 * Install MetaMask from [https://metamask.io/](https://metamask.io/).
 * Connect to Ethereum Sepolia Testnet
-* Get some Sepolia Testnet tokens
-* Use [https://remix.ethereum.org/](https://remix.ethereum.org/) to deploy your smart contracts below:
-* View and interact with your ERC-20 token contract on [https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/](https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/)
-
+* Get some Sepolia Testnet tokens into 2 accounts
 
 ### Deploy ERC-20
 
+Use [https://remix.ethereum.org/](https://remix.ethereum.org/) to deploy your smart contract
+
 <kbd><img src="images/Deploy-ERC-20.png" /></kbd>
+
+### View And Interact With Your ERC-20 Contract
+
+View and interact with your ERC-20 token contract on [https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/](https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/)
+
+<br />
+
+---
+
+## Screenshots of ERC-20 Explorer
+
+[https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/](https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/)
+
+### ERC-20 Explorer on Sepolia
+
+<kbd><img src="images/Explore-ERC-20-1.png" /></kbd>
+<kbd><img src="images/Explore-ERC-20-2.png" /></kbd>
+<kbd><img src="images/Explore-ERC-20-3.png" /></kbd>
+<kbd><img src="images/Explore-ERC-20-4.png" /></kbd>
+<kbd><img src="images/Explore-ERC-20-5.png" /></kbd>
 
 <br />
 
