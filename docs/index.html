@@ -270,7 +270,7 @@
                     <b-form-input type="text" size="sm" id="erc20-transfer-tokens" v-model="settings.erc20.transfer.tokens" @change="saveSettings" class="w-25"></b-form-input>
                   </b-form-group>
                   <b-form-group label="" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
-                    <b-button size="sm" :disabled="!validAddress(settings.erc20.contract) || !validAddress(settings.erc20.transfer.to)" @click="transferERC20" variant="warning">Transfer</b-button>
+                    <b-button size="sm" :disabled="!validAddress(settings.erc20.contract) || !validAddress(settings.erc20.transfer.to) || !validNumber(settings.erc20.transfer.tokens)" @click="transferERC20" variant="warning">Transfer</b-button>
                   </b-form-group>
                   <b-form-group label="txHash:" label-for="erc20-transfer-txhash" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
                     <b-input-group size="sm" class="w-75">
@@ -308,7 +308,7 @@
                     <b-form-input type="text" size="sm" id="erc20-approve-tokens" v-model="settings.erc20.approve.tokens" @change="saveSettings" class="w-25"></b-form-input>
                   </b-form-group>
                   <b-form-group label="" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
-                    <b-button size="sm" :disabled="!validAddress(settings.erc20.contract) || !validAddress(settings.erc20.approve.spender)" @click="approveERC20" variant="warning">Approve</b-button>
+                    <b-button size="sm" :disabled="!validAddress(settings.erc20.contract) || !validAddress(settings.erc20.approve.spender) || !validNumber(settings.erc20.approve.tokens)" @click="approveERC20" variant="warning">Approve</b-button>
                   </b-form-group>
                   <b-form-group label="txHash:" label-for="erc20-approve-txhash" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
                     <b-input-group size="sm" class="w-75">
@@ -354,7 +354,7 @@
                     <b-form-input type="text" size="sm" id="erc20-transferfrom-tokens" v-model="settings.erc20.transferFrom.tokens" @change="saveSettings" class="w-25"></b-form-input>
                   </b-form-group>
                   <b-form-group label="" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
-                    <b-button size="sm" :disabled="!validAddress(settings.erc20.contract) || !validAddress(settings.erc20.transferFrom.from) || !validAddress(settings.erc20.transferFrom.to)" @click="transferFromERC20" variant="warning">Transfer From</b-button>
+                    <b-button size="sm" :disabled="!validAddress(settings.erc20.contract) || !validAddress(settings.erc20.transferFrom.from) || !validAddress(settings.erc20.transferFrom.to) || !validNumber(settings.erc20.transferFrom.tokens)" @click="transferFromERC20" variant="warning">Transfer From</b-button>
                   </b-form-group>
                   <b-form-group label="txHash:" label-for="erc20-transferfrom-txhash" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
                     <b-input-group size="sm" class="w-75">
@@ -836,7 +836,9 @@
             }
             return false;
           },
-
+          validNumber(n) {
+            return n && !isNaN(n) || false;
+          },
           saveSettings() {
             console.log(moment().format("HH:mm:ss") + " saveSettings: " + JSON.stringify(this.settings, null, 2));
             localStorage.getStartedWithDevelopingInEthereumSettings = JSON.stringify(this.settings);
