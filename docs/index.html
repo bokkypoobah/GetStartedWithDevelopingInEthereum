@@ -115,10 +115,18 @@
                       <font size="-1" class="text-muted">{{ parseInt(data.index) + ((settings.erc20.eventsTable.currentPage - 1) * settings.erc20.eventsTable.pageSize) + 1 }}</font>
                   </template>
                   <template #cell(when)="data">
-                    <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.txHash + '#eventlog#' + data.item.logIndex" variant="link" v-b-popover.hover.ds500="'blockNumber:txIndex.logIndex'" target="_blank">
-                      {{ data.item.blockNumber + ':' + data.item.txIndex + '.' + data.item.logIndex }}
-                    </b-link>
-                    <font size="-1" v-b-popover.hover.ds500="'txHash'" class="text-muted">{{ data.item.txHash.substring(0, 8) + '...' + data.item.txHash.slice(-6) }}</font>
+                    <font size="-1">
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.txHash + '#eventlog#' + data.item.logIndex" variant="link" v-b-popover.hover.ds500="(timestamps[chainId] && timestamps[chainId][data.item.blockNumber]) ? 'Timestamp' : 'blockNumber:txIndex'" target="_blank">
+                        <span v-if="timestamps[chainId] && timestamps[chainId][data.item.blockNumber]">
+                          {{ formatTimestamp(timestamps[chainId][data.item.blockNumber]) }}
+                        </span>
+                        <span v-else>
+                          {{ data.item.blockNumber + ':' + data.item.txIndex }}
+                        </span>
+                      </b-link>
+                      <font size="-1" v-b-popover.hover.ds500="'logIndex'" class="text-muted">{{ data.item.logIndex }}</font>
+                      <font size="-1" v-b-popover.hover.ds500="'txHash'" class="text-muted">{{ data.item.txHash.substring(0, 8) + '...' + data.item.txHash.slice(-6) }}</font>
+                    </font>
                   </template>
                   <template #cell(fromOwner)="data">
                     <div v-if="data.item.name == 'Transfer'">
@@ -178,9 +186,17 @@
                       <font size="-1" class="text-muted">{{ parseInt(data.index) + ((settings.erc20.balancesTable.currentPage - 1) * settings.erc20.balancesTable.pageSize) + 1 }}</font>
                   </template>
                   <template #cell(latestUpdate)="data">
-                    <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.balance.txHash + '#eventlog#' + data.item.balance.logIndex" variant="link" v-b-popover.hover.ds500="'blockNumber:txIndex.logIndex'" target="_blank">
-                      {{ data.item.balance.blockNumber + ':' + data.item.balance.txIndex + '.' + data.item.balance.logIndex }}
+                    <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.balance.txHash + '#eventlog#' + data.item.balance.logIndex" variant="link" v-b-popover.hover.ds500="(timestamps[chainId] && timestamps[chainId][data.item.balance.blockNumber]) ? 'Timestamp' : 'blockNumber:txIndex'" target="_blank">
+                      <font size="-1">
+                        <span v-if="timestamps[chainId] && timestamps[chainId][data.item.balance.blockNumber]">
+                          {{ formatTimestamp(timestamps[chainId][data.item.balance.blockNumber]) }}
+                        </span>
+                        <span v-else>
+                          {{ data.item.balance.blockNumber + ':' + data.item.balance.txIndex }}
+                        </span>
+                      </font>
                     </b-link>
+                    <font size="-1" v-b-popover.hover.ds500="'logIndex'" class="text-muted">{{ data.item.balance.logIndex }}</font>
                     <font size="-1" v-b-popover.hover.ds500="'txHash'" class="text-muted">{{ data.item.balance.txHash.substring(0, 8) + '...' + data.item.balance.txHash.slice(-6) }}</font>
                   </template>
                   <template #cell(owner)="data">
@@ -222,10 +238,18 @@
                       <font size="-1" class="text-muted">{{ parseInt(data.index) + ((settings.erc20.allowancesTable.currentPage - 1) * settings.erc20.allowancesTable.pageSize) + 1 }}</font>
                   </template>
                   <template #cell(latestUpdate)="data">
-                    <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.tokens.txHash + '#eventlog#' + data.item.tokens.logIndex" variant="link" v-b-popover.hover.ds500="'blockNumber:txIndex.logIndex'" target="_blank">
-                      {{ data.item.tokens.blockNumber + ':' + data.item.tokens.txIndex + '.' + data.item.tokens.logIndex }}
-                    </b-link>
-                    <font size="-1" v-b-popover.hover.ds500="'txHash'" class="text-muted">{{ data.item.tokens.txHash.substring(0, 8) + '...' + data.item.tokens.txHash.slice(-6) }}</font>
+                    <font size="-1">
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.tokens.txHash + '#eventlog#' + data.item.tokens.logIndex" variant="link" v-b-popover.hover.ds500="(timestamps[chainId] && timestamps[chainId][data.item.tokens.blockNumber]) ? 'Timestamp' : 'blockNumber:txIndex.logIndex'" target="_blank">
+                        <span v-if="timestamps[chainId] && timestamps[chainId][data.item.tokens.blockNumber]">
+                          {{ formatTimestamp(timestamps[chainId][data.item.tokens.blockNumber]) }}
+                        </span>
+                        <span v-else>
+                          {{ data.item.tokens.blockNumber + ':' + data.item.tokens.txIndex }}
+                        </span>
+                      </b-link>
+                      <font size="-1" v-b-popover.hover.ds500="'logIndex'" class="text-muted">{{ data.item.tokens.logIndex }}</font>
+                      <font size="-1" v-b-popover.hover.ds500="'txHash'" class="text-muted">{{ data.item.tokens.txHash.substring(0, 8) + '...' + data.item.tokens.txHash.slice(-6) }}</font>
+                    </font>
                   </template>
                   <template #cell(owner)="data">
                     <b-link size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc20.contract + '?a=' + data.item.owner" variant="link" v-b-popover.hover.ds500="data.item.owner" target="_blank">
@@ -620,11 +644,11 @@
           ],
           erc20EventsFields: [
             { key: 'number', label: '#', sortable: false, thStyle: 'width: 5%;', tdClass: 'text-truncate' },
-            { key: 'when', label: 'When', sortable: false, thStyle: 'width: 25%;', thClass: 'text-left', tdClass: 'text-left' },
+            { key: 'when', label: 'When', sortable: false, thStyle: 'width: 30%;', thClass: 'text-left', tdClass: 'text-left' },
             { key: 'name', label: 'Name', sortable: false, thStyle: 'width: 10%;', tdClass: 'text-truncate' },
             { key: 'fromOwner', label: 'From / Owner', sortable: false, thStyle: 'width: 15%;', tdClass: 'text-truncate' },
             { key: 'toSpender', label: 'To / Spender', sortable: false, thStyle: 'width: 15%;', tdClass: 'text-truncate' },
-            { key: 'tokens', label: 'Tokens', sortable: false, thStyle: 'width: 30%;', thClass: 'text-right', tdClass: 'text-right' },
+            { key: 'tokens', label: 'Tokens', sortable: false, thStyle: 'width: 25%;', thClass: 'text-right', tdClass: 'text-right' },
           ],
           erc20BalancesFields: [
             { key: 'number', label: '#', sortable: false, thStyle: 'width: 5%;', tdClass: 'text-truncate' },
@@ -1010,11 +1034,14 @@
             console.log(moment().format("HH:mm:ss") + " retrieveERC20Timestamps BEGIN - events: " + JSON.stringify(events, null, 2));
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const contract = new ethers.Contract(this.settings.erc20.contract, ERC20ABI, provider);
+            if (!(this.chainId in this.timestamps)) {
+              Vue.set(this.timestamps, this.chainId, {});
+            }
             for (const event of events) {
-              if (!(event.blockNumber in this.timestamps)) {
+              if (!(event.blockNumber in this.timestamps[this.chainId])) {
                 try {
                   const block = await provider.getBlock(event.blockNumber);
-                  Vue.set(this.timestamps, event.blockNumber, parseInt(block.timestamp));
+                  Vue.set(this.timestamps[this.chainId], event.blockNumber, parseInt(block.timestamp));
                 } catch (e) {
                   console.log(moment().format("HH:mm:ss") + " retrieveERC20Timestamps ERROR: " + e.message);
                 }
@@ -1202,7 +1229,6 @@
           }
           if ('getStartedWithDevelopingInEthereumTimestamps' in localStorage) {
             this.timestamps = JSON.parse(localStorage.getStartedWithDevelopingInEthereumTimestamps);
-            console.log(moment().format("HH:mm:ss") + " mounted timestamps: " + JSON.stringify(this.timestamps));
           }
           if ('getStartedWithDevelopingInEthereumSettings' in localStorage) {
             const tempSettings = JSON.parse(localStorage.getStartedWithDevelopingInEthereumSettings);
