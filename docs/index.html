@@ -86,50 +86,68 @@
               </b-form-group>
 
               <b-form-group label="events:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
-                <font size="-2">
-                  <b-table small fixed striped sticky-header="200px" :fields="erc20EventsFields" :items="erc20.events" show-empty empty-html="Click [Retrieve] above" head-variant="light">
-                    <template #cell(number)="data">
-                        {{ parseInt(data.index) + 1 }}
-                    </template>
-                    <template #cell(when)="data">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.txHash + '#eventlog#' + data.item.logIndex" variant="link" v-b-popover.hover.ds500="'blockNumber:txIndex.logIndex:txHash'" target="_blank">
-                        {{ data.item.blockNumber + ':' + data.item.txIndex + '.' + data.item.logIndex + ':' + data.item.txHash.substring(0, 8) + '...' + data.item.txHash.slice(-6) }}
+                <div class="d-flex flex-wrap m-0 p-0">
+                  <div class="mt-0 pr-1" style="width: 10.0rem;">
+                    <b-form-input type="text" size="sm" v-model.trim="settings.erc20.eventsTable.filter" @change="saveSettings" debounce="600" placeholder="🔍 address regex"></b-form-input>
+                  </div>
+                  <div class="mt-0 flex-grow-1">
+                  </div>
+                  <div class="mt-0 pl-1">
+                    <b-form-select size="sm" v-model="settings.erc20.eventsTable.sortOption" @change="saveSettings" :options="eventsSortOptions" v-b-popover.hover.bottom="'Yeah. Sort'"></b-form-select>
+                  </div>
+                  <div class="mt-0 pl-1">
+                    <font size="-2" v-b-popover.hover.bottom="'# filtered / total events'">{{ formatNumber(filteredEvents.length) + '/' + formatNumber(erc20.events.length) }}</font>
+                  </div>
+                  <div class="mt-0 pl-1">
+                    <b-pagination size="sm" v-model="settings.erc20.eventsTable.currentPage" @input="saveSettings" :total-rows="filteredEvents.length" :per-page="settings.erc20.eventsTable.pageSize" style="height: 0;"></b-pagination>
+                  </div>
+                  <div class="mt-0 pl-1">
+                    <b-form-select size="sm" v-model="settings.erc20.eventsTable.pageSize" @change="saveSettings();" :options="pageSizes" v-b-popover.hover.bottom="'Yeah. Page size'"></b-form-select>
+                  </div>
+                </div>
+                <b-table small fixed striped :fields="erc20EventsFields" :items="pagedFilteredEvents" show-empty empty-html="Click [Retrieve] above" head-variant="light" class="mt-1">
+                  <template #cell(number)="data">
+                      <font size="-1" class="text-muted">{{ parseInt(data.index) + ((settings.erc20.eventsTable.currentPage - 1) * settings.erc20.eventsTable.pageSize) + 1 }}</font>
+                  </template>
+                  <template #cell(when)="data">
+                    <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.txHash + '#eventlog#' + data.item.logIndex" variant="link" v-b-popover.hover.ds500="'blockNumber:txIndex.logIndex'" target="_blank">
+                      {{ data.item.blockNumber + ':' + data.item.txIndex + '.' + data.item.logIndex }}
+                    </b-link>
+                    <font size="-1" v-b-popover.hover.ds500="'txHash'" class="text-muted">{{ data.item.txHash.substring(0, 8) + '...' + data.item.txHash.slice(-6) }}</font>
+                  </template>
+                  <template #cell(info)="data">
+                    <div v-if="data.item.name == 'Transfer'">
+                      <font size="-1" class="text-muted">from:</font>
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.from" variant="link" v-b-popover.hover.ds500="data.item.from" target="_blank">
+                        {{ data.item.from.substring(0, 6) + '...' + data.item.from.slice(-4) }}
                       </b-link>
-                    </template>
-                    <template #cell(info)="data">
-                      <div v-if="data.item.name == 'Transfer'">
-                        from:
-                        <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.from" variant="link" v-b-popover.hover.ds500="data.item.from" target="_blank">
-                          {{ data.item.from.substring(0, 6) + '...' + data.item.from.slice(-4) }}
-                        </b-link>
-                        to:
-                        <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.to" variant="link" v-b-popover.hover.ds500="data.item.to" target="_blank">
-                          {{ data.item.to.substring(0, 6) + '...' + data.item.to.slice(-4) }}
-                        </b-link>
-                        tokens:
-                        {{ formatDecimals(data.item.tokens, data.item.decimals) }}
-                        <span class="text-muted">
-                          {{ formatNumber(data.item.tokens) }}
-                        </span>
-                      </div>
-                      <div v-else-if="data.item.name == 'Approval'">
-                        owner:
-                        <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.owner" variant="link" v-b-popover.hover.ds500="data.item.owner" target="_blank">
-                          {{ data.item.owner.substring(0, 6) + '...' + data.item.owner.slice(-4) }}
-                        </b-link>
-                        spender:
-                        <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.spender" variant="link" v-b-popover.hover.ds500="data.item.spender" target="_blank">
-                          {{ data.item.spender.substring(0, 6) + '...' + data.item.spender.slice(-4) }}
-                        </b-link>
-                        tokens:
-                        {{ formatDecimals(data.item.tokens, data.item.decimals) }}
-                        <span class="text-muted">
-                          {{ formatNumber(data.item.tokens) }}
-                        </span>
-                      </div>
-                    </template>
-                  </b-table>
-                </font>
+                      <font size="-1" class="text-muted">to:</font>
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.to" variant="link" v-b-popover.hover.ds500="data.item.to" target="_blank">
+                        {{ data.item.to.substring(0, 6) + '...' + data.item.to.slice(-4) }}
+                      </b-link>
+                      <font size="-1" class="text-muted">tokens:</font>
+                      {{ formatDecimals(data.item.tokens, data.item.decimals) }}
+                      <font size="-1" class="text-muted">
+                        {{ formatNumber(data.item.tokens) }}
+                      </font>
+                    </div>
+                    <div v-else-if="data.item.name == 'Approval'">
+                      <font size="-1" class="text-muted">owner:</font>
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.owner" variant="link" v-b-popover.hover.ds500="data.item.owner" target="_blank">
+                        {{ data.item.owner.substring(0, 6) + '...' + data.item.owner.slice(-4) }}
+                      </b-link>
+                      <font size="-1" class="text-muted">spender:</font>
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.spender" variant="link" v-b-popover.hover.ds500="data.item.spender" target="_blank">
+                        {{ data.item.spender.substring(0, 6) + '...' + data.item.spender.slice(-4) }}
+                      </b-link>
+                      <font size="-1" class="text-muted">tokens:</font>
+                      {{ formatDecimals(data.item.tokens, data.item.decimals) }}
+                      <font size="-1" class="text-muted">
+                        {{ formatNumber(data.item.tokens) }}
+                      </font>
+                    </div>
+                  </template>
+                </b-table>
               </b-form-group>
 
               <b-form-group label="balances:" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
@@ -470,6 +488,12 @@
             tabIndex: 0,
             erc20: {
               contract: null,
+              eventsTable: {
+                filter: null,
+                currentPage: 1,
+                pageSize: 10,
+                sortOption: 'txorderdsc',
+              },
               balanceOf: {
                 owner: null,
               },
@@ -497,7 +521,7 @@
             erc1155: {
               contract: null,
             },
-            version: 5,
+            version: 6,
           },
           erc20: {
             symbol: null,
@@ -523,10 +547,25 @@
               result: null,
             },
           },
+          eventsSortOptions: [
+            { value: 'txorderasc', text: '▲ TxOrder' },
+            { value: 'txorderdsc', text: '▼ TxOrder' },
+          ],
+          pageSizes: [
+            { value: 5, text: '5' },
+            { value: 10, text: '10' },
+            { value: 25, text: '25' },
+            { value: 50, text: '50' },
+            { value: 100, text: '100' },
+            { value: 500, text: '500' },
+            { value: 1000, text: '1k' },
+            { value: 2500, text: '2.5k' },
+            { value: 10000, text: '10k' },
+          ],
           erc20EventsFields: [
             { key: 'number', label: '#', sortable: false, thStyle: 'width: 5%;', tdClass: 'text-truncate' },
-            { key: 'when', label: 'When', sortable: false, thStyle: 'width: 20%;', thClass: 'text-left', tdClass: 'text-left' },
-            { key: 'name', label: 'Name', sortable: false, thStyle: 'width: 15%;', tdClass: 'text-truncate' },
+            { key: 'when', label: 'When', sortable: false, thStyle: 'width: 25%;', thClass: 'text-left', tdClass: 'text-left' },
+            { key: 'name', label: 'Name', sortable: false, thStyle: 'width: 10%;', tdClass: 'text-truncate' },
             { key: 'info', label: 'Info', sortable: false, thStyle: 'width: 60%;', tdClass: 'text-truncate' },
           ],
           erc20BalancesFields: [
@@ -546,6 +585,57 @@
 
         // --- COMPUTED ---
         computed: {
+          filteredEvents() {
+            console.log(moment().format("HH:mm:ss") + " pagedFilteredEvents");
+            const results = [];
+            let regex = null;
+            if (this.settings.erc20.eventsTable.filter != null && this.settings.erc20.eventsTable.filter > 0) {
+              try {
+                regex = new RegExp(this.settings.erc20.eventsTable.filter, 'i');
+              } catch (e) {
+                console.log(moment().format("HH:mm:ss") + " pagedFilteredEvents - regex error: " + e.message);
+                regex = new RegExp(/thequickbrowndogjumpsoverthelazyfox/, 'i');
+              }
+            }
+            for (const event of this.erc20.events) {
+              let include = true;
+              if (regex) {
+                if (event.name == "Transfer") {
+                  if (!(regex.test(event.from) || regex.test(event.to))) {
+                    include = false;
+                  }
+                } else if (event.name == "Approval") {
+                  if (!(regex.test(event.owner) || regex.test(event.spender))) {
+                    include = false;
+                  }
+                }
+              }
+              if (include) {
+                results.push(event);
+              }
+            }
+            if (this.settings.erc20.eventsTable.sortOption == "txorderasc") {
+              results.sort((a, b) => {
+                if (a.blockNumber == b.blockNumber) {
+                  return a.logIndex - b.logIndex;
+                } else {
+                  return a.blockNumber - b.blockNumber;
+                }
+              });
+            } else if (this.settings.erc20.eventsTable.sortOption == "txorderdsc") {
+              results.sort((a, b) => {
+                if (a.blockNumber == b.blockNumber) {
+                  return b.logIndex - a.logIndex;
+                } else {
+                  return b.blockNumber - a.blockNumber;
+                }
+              });
+            }
+            return results;
+          },
+          pagedFilteredEvents() {
+            return this.filteredEvents.slice((this.settings.erc20.eventsTable.currentPage - 1) * this.settings.erc20.eventsTable.pageSize, this.settings.erc20.eventsTable.currentPage * this.settings.erc20.eventsTable.pageSize);
+          },
         },
 
         // --- METHODS ---
@@ -858,10 +948,10 @@
             return e.toFixed(precision);
           },
           formatNumber(e) {
-            return e ? e.toString().replace(/(?<!(\.\d*|^.{0}))(?=(\d{3})+(?!\d))/g, ',') : null;
+            return e != null ? e.toString().replace(/(?<!(\.\d*|^.{0}))(?=(\d{3})+(?!\d))/g, ',') : null;
           },
           formatDecimals(e, decimals = 18) {
-            return e ? ethers.utils.formatUnits(e, decimals).replace(/(?<!(\.\d*|^.{0}))(?=(\d{3})+(?!\d))/g, ',') : null;
+            return e != null ? ethers.utils.formatUnits(e, decimals).replace(/(?<!(\.\d*|^.{0}))(?=(\d{3})+(?!\d))/g, ',') : null;
           },
           formatTimestamp(ts) {
             if (ts != null) {
