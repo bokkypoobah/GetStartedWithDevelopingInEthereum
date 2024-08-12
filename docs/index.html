@@ -300,7 +300,7 @@
                     <b-input-group size="sm" class="w-50">
                       <b-form-input type="text" size="sm" id="erc20-approve-spender" v-model="settings.erc20.approve.spender" @change="saveSettings"></b-form-input>
                       <b-input-group-append>
-                        <b-button size="sm" :href="'https://sepolia.etherscan.io/address/' + settings.erc20.approve.spender" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                        <b-button size="sm" :disabled="!validAddress(settings.erc20.approve.spender)" :href="'https://sepolia.etherscan.io/address/' + settings.erc20.approve.spender" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
@@ -308,7 +308,7 @@
                     <b-form-input type="text" size="sm" id="erc20-approve-tokens" v-model="settings.erc20.approve.tokens" @change="saveSettings" class="w-25"></b-form-input>
                   </b-form-group>
                   <b-form-group label="" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
-                    <b-button size="sm" @click="approveERC20" variant="warning">Approve</b-button>
+                    <b-button size="sm" :disabled="!validAddress(settings.erc20.contract) || !validAddress(settings.erc20.approve.spender)" @click="approveERC20" variant="warning">Approve</b-button>
                   </b-form-group>
                   <b-form-group label="txHash:" label-for="erc20-approve-txhash" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
                     <b-input-group size="sm" class="w-75">
@@ -338,7 +338,7 @@
                     <b-input-group size="sm" class="w-50">
                       <b-form-input type="text" size="sm" id="erc20-transferfrom-from" v-model="settings.erc20.transferFrom.from" @change="saveSettings"></b-form-input>
                       <b-input-group-append>
-                        <b-button size="sm" :href="'https://sepolia.etherscan.io/address/' + settings.erc20.transferFrom.from" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                        <b-button size="sm" :disabled="!validAddress(settings.erc20.transferFrom.from)" :href="'https://sepolia.etherscan.io/address/' + settings.erc20.transferFrom.from" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
@@ -346,7 +346,7 @@
                     <b-input-group size="sm" class="w-50">
                       <b-form-input type="text" size="sm" id="erc20-transferfrom-to" v-model="settings.erc20.transferFrom.to" @change="saveSettings"></b-form-input>
                       <b-input-group-append>
-                        <b-button size="sm" :href="'https://sepolia.etherscan.io/address/' + settings.erc20.transferFrom.to" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                        <b-button size="sm" :disabled="!validAddress(settings.erc20.transferFrom.to)" :href="'https://sepolia.etherscan.io/address/' + settings.erc20.transferFrom.to" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
@@ -354,7 +354,7 @@
                     <b-form-input type="text" size="sm" id="erc20-transferfrom-tokens" v-model="settings.erc20.transferFrom.tokens" @change="saveSettings" class="w-25"></b-form-input>
                   </b-form-group>
                   <b-form-group label="" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
-                    <b-button size="sm" @click="transferFromERC20" variant="warning">Transfer From</b-button>
+                    <b-button size="sm" :disabled="!validAddress(settings.erc20.contract) || !validAddress(settings.erc20.transferFrom.from) || !validAddress(settings.erc20.transferFrom.to)" @click="transferFromERC20" variant="warning">Transfer From</b-button>
                   </b-form-group>
                   <b-form-group label="txHash:" label-for="erc20-transferfrom-txhash" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
                     <b-input-group size="sm" class="w-75">
