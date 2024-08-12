@@ -61,7 +61,7 @@
 
           <b-card class="m-0 p-0 border-0" body-class="m-1 p-0">
             <b-card v-if="settings.tabIndex == 0" header="ERC-20" class="m-0 p-0">
-              <b-form-group label="contract:" label-for="erc20-contract" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" description="e.g., '0xc21d97673B9E0B3AA53a06439F71fDc1facE393B' for XEENUS and '0x7439E9Bb6D8a84dd3A23fe621A30F95403F87fB9' for WEENUS on Sepolia" :state="!settings.erc20.contract || validAddress(settings.erc20.contract)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
+              <b-form-group label="contract:" label-for="erc20-contract" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" description="e.g., '0xc21d97673B9E0B3AA53a06439F71fDc1facE393B' for XEENUS and '0x1e5df6db242d07cc40a37b634022c02f73a74d59' for MYERC20TOKEN on Sepolia" :state="!settings.erc20.contract || validAddress(settings.erc20.contract)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
                 <b-input-group size="sm" class="w-50">
                   <b-form-input type="text" size="sm" id="erc20-contract" v-model="settings.erc20.contract" @change="saveSettings"></b-form-input>
                   <b-input-group-append>
