@@ -10,7 +10,7 @@ If you like this, please share it.
 You can do this on Ethereum mainnet for the cost of ~600k gas or ~USD 3, at time of writing. As well as most "EVM" (Ethereum Virtual Machine) [compatible chains](https://l2beat.com/scaling/summary) like Arbitrum, Base or Optimism.
 
 ##### Steps
-* Deploy your own ERC-20 token contract - [contracts/ERC20Token.sol](contracts/ERC20Token.sol) or [contracts/FixedSupplyToken.sol](contracts/FixedSupplyToken.sol).
+* Deploy your own ERC-20 token contract - [contracts/ERC20Token.sol](contracts/ERC20Token.sol) (Sepolia [0x1e5D...4D59](https://sepolia.etherscan.io/address/0x1e5Df6dB242d07cc40a37b634022c02F73A74D59#code)) or [contracts/FixedSupplyToken.sol](contracts/FixedSupplyToken.sol) (Sepolia [0x8fAF...d093](https://sepolia.etherscan.io/address/0x8fAF86fa6B137B316D699e23Ae1DcA3C12e7d093#code)).
 * Interact with your own ERC-20 token contract
 * Deploy a simple vault that operates with your ERC-20 token contract - [contracts/SimpleVault.sol](contracts/SimpleVault.sol)
 * Interact with your simple vault
