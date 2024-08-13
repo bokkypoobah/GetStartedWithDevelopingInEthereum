@@ -16,7 +16,8 @@ If you like this, please share this link.
 
 ##### ERC-20 Token Browser
 * https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/
-* Source code in [docs/](docs/).
+* Main source file in [docs/index.html](docs/index.html)
+* Can be installed locally by running e.g. [anywhere](https://www.npmjs.com/package/anywhere?activeTab=readme) in the [docs/](docs/) folder on your local machine
 
 ##### Requirements
 * Web browser, with the MetaMask https://metamask.io/, or Rabby https://rabby.io/ browser plug-in
@@ -24,7 +25,7 @@ If you like this, please share this link.
 * For developing and testing on your local computer, familiarity with the Linux, MacOS or Windows command line. And [npx](https://docs.npmjs.com/cli/v10/commands/npx) to run commands from Node packages.
 
 ##### TODO
-* ERC-721 and ERC-1155
+* Contents and UI for ERC-721 and ERC-1155
 
 <br />
 
