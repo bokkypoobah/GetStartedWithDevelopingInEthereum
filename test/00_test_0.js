@@ -5,211 +5,154 @@ const {
 const { anyValue } = require("@nomicfoundation/hardhat-chai-matchers/withArgs");
 const { expect } = require("chai");
 
+describe("00_test_0", function () {
+  // We define a fixture to reuse the same setup in every test.
+  // We use loadFixture to run this setup once, snapshot that state,
+  // and reset Hardhat Network to that snapshot in every test.
+  async function deployOneYearLockFixture() {
+    // const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
+    // const ONE_GWEI = 1_000_000_000;
+    //
+    // const lockedAmount = ONE_GWEI;
+    // const unlockTime = (await time.latest()) + ONE_YEAR_IN_SECS;
 
-// const { ZERO_ADDRESS, PAIRKEY_NULL, ORDERKEY_SENTINEL, BUYORSELL, ANYORALL, BUYORSELLSTRING, ANYORALLSTRING, Data, generateRange } = require('./helpers/common');
-// const { singletons, expectRevert } = require("@openzeppelin/test-helpers");
-// const { expect, assert } = require("chai");
-// const { BigNumber } = require("ethers");
-// const util = require('util');
+    // Contracts are deployed using the first signer/account by default
+    const [owner, otherAccount] = await ethers.getSigners();
 
-// const BuySell = {
-//   Buy: 0,
-//   Sell: 1,
-// };
+    // const Lock = await ethers.getContractFactory("Lock");
+    // const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
 
-// const Action = {
-//   FillAny: 0,
-//   FillAllOrNothing: 1,
-//   FillAnyAndAddOrder: 2,
-//   RemoveOrder: 3,
-//   UpdateExpiryAndTokens: 4,
-// }
+    const ERC20Token = await ethers.getContractFactory("ERC20");
+    const erc20Token = await ERC20Token.deploy("MYSYMBOL", "My Name", 18, "1000000000000000000000000");
 
-let data;
+    const symbol = await erc20Token.symbol()
+    const name = await erc20Token.name()
+    const decimals = await erc20Token.decimals()
+    const totalSupply = await erc20Token.totalSupply()
+    console.log("        Deploying ERC20");
+    console.log("        * symbol: " + symbol);
+    console.log("        * name: " + name);
+    console.log("        * decimals: " + decimals);
+    console.log("        * totalSupply: " + totalSupply);
 
-describe("Chadex", function () {
-  const DETAILS = 1;
+    return { /*lock, unlockTime, lockedAmount,*/ owner, otherAccount, erc20Token };
+  }
 
-  beforeEach(async function () {
-    console.log();
-    console.log("      beforeEach");
-    const Token  = await ethers.getContractFactory("ERC20");
-    // const Weth  = await ethers.getContractFactory("WETH9");
-    // const Chadex  = await ethers.getContractFactory("Chadex");
-    // data = new Data();
-    // await data.init();
-    //
-    // console.log("        --- Setup Tokens and Chadex Contracts. Assuming gasPrice: " + ethers.utils.formatUnits(data.gasPrice, "gwei") + " gwei, ethUsd: " + ethers.utils.formatUnits(data.ethUsd, 18) + " ---");
-    //
-    // const token0 = await Token.deploy("TOK0", "Token0", 18, ethers.utils.parseUnits("400", 18));
-    // const token0 = await Token.deploy("TOK0", "Token0", 18, "400_000_000_000_000_000_000");
-    // await token0.deployed();
-    // await data.setToken0(token0);
-    // const token0Receipt = await data.token0.deployTransaction.wait();
-    // if (DETAILS > 0) {
-    //   await data.printEvents("Deployed Token0", token0Receipt);
-    // }
-    // console.log("        Token0 deployed");
-    //
-    // const token1 = await Token.deploy("TOK1", "Token1", 18, ethers.utils.parseUnits("400", 18));
-    // await token1.deployed();
-    // await data.setToken1(token1);
-    // const token1Receipt = await data.token1.deployTransaction.wait();
-    // if (DETAILS > 0) {
-    //   await data.printEvents("Deployed Token1", token1Receipt);
-    // }
-    // console.log("        Token1 deployed");
-    //
-    // const weth = await Weth.deploy();
-    // await weth.deployed();
-    // await data.setWeth(weth);
-    // const wethReceipt = await data.weth.deployTransaction.wait();
-    // if (DETAILS > 0) {
-    //   await data.printEvents("Deployed WETH", wethReceipt);
-    // }
-    // console.log("        WETH deployed");
-    //
-    // const chadex = await Chadex.deploy();
-    // await chadex.deployed();
-    // await data.setChadex(chadex);
-    // const chadexReceipt = await data.chadex.deployTransaction.wait();
-    // if (DETAILS > 0) {
-    //   await data.printEvents("Deployed Chadex", chadexReceipt);
-    // }
-    // console.log("        Chadex deployed");
-    //
-    // const setup1 = [];
-    // const amount0 = ethers.utils.parseUnits("100", data.decimals0);
-    // setup1.push(token0.transfer(data.user0, amount0));
-    // setup1.push(token0.transfer(data.user1, amount0));
-    // setup1.push(token0.transfer(data.user2, amount0));
-    // setup1.push(token0.transfer(data.user3, amount0));
-    // const [transferToken00Tx, transferToken01Tx, transferToken02Tx, transferToken03Tx] = await Promise.all(setup1);
-    // if (DETAILS > 0) {
-    //   [transferToken00Tx, transferToken01Tx, transferToken02Tx, transferToken03Tx].forEach( async function (a) {
-    //     await data.printEvents("Transfer Token0", await a.wait());
-    //   });
-    // }
-    // const setup2 = [];
-    // const amount1 = ethers.utils.parseUnits("100", data.decimals1);
-    // setup2.push(token1.transfer(data.user0, amount1));
-    // setup2.push(token1.transfer(data.user1, amount1));
-    // setup2.push(token1.transfer(data.user2, amount1));
-    // setup2.push(token1.transfer(data.user3, amount1));
-    // const [transferToken10Tx, transferToken11Tx, transferToken12Tx, transferToken13Tx] = await Promise.all(setup2);
-    // if (DETAILS > 0) {
-    //   [transferToken10Tx, transferToken11Tx, transferToken12Tx, transferToken13Tx].forEach( async function (a) {
-    //     await data.printEvents("Transfer Token1", await a.wait());
-    //   });
-    // }
-    // console.log("        Tokens transferred");
+  describe("Deployment", function () {
 
-    // const amountWeth = ethers.utils.parseUnits("100", data.decimalsWeth);
-    // const weth0Tx = await data.user0Signer.sendTransaction({ to: data.weth.address, value: amountWeth });
-    // const weth1Tx = await data.user1Signer.sendTransaction({ to: data.weth.address, value: amountWeth });
-    // const weth2Tx = await data.user2Signer.sendTransaction({ to: data.weth.address, value: amountWeth });
-    // const weth3Tx = await data.user3Signer.sendTransaction({ to: data.weth.address, value: amountWeth });
-    // await data.printEvents("Send weth" , await weth0Tx.wait());
-    // await data.printEvents("Send weth" , await weth1Tx.wait());
-    // await data.printEvents("Send weth" , await weth2Tx.wait());
-    // await data.printEvents("Send weth" , await weth3Tx.wait());
+    it("Should have the correct symbol, name, decimals and totalSupply", async function () {
+      const { erc20Token, owner } = await loadFixture(deployOneYearLockFixture);
+      expect(await erc20Token.symbol()).to.equal("MYSYMBOL");
+      expect(await erc20Token.name()).to.equal("My Name");
+      expect(await erc20Token.decimals()).to.equal(18);
+      expect(await erc20Token.totalSupply()).to.equal("1000000000000000000000000");
+    });
+
+    it("Should emit an event on transfers", async function () {
+      const { erc20Token, owner, otherAccount } = await loadFixture(deployOneYearLockFixture);
+      await expect(erc20Token.transfer(otherAccount, "1"))
+        .to.emit(erc20Token, "Transfer")
+        .withArgs(owner, otherAccount, anyValue);
+      await expect(erc20Token.transfer(otherAccount, "2"))
+        .to.emit(erc20Token, "Transfer")
+        .withArgs(owner, otherAccount, "2");
+    });
+
+    // it("Should set the right unlockTime", async function () {
+    //   const { lock, unlockTime } = await loadFixture(deployOneYearLockFixture);
     //
-    // const approveAmount0 = ethers.utils.parseUnits("10", data.decimals0);
-    // const approveAmount1 = ethers.utils.parseUnits("10", data.decimals1);
-    // const approveAmountWeth = ethers.utils.parseUnits("2.69", data.decimalsWeth);
+    //   expect(await lock.unlockTime()).to.equal(unlockTime);
+    // });
     //
-    // const approve00Tx = await data.token0.connect(data.user0Signer).approve(data.chadex.address, approveAmount0);
-    // const approve10Tx = await data.token1.connect(data.user0Signer).approve(data.chadex.address, approveAmount1);
-    // const approve20Tx = await data.weth.connect(data.user0Signer).approve(data.chadex.address, approveAmountWeth);
+    // it("Should set the right owner", async function () {
+    //   const { lock, owner } = await loadFixture(deployOneYearLockFixture);
     //
-    // const approve01Tx = await data.token0.connect(data.user1Signer).approve(data.chadex.address, approveAmount0);
-    // const approve11Tx = await data.token1.connect(data.user1Signer).approve(data.chadex.address, approveAmount1);
-    // const approve21Tx = await data.weth.connect(data.user1Signer).approve(data.chadex.address, approveAmountWeth);
+    //   expect(await lock.owner()).to.equal(owner.address);
+    // });
     //
-    // const approve02Tx = await data.token0.connect(data.user2Signer).approve(data.chadex.address, approveAmount0);
-    // const approve12Tx = await data.token1.connect(data.user2Signer).approve(data.chadex.address, approveAmount1);
-    // const approve22Tx = await data.weth.connect(data.user2Signer).approve(data.chadex.address, approveAmountWeth);
+    // it("Should receive and store the funds to lock", async function () {
+    //   const { lock, lockedAmount } = await loadFixture(
+    //     deployOneYearLockFixture
+    //   );
     //
-    // const approve03Tx = await data.token0.connect(data.user3Signer).approve(data.chadex.address, approveAmount0);
-    // const approve13Tx = await data.token1.connect(data.user3Signer).approve(data.chadex.address, approveAmount1);
-    // const approve23Tx = await data.weth.connect(data.user3Signer).approve(data.chadex.address, approveAmountWeth);
+    //   expect(await ethers.provider.getBalance(lock.target)).to.equal(
+    //     lockedAmount
+    //   );
+    // });
     //
-    // await data.printEvents("user0->token0.approve(chadex, " + ethers.utils.formatUnits(approveAmount0, data.decimals0) + ")", await approve00Tx.wait());
-    // await data.printEvents("user0->token1.approve(chadex, " + ethers.utils.formatUnits(approveAmount1, data.decimals1) + ")", await approve10Tx.wait());
-    // await data.printEvents("user0->weth.approve(chadex, " + ethers.utils.formatUnits(approveAmountWeth, data.decimalsWeth) + ")", await approve20Tx.wait());
-    // await data.printEvents("user1->token0.approve(chadex, " + ethers.utils.formatUnits(approveAmount0, data.decimals0) + ")", await approve01Tx.wait());
-    // await data.printEvents("user1->token1.approve(chadex, " + ethers.utils.formatUnits(approveAmount1, data.decimals1) + ")", await approve11Tx.wait());
-    // await data.printEvents("user1->weth.approve(chadex, " + ethers.utils.formatUnits(approveAmountWeth, data.decimalsWeth) + ")", await approve21Tx.wait());
-    //
-    // await data.printEvents("user2->token0.approve(chadex, " + ethers.utils.formatUnits(approveAmount0, data.decimals0) + ")", await approve02Tx.wait());
-    // await data.printEvents("user2->token1.approve(chadex, " + ethers.utils.formatUnits(approveAmount1, data.decimals1) + ")", await approve12Tx.wait());
-    // await data.printEvents("user2->weth.approve(chadex, " + ethers.utils.formatUnits(approveAmountWeth, data.decimalsWeth) + ")", await approve22Tx.wait());
-    //
-    // await data.printEvents("user3->token0.approve(chadex, " + ethers.utils.formatUnits(approveAmount0, data.decimals0) + ")", await approve03Tx.wait());
-    // await data.printEvents("user3->token1.approve(chadex, " + ethers.utils.formatUnits(approveAmount1, data.decimals1) + ")", await approve13Tx.wait());
-    // await data.printEvents("user3->weth.approve(chadex, " + ethers.utils.formatUnits(approveAmountWeth, data.decimalsWeth) + ")", await approve23Tx.wait());
-    //
-    // //   await data.printState("user0 approved user1 to transfer " + approveAmount + " umswaps");
-    //
-    // await data.printState("Setup Completed. Chadex bytecode ~" + JSON.stringify(data.chadex.deployTransaction.data.length/2, null, 2));
+    // it("Should fail if the unlockTime is not in the future", async function () {
+    //   // We don't use the fixture here because we want a different deployment
+    //   const latestTime = await time.latest();
+    //   const Lock = await ethers.getContractFactory("Lock");
+    //   await expect(Lock.deploy(latestTime, { value: 1 })).to.be.revertedWith(
+    //     "Unlock time should be in the future"
+    //   );
+    // });
   });
 
-  it("00. Test 00", async function () {
-    console.log("      00. Test 00 - Happy Path - Specified Set");
-
-    // // Add Orders
-    // const price1 = "0.6901";
-    // const price2 = "0.6902";
-    // const price3 = "0.6903";
-    // const price5 = "0.6905";
-    // const price6 = "0.6906";
-    // const price7 = "0.6907";
-    // const expired = parseInt(new Date()/1000) - 60*60;
-    // const expiry = parseInt(new Date()/1000) + 60*60;
-    // const baseTokens1 = ethers.utils.parseUnits("1", data.decimals0);
-    // const baseTokens2 = ethers.utils.parseUnits("2", data.decimals0);
-    // const baseTokens3 = ethers.utils.parseUnits("3", data.decimals0);
-    // const baseTokens4 = ethers.utils.parseUnits("6.9", data.decimals0);
-    // const baseTokens5 = ethers.utils.parseUnits("69", data.decimals0);
-    //
-    // const actionsA = [
-    //   { action: Action.FillAnyAndAddOrder, buySell: BuySell.Buy, base: data.token0.address, quote: data.weth.address, price: ethers.utils.parseUnits(price1, 12).toString(), targetPrice: ethers.utils.parseUnits(price1, 12).toString(), expiry: expiry, tokens: baseTokens1.toString(), skipCheck: false },
-    //   // { action: Action.FillAnyAndAddOrder, buySell: BuySell.Buy, base: data.token0.address, quote: data.weth.address, price: ethers.utils.parseUnits(price2, 12).toString(), targetPrice: ethers.utils.parseUnits(price2, 12).toString(), expiry: expiry, tokens: baseTokens2.toString(), skipCheck: false },
-    //   // { action: Action.FillAnyAndAddOrder, buySell: BuySell.Buy, base: data.token0.address, quote: data.weth.address, price: ethers.utils.parseUnits(price3, 12).toString(), targetPrice: ethers.utils.parseUnits(price3, 12).toString(), expiry: expiry, tokens: baseTokens3.toString(), skipCheck: false },
-    // ];
-    // console.log("        Executing: " + JSON.stringify(actionsA, null, 2));
-    //
-    // const execute0aTx = await data.chadex.connect(data.user0Signer).execute(actionsA);
-    // await data.printEvents("user0->chadex.execute(actionsA)", await execute0aTx.wait());
-    //
-    // const execute1aTx = await data.chadex.connect(data.user1Signer).execute(actionsA);
-    // await data.printEvents("user1->chadex.execute(actionsA)", await execute1aTx.wait());
-    //
-    // const execute1bTx = await data.chadex.connect(data.user2Signer).execute(actionsA);
-    // await data.printEvents("user2->chadex.execute(actionsA)", await execute1bTx.wait());
-    //
-    // await data.printState("After Adding Orders");
-    //
-    // const targetPrice1 = "0.6901";
-    // const baseTokensB1 = ethers.utils.parseUnits("1", data.decimals0);
-    // const actionsB1 = [
-    //   { action: Action.FillAnyAndAddOrder, buySell: BuySell.Sell, base: data.token0.address, quote: data.weth.address, price: ethers.utils.parseUnits(price1, 12).toString(), targetPrice: ethers.utils.parseUnits(targetPrice1, 12).toString(), expiry: expiry, tokens: baseTokensB1.toString(), skipCheck: false },
-    //   // { action: Action.FillAnyAndAddOrder, buySell: BuySell.Sell, base: data.token0.address, quote: data.weth.address, price: ethers.utils.parseUnits(price3, 12).toString(), targetPrice: ethers.utils.parseUnits(targetPrice1, 12).toString(), expiry: expiry, tokens: baseTokensB1.toString() },
-    // ];
-    // console.log("        Executing: " + JSON.stringify(actionsB1, null, 2));
-    // const executeB1Tx = await data.chadex.connect(data.user3Signer).execute(actionsB1);
-    // await data.printEvents("user3->chadex.execute(actions)", await executeB1Tx.wait());
-
-
-    // await data.printState("After Executing Against Orders");
-
-    // const owners = [data.user0];
-    // const tokens = [data.token0.address];
-    // const tokenBalanceAndAllowance = await data.chadex.getTokenBalanceAndAllowance(owners, tokens);
-    // console.log("tokenBalanceAndAllowance: " + JSON.stringify(tokenBalanceAndAllowance, null, 2));
-
-    // // Delete orders
-    // const chadexData = await data.getChadexData();
-    // console.log();
-  });
+  // describe("Withdrawals", function () {
+  //   describe("Validations", function () {
+  //     it("Should revert with the right error if called too soon", async function () {
+  //       const { lock } = await loadFixture(deployOneYearLockFixture);
+  //
+  //       await expect(lock.withdraw()).to.be.revertedWith(
+  //         "You can't withdraw yet"
+  //       );
+  //     });
+  //
+  //     it("Should revert with the right error if called from another account", async function () {
+  //       const { lock, unlockTime, otherAccount } = await loadFixture(
+  //         deployOneYearLockFixture
+  //       );
+  //
+  //       // We can increase the time in Hardhat Network
+  //       await time.increaseTo(unlockTime);
+  //
+  //       // We use lock.connect() to send a transaction from another account
+  //       await expect(lock.connect(otherAccount).withdraw()).to.be.revertedWith(
+  //         "You aren't the owner"
+  //       );
+  //     });
+  //
+  //     it("Shouldn't fail if the unlockTime has arrived and the owner calls it", async function () {
+  //       const { lock, unlockTime } = await loadFixture(
+  //         deployOneYearLockFixture
+  //       );
+  //
+  //       // Transactions are sent using the first signer by default
+  //       await time.increaseTo(unlockTime);
+  //
+  //       await expect(lock.withdraw()).not.to.be.reverted;
+  //     });
+  //   });
+  //
+  //   describe("Events", function () {
+  //     it("Should emit an event on withdrawals", async function () {
+  //       const { lock, unlockTime, lockedAmount } = await loadFixture(
+  //         deployOneYearLockFixture
+  //       );
+  //
+  //       await time.increaseTo(unlockTime);
+  //
+  //       await expect(lock.withdraw())
+  //         .to.emit(lock, "Withdrawal")
+  //         .withArgs(lockedAmount, anyValue); // We accept any value as `when` arg
+  //     });
+  //   });
+  //
+  //   describe("Transfers", function () {
+  //     it("Should transfer the funds to the owner", async function () {
+  //       const { lock, unlockTime, lockedAmount, owner } = await loadFixture(
+  //         deployOneYearLockFixture
+  //       );
+  //
+  //       await time.increaseTo(unlockTime);
+  //
+  //       await expect(lock.withdraw()).to.changeEtherBalances(
+  //         [owner, lock],
+  //         [lockedAmount, -lockedAmount]
+  //       );
+  //     });
+  //   });
+  // });
 });

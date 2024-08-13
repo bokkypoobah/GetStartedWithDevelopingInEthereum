@@ -1,0 +1,15 @@
+
+
+  00_test_0
+    Deployment
+        Deploying ERC20
+        * symbol: MYSYMBOL
+        * name: My Name
+        * decimals: 18
+        * totalSupply: 1000000000000000000000000
+      ✔ Should have the correct symbol, name, decimals and totalSupply (536ms)
+      ✔ Should emit an event on transfers
+
+
+  2 passing (548ms)
+
