@@ -43,13 +43,20 @@ e.g., Game items
 
 ---
 
-## Exercises
+## Exercise 1 - ERC-20
 
-* Install MetaMask from [https://metamask.io/](https://metamask.io/).
-* Connect to Ethereum Sepolia Testnet
-* Get some Sepolia Testnet tokens into 2 accounts
+##### Aim
+* Familiarise yourself with ERC-20 tokens as a basic building block
 
-### Deploy ERC-20
+##### Steps
+1. If required, install MetaMask from [https://metamask.io/](https://metamask.io/) and create your first account
+2. Connect MetaMask to the Ethereum Sepolia testnet
+3. Obtain some Sepolia testnet ethers in your MetaMask accounts
+4. Set up a second MetaMask account and transfer some testnet ethers to your second account
+5. Use [https://remix.ethereum.org/](https://remix.ethereum.org/) to deploy your very own ERC-20 token to the Sepolia testnet. You can use [contracts/ERC20Token.sol](contracts/ERC20Token.sol) and customise with very own symbol and name
+6. Perform some transactions on your ERC-20 token
+
+#### Exercise 1 - Step 5 - Deploy ERC-20 Token Contract
 
 Use [https://remix.ethereum.org/](https://remix.ethereum.org/) to deploy your smart contract
 
@@ -57,17 +64,16 @@ Use [https://remix.ethereum.org/](https://remix.ethereum.org/) to deploy your sm
 
 Example [contracts/ERC20Token.sol](contracts/ERC20Token.sol) deployed to Sepolia at [https://sepolia.etherscan.io/address/0x1e5df6db242d07cc40a37b634022c02f73a74d59](https://sepolia.etherscan.io/address/0x1e5df6db242d07cc40a37b634022c02f73a74d59#code)
 
-### View And Interact With Your ERC-20 Contract
+#### Exercise 1 - Step 6 - View And Interact With Your ERC-20 Token Contract
 
-View and interact with your ERC-20 token contract on [https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/](https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/)
+View your ERC-20 token contract on [https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/](https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/)
 
-Events below show:
-* Initial mint of 1,000,000 tokens to account1
+Create transactions like below:
+* Initial mint of 1,000,000 tokens to account1, when your ERC-20 token contract is deployed
 * Transfer of 10 tokens from account1 to account2
 * Transfer of 1 token from account1 to account2
 * account1 approves for account2 to spend 100 tokens
 * account2 transfers from account1 0.12345 tokens
-
 
 <kbd><img src="images/Exercise-ERC-20-1.png" /></kbd>
 
@@ -81,22 +87,26 @@ Events below show:
 
 ---
 
-### Set up Hardhat Environment
+## Exercise 2 - SimpleVault Gadget for ERC-20s
+
+##### Aim
+* Deploy and interact with a simple gadget that uses the ERC-20 basic building block
+
+##### Steps
+1. Set up the Hardhat testing environment - [https://hardhat.org/docs](https://hardhat.org/docs)
+2. Modify [contracts/SimpleVault.sol](contracts/SimpleVault.sol) to break the functionality and confirm with the tests
+3. Deploy your own SimpleVault to the Sepolia testnet
+4. Send and withdraw some of your very own ERC-20 tokens created in Exercise 1
+
+#### Exercise 1 - Step 1 - Hardhat Testing Environment
 
 ```bash
 npm install --save-dev hardhat
 
-# Project in GitHub created using the following:
-# npx hardhat init
-# Create a JavaScript project
-# Hardhat project root: {current directory}
-# Add .gitignore? (Y/n) · y
-# Do you want to install this sample project's dependencies with npm (hardhat @nomicfoundation/hardhat-toolbox)? (Y/n) · y
-
 # Run test
 npx hardhat test
 
-# Run test and save output in ./testIt.out
+# Or run test and save output in ./testIt.out
 ./10_testIt.sh
 #  00_test_0
 #    Deployment
@@ -117,7 +127,6 @@ npx hardhat test
 #
 #  3 passing (581ms)
 ```
-
 
 <br />
 
