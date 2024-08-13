@@ -2,6 +2,8 @@
 
 Materials prepared for [ETHSydney August - Get started with developing in Ethereum](https://lu.ma/42iq2h0p), Tuesday Aug 13 2024.
 
+If you like this, please share this link.
+
 ##### Aim
 * Deploy your own ERC-20 token contract - [contracts/ERC20Token.sol](contracts/ERC20Token.sol)
 * Interact with your own ERC-20 token contract
@@ -116,7 +118,7 @@ Click on the [Holders] tab to view the account holdings.
 
 View your ERC-20 token contract on https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/.
 
-Use my newly deployed ERC-20 token contract `0xAC09587d186D70d93dd9B16328C2E4fA845cC9CF`, you can see the initially minted `1,000,000` `TOOSEXY` tokens transferred to my account when my ERC-20 token contract was deployed.
+Using my newly deployed ERC-20 token contract `0xAC09587d186D70d93dd9B16328C2E4fA845cC9CF`, you can see the initially minted `1,000,000` `TOOSEXY` tokens transferred to my account when my ERC-20 token contract was deployed.
 
 <kbd><img src="images/Exercise-ExplorerERC20-1.png" /></kbd>
 
