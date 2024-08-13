@@ -115,29 +115,18 @@ Click [Retrieve], and you can see the new transaction of `10` `TOOSEXY` tokens, 
 
 <kbd><img src="images/Exercise-ExplorerERC20-4.png" /></kbd>
 
-
---- TODO BELOW ---
-
-Create transactions like below:
-* Initial mint of 1,000,000 tokens to account1, when your ERC-20 token contract is deployed
-* Transfer of 10 tokens from account1 to account2
+##### TODO
 * Transfer of 1 token from account1 to account2
 * account1 approves for account2 to spend 100 tokens
 * account2 transfers from account1 0.12345 tokens
-
-<kbd><img src="images/Exercise-ERC-20-1.png" /></kbd>
-
-<kbd><img src="images/Exercise-ERC-20-2.png" /></kbd>
-
-<kbd><img src="images/Exercise-ERC-20-3.png" /></kbd>
-
-<kbd><img src="images/Exercise-ERC-20-4.png" /></kbd>
 
 <br />
 
 ---
 
 ## Exercise 2 - SimpleVault Gadget for ERC-20s
+
+TODO
 
 ##### Aim
 * Deploy and interact with a simple gadget that uses the ERC-20 basic building block
