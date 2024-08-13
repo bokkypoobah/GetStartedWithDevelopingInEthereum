@@ -10,9 +10,13 @@ If you like this, please share this link.
 * Deploy a simple vault that operates with your ERC-20 token contract - [contracts/SimpleVault.sol](contracts/SimpleVault.sol)
 * Interact with your simple vault
 
-##### UI For ERC-20 Token Contracts
+##### Outcome
+* On completion of Exercise 1, you will have deployed your first ERC-20 token contract on the Ethereum Sepolia testnet
+* On completion of Exercise 2, you will have interacted with your ERC-20 token contract
 
+##### ERC-20 Token Browser
 * https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/
+* Source code in [docs/](docs/).
 
 ##### Requirements
 * Web browser, with the MetaMask https://metamask.io/, or Rabby https://rabby.io/ browser plug-in
