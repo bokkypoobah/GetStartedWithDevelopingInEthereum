@@ -17,9 +17,6 @@ Materials prepared for [ETHSydney August - Get started with developing in Ethere
 * Sepolia testnet ethers in your MetaMask account. Try https://www.alchemy.com/faucets
 * For developing and testing on your local computer, familiarity with the Linux, MacOS or Windows command line. And [npx](https://docs.npmjs.com/cli/v10/commands/npx) to run commands from Node packages.
 
-##### Overview
-<kbd><img src="images/Overview.png" /></kbd>
-
 ##### For Later
 * ERC-721 and ERC-1155
 
@@ -27,7 +24,25 @@ Materials prepared for [ETHSydney August - Get started with developing in Ethere
 
 ---
 
-## Exercise 1 - Deploy Your Own ERC-20
+## Table Of Contents
+
+* [Overview](#overview)
+* [Exercise 1 - Deploy Your Own ERC-20 Token Contract](#exercise-1---deploy-your-own-erc-20-token-contract)
+* [Exercise 2 - Interact With Your ERC-20 Token Contract](#exercise-2---interact-with-your-erc-20-token-contract)
+
+<br />
+
+---
+
+## Overview
+<kbd><img src="images/Overview.png" /></kbd>
+
+
+<br />
+
+---
+
+## Exercise 1 - Deploy Your Own ERC-20 Token Contract
 
 Go to [https://remix.ethereum.org/](https://remix.ethereum.org/). In the `FILE EXPLORER` tab, create a new `ERC20Token.sol` document under `default_workspace` -> `contracts`. Copy the content from [contracts/ERC20Token.sol](contracts/ERC20Token.sol) and paste into your newly created `ERC20Token.sol` document.
 
@@ -51,11 +66,11 @@ Click [Deploy], and [Confirm] your transaction in MetaMask.
 
 <kbd><img src="images/Exercise-DeployERC20-5.png" /></kbd>
 
-In the bottom pane, you will see your completed transaction and newly created `contract address`. `0xac09587d186d70d93dd9b16328c2e4fa845cc9cf` in this case.
+In the bottom pane, you will see your completed transaction and newly created `contract address`. `0xac09587d186d70d93dd9b16328c2e4fa845cc9cf` in my case.
 
 <kbd><img src="images/Exercise-DeployERC20-6.png" /></kbd>
 
-In this case, my contract can be viewed at https://sepolia.etherscan.io/address/0xac09587d186d70d93dd9b16328c2e4fa845cc9cf.
+The contract can be viewed at https://sepolia.etherscan.io/address/0xac09587d186d70d93dd9b16328c2e4fa845cc9cf, in my case.
 
 <kbd><img src="images/Exercise-DeployERC20-7.png" /></kbd>
 
@@ -63,7 +78,7 @@ Switch to the `Contract` tab.
 
 <kbd><img src="images/Exercise-DeployERC20-8.png" /></kbd>
 
-Click on [Verify and Publish] to upload the source code for your ERC-20 token contract. Select the `Compiler Type` of `Solidity(Single file)`. Select the `Compiler Version` to compiler version you compiled your contract with, `0.8.26+commit.8a87fa7a` in this case. Select the `Open Source License Type` of `3) MIT License (MIT)`. Click [Continue].
+Click on [Verify and Publish] to upload the source code for your ERC-20 token contract. Select the `Compiler Type` of `Solidity(Single file)`. Select the `Compiler Version` to compiler version you compiled your contract with, `0.8.26+commit.8a87fa7a` currently. Select the `Open Source License Type` of `3) MIT License (MIT)`. Click [Continue].
 
 <kbd><img src="images/Exercise-DeployERC20-9.png" /></kbd>
 
@@ -81,11 +96,11 @@ Click [Verify and Publish].
 
 <kbd><img src="images/Exercise-DeployERC20-12.png" /></kbd>
 
-In this case, my contract code can be viewed at https://sepolia.etherscan.io/address/0xac09587d186d70d93dd9b16328c2e4fa845cc9cf#code.
+The newly deployed contract code can be viewed at https://sepolia.etherscan.io/address/0xac09587d186d70d93dd9b16328c2e4fa845cc9cf#code, in my case.
 
 <kbd><img src="images/Exercise-DeployERC20-13.png" /></kbd>
 
-My ERC-20 token transactions can be viewed at https://sepolia.etherscan.io/token/0xac09587d186d70d93dd9b16328c2e4fa845cc9cf. You can see `1,000,000` tokens being minted from address `0x0000...0000` to my address.
+The ERC-20 token transactions can be viewed at https://sepolia.etherscan.io/token/0xac09587d186d70d93dd9b16328c2e4fa845cc9cf, in my case. You can see `1,000,000` tokens being minted from address `0x0000...0000` to deploying address.
 
 <kbd><img src="images/Exercise-DeployERC20-14.png" /></kbd>
 
@@ -93,7 +108,11 @@ Click on the [Holders] tab to view the account holdings.
 
 <kbd><img src="images/Exercise-DeployERC20-15.png" /></kbd>
 
-#### Exercise 2 - Interact With Your ERC-20 Token Contract
+<br />
+
+---
+
+## Exercise 2 - Interact With Your ERC-20 Token Contract
 
 View your ERC-20 token contract on [https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/](https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/).
 
@@ -157,7 +176,7 @@ In the **allowance:** block, you can see that the allowance of `100` that you se
 
 ---
 
-## Exercise 2 - SimpleVault Gadget for ERC-20s
+## Exercise 3 - SimpleVault Gadget for ERC-20s
 
 TODO
 
