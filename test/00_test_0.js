@@ -48,14 +48,21 @@ describe("00_test_0", function () {
       expect(await erc20Token.totalSupply()).to.equal("1000000000000000000000000");
     });
 
-    it("Should emit an event on transfers", async function () {
+    it("Should emit an event on transfers and balanceOf adds up", async function () {
       const { erc20Token, owner, otherAccount } = await loadFixture(deployOneYearLockFixture);
+
       await expect(erc20Token.transfer(otherAccount, "1"))
         .to.emit(erc20Token, "Transfer")
         .withArgs(owner, otherAccount, anyValue);
+      expect(await erc20Token.balanceOf(owner)).to.equal("999999999999999999999999");
+      expect(await erc20Token.balanceOf(otherAccount)).to.equal("1");
+
       await expect(erc20Token.transfer(otherAccount, "2"))
         .to.emit(erc20Token, "Transfer")
         .withArgs(owner, otherAccount, "2");
+      expect(await erc20Token.balanceOf(owner)).to.equal("999999999999999999999997");
+      expect(await erc20Token.balanceOf(otherAccount)).to.equal("3");
+
     });
 
     // it("Should set the right unlockTime", async function () {

@@ -7,9 +7,9 @@
         * name: My Name
         * decimals: 18
         * totalSupply: 1000000000000000000000000
-      ✔ Should have the correct symbol, name, decimals and totalSupply (536ms)
-      ✔ Should emit an event on transfers
+      ✔ Should have the correct symbol, name, decimals and totalSupply (528ms)
+      ✔ Should emit an event on transfers and balanceOf adds up
 
 
-  2 passing (548ms)
+  2 passing (539ms)
 
