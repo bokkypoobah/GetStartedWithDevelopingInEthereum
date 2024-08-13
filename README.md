@@ -13,36 +13,6 @@ Materials for [ETHSydney August - Get started with developing in Ethereum](https
 
 ---
 
-## Building Blocks - Tokens
-
-### ERC-20 Fungible Tokens - "Coins"
-
-e.g., Bank balance, Opal card balance, transfers
-
-<kbd><img src="images/Overview-ERC-20.png" /></kbd>
-
-* [contracts/ERC20Token.sol](contracts/ERC20Token.sol)
-
-### ERC-721 Non-Fungible Tokens - "Pictures"
-
-e.g., Bank account number, Opal card number, drivers license, registry item
-
-<kbd><img src="images/Overview-ERC-721.png" /></kbd>
-
-* [contracts/ERC721Token.sol](contracts/ERC721Token.sol)
-
-### ERC-1155 Non-Fungible Tokens - "Coins & Pictures"
-
-e.g., Game items
-
-<kbd><img src="images/Overview-ERC-1155.png" /></kbd>
-
-* [contracts/ERC1155Token.sol](contracts/ERC1155Token.sol)
-
-<br />
-
----
-
 ## Exercise 1 - ERC-20
 
 ##### Aim
@@ -54,7 +24,8 @@ e.g., Game items
 3. Obtain some Sepolia testnet ethers in your MetaMask accounts
 4. Set up a second MetaMask account and transfer some testnet ethers to your second account
 5. Use [https://remix.ethereum.org/](https://remix.ethereum.org/) to deploy your very own ERC-20 token to the Sepolia testnet. You can use [contracts/ERC20Token.sol](contracts/ERC20Token.sol) and customise with very own symbol and name
-6. Perform some transactions on your ERC-20 token
+6. Upload your ERC-20 token source code to https://sepolia.etherscan.io (source code validation)
+7. Perform some transactions on your ERC-20 token
 
 #### Exercise 1 - Step 5 - Deploy ERC-20 Token Contract
 
@@ -64,9 +35,17 @@ Use [https://remix.ethereum.org/](https://remix.ethereum.org/) to deploy your sm
 
 Example [contracts/ERC20Token.sol](contracts/ERC20Token.sol) deployed to Sepolia at [https://sepolia.etherscan.io/address/0x1e5df6db242d07cc40a37b634022c02f73a74d59](https://sepolia.etherscan.io/address/0x1e5df6db242d07cc40a37b634022c02f73a74d59#code)
 
-#### Exercise 1 - Step 6 - View And Interact With Your ERC-20 Token Contract
+TODO: show sub steps
+
+#### Exercise 1 - Step 6 - Etherscan Source Code Validation
+
+TODO: show sub steps
+
+#### Exercise 1 - Step 7 - View And Interact With Your ERC-20 Token Contract
 
 View your ERC-20 token contract on [https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/](https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/)
+
+TODO: Split below in sub steps
 
 Create transactions like below:
 * Initial mint of 1,000,000 tokens to account1, when your ERC-20 token contract is deployed
@@ -127,6 +106,36 @@ npx hardhat test
 #
 #  3 passing (581ms)
 ```
+
+<br />
+
+---
+
+## Building Blocks - Tokens
+
+### ERC-20 Fungible Tokens - "Coins"
+
+e.g., Bank balance, Opal card balance, transfers
+
+<kbd><img src="images/Overview-ERC-20.png" /></kbd>
+
+* [contracts/ERC20Token.sol](contracts/ERC20Token.sol)
+
+### ERC-721 Non-Fungible Tokens - "Pictures"
+
+e.g., Bank account number, Opal card number, drivers license, registry item
+
+<kbd><img src="images/Overview-ERC-721.png" /></kbd>
+
+* [contracts/ERC721Token.sol](contracts/ERC721Token.sol)
+
+### ERC-1155 Non-Fungible Tokens - "Coins & Pictures"
+
+e.g., Game items
+
+<kbd><img src="images/Overview-ERC-1155.png" /></kbd>
+
+* [contracts/ERC1155Token.sol](contracts/ERC1155Token.sol)
 
 <br />
 
