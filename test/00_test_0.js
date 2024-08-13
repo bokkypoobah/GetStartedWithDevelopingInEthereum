@@ -10,6 +10,7 @@ describe("00_test_0", function () {
   // We use loadFixture to run this setup once, snapshot that state,
   // and reset Hardhat Network to that snapshot in every test.
   async function deployOneYearLockFixture() {
+    const TOTALSUPPLY = "1000000000000000000000000";
     // const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
     // const ONE_GWEI = 1_000_000_000;
     //
@@ -18,37 +19,41 @@ describe("00_test_0", function () {
 
     // Contracts are deployed using the first signer/account by default
     const [owner, otherAccount] = await ethers.getSigners();
+    console.log("        Signers");
+    console.log("        * owner: " + owner.address);
+    console.log("        * otherAccount: " + otherAccount.address);
 
     // const Lock = await ethers.getContractFactory("Lock");
     // const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
 
-    const ERC20Token = await ethers.getContractFactory("ERC20");
-    const erc20Token = await ERC20Token.deploy("MYSYMBOL", "My Name", 18, "1000000000000000000000000");
-
-    const symbol = await erc20Token.symbol()
-    const name = await erc20Token.name()
-    const decimals = await erc20Token.decimals()
-    const totalSupply = await erc20Token.totalSupply()
     console.log("        Deploying ERC20");
-    console.log("        * symbol: " + symbol);
-    console.log("        * name: " + name);
-    console.log("        * decimals: " + decimals);
-    console.log("        * totalSupply: " + totalSupply);
+    const ERC20Token = await ethers.getContractFactory("ERC20");
+    const erc20Token = await ERC20Token.deploy("MYSYMBOL", "My Name", 18, TOTALSUPPLY);
+    console.log("        * symbol: " + await erc20Token.symbol());
+    console.log("        * name: " + await erc20Token.name());
+    console.log("        * decimals: " + await erc20Token.decimals());
+    console.log("        * totalSupply: " + await erc20Token.totalSupply());
 
-    return { /*lock, unlockTime, lockedAmount,*/ owner, otherAccount, erc20Token };
+    console.log("        Deploying SimpleVault");
+    const SimpleVault = await ethers.getContractFactory("SimpleVault");
+    const simpleVault = await SimpleVault.deploy();
+    const simpleVaultOwner = await simpleVault.owner()
+    console.log("        * owner: " + simpleVaultOwner);
+
+    return { /*lock, unlockTime, lockedAmount,*/ erc20Token, simpleVault, owner, otherAccount, TOTALSUPPLY };
   }
 
   describe("Deployment", function () {
 
-    it("Should have the correct symbol, name, decimals and totalSupply", async function () {
-      const { erc20Token, owner } = await loadFixture(deployOneYearLockFixture);
+    it("ERC20 token should have the correct symbol, name, decimals and totalSupply", async function () {
+      const { erc20Token, owner, TOTALSUPPLY } = await loadFixture(deployOneYearLockFixture);
       expect(await erc20Token.symbol()).to.equal("MYSYMBOL");
       expect(await erc20Token.name()).to.equal("My Name");
       expect(await erc20Token.decimals()).to.equal(18);
-      expect(await erc20Token.totalSupply()).to.equal("1000000000000000000000000");
+      expect(await erc20Token.totalSupply()).to.equal(TOTALSUPPLY);
     });
 
-    it("Should emit an event on transfers and balanceOf adds up", async function () {
+    it("ERC20 token should emit an event on transfers and balanceOf adds up", async function () {
       const { erc20Token, owner, otherAccount } = await loadFixture(deployOneYearLockFixture);
 
       await expect(erc20Token.transfer(otherAccount, "1"))
@@ -63,6 +68,34 @@ describe("00_test_0", function () {
       expect(await erc20Token.balanceOf(owner)).to.equal("999999999999999999999997");
       expect(await erc20Token.balanceOf(otherAccount)).to.equal("3");
 
+    });
+
+    it("SimpleVault should process token deposits and withdrawals correctly", async function () {
+      const { erc20Token, simpleVault, owner, otherAccount, TOTALSUPPLY } = await loadFixture(deployOneYearLockFixture);
+
+      await expect(simpleVault.depositTokens(erc20Token, "1")).to.be.reverted;
+
+      await expect(erc20Token.approve(simpleVault, "100"))
+        .to.emit(erc20Token, "Approval")
+        .withArgs(owner, simpleVault, "100");
+
+      await expect(simpleVault.depositTokens(erc20Token, "1"))
+        .to.emit(erc20Token, "Transfer")
+        .withArgs(owner, simpleVault, "1")
+        .to.emit(simpleVault, "TokensDeposited")
+        .withArgs(owner, erc20Token, "1");
+
+      expect(await erc20Token.balanceOf(owner)).to.equal("999999999999999999999999");
+      expect(await erc20Token.balanceOf(simpleVault)).to.equal("1");
+
+      await expect(simpleVault.withdrawTokens(erc20Token, "1"))
+        .to.emit(erc20Token, "Transfer")
+        .withArgs(simpleVault, owner, "1")
+        .to.emit(simpleVault, "TokensWithdrawn")
+        .withArgs(owner, erc20Token, "1");
+
+      expect(await erc20Token.balanceOf(owner)).to.equal(TOTALSUPPLY);
+      expect(await erc20Token.balanceOf(simpleVault)).to.equal("0");
     });
 
     // it("Should set the right unlockTime", async function () {
