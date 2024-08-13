@@ -7,7 +7,22 @@ If you like this, please share it.
 ##### Aim
 * Have the capabilities to launch your own **sh*tcoin** within minutes!
 
-You can do this on Ethereum mainnet for the cost of ~600k gas or ~USD 3, at time of writing. As well as most "EVM" (Ethereum Virtual Machine) [compatible chains](https://l2beat.com/scaling/summary) like Arbitrum, Base or Optimism.
+    You can do this on Ethereum mainnet for the cost of ~600k gas or ~USD 3, at time of writing. As well as most "EVM" (Ethereum Virtual Machine) [compatible chains](https://l2beat.com/scaling/summary) like Arbitrum, Base or Optimism.
+* Demystify ERC-20s
+
+    An ERC-20 token contract is a little bit like a database table with two columns - owner and balance. And with stored procedures to implement transfer rules.
+
+    **balances:** section in the ERC-20 browser.
+
+    <kbd><img src="images/ERC-20-Balance-1.png" /></kbd>
+
+    With events logs recording the transfers
+
+    **events:** section in the ERC-20 browser.
+
+    <kbd><img src="images/ERC-20-Balance-2.png" /></kbd>
+
+    Token amounts are stored as raw numbers with a specified number of `decimals`, `18` in this case.
 
 ##### Steps
 * Deploy your own ERC-20 token contract - [contracts/ERC20Token.sol](contracts/ERC20Token.sol) (Sepolia [0x1e5D...4D59](https://sepolia.etherscan.io/address/0x1e5Df6dB242d07cc40a37b634022c02F73A74D59#code)) or [contracts/FixedSupplyToken.sol](contracts/FixedSupplyToken.sol) (Sepolia [0x8fAF...d093](https://sepolia.etherscan.io/address/0x8fAF86fa6B137B316D699e23Ae1DcA3C12e7d093#code)).
