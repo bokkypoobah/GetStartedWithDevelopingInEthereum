@@ -1,6 +1,7 @@
 const { time, loadFixture } = require("@nomicfoundation/hardhat-toolbox/network-helpers");
 const { anyValue } = require("@nomicfoundation/hardhat-chai-matchers/withArgs");
 const { expect } = require("chai"); // https://hardhat.org/hardhat-chai-matchers/docs/reference
+const ADDRESS0 = "0x0000000000000000000000000000000000000000";
 
 describe("00_test_0", function () {
   async function deployContracts() {
@@ -21,7 +22,7 @@ describe("00_test_0", function () {
 
   describe("Deployment", function () {
 
-    it("FixedSupplyToken should have the correct symbol, name, decimals, totalSupply and balanceOf", async function () {
+    it("FixedSupplyToken - Test symbol, name, decimals, totalSupply and balanceOf", async function () {
       const { FIXEDSUPPLYTOKEN, accounts, fixedSupplyToken } = await loadFixture(deployContracts);
       console.log("        * accounts: " + JSON.stringify(accounts.slice(0, 2).map(e => e.address)));
       console.log("        * FixedSupplyToken:");
@@ -35,6 +36,30 @@ describe("00_test_0", function () {
       expect(await fixedSupplyToken.totalSupply()).to.equal(FIXEDSUPPLYTOKEN.TOTALSUPPLY);
       expect(await fixedSupplyToken.balanceOf(accounts[0])).to.equal(FIXEDSUPPLYTOKEN.TOTALSUPPLY);
       expect(await fixedSupplyToken.balanceOf(accounts[1])).to.equal(0);
+    });
+
+    it("FixedSupplyToken - Test transfers, including burn to address(0)", async function () {
+      const { FIXEDSUPPLYTOKEN, accounts, fixedSupplyToken } = await loadFixture(deployContracts);
+      await expect(fixedSupplyToken.transfer(accounts[1], "10"))
+        .to.emit(fixedSupplyToken, "Transfer")
+        .withArgs(accounts[0], accounts[1], anyValue);
+      expect(await fixedSupplyToken.balanceOf(accounts[0])).to.equal("999999999999999999999990");
+      expect(await fixedSupplyToken.balanceOf(accounts[1])).to.equal("10");
+      await expect(fixedSupplyToken.transfer(accounts[1], "1"))
+        .to.emit(fixedSupplyToken, "Transfer")
+        .withArgs(accounts[0], accounts[1], "1");
+      expect(await fixedSupplyToken.balanceOf(accounts[0])).to.equal("999999999999999999999989");
+      expect(await fixedSupplyToken.balanceOf(accounts[1])).to.equal("11");
+    });
+
+    it("FixedSupplyToken - Test burns, i.e., transfers to address(0) that reduce totalSupply", async function () {
+      const { FIXEDSUPPLYTOKEN, accounts, fixedSupplyToken } = await loadFixture(deployContracts);
+      await expect(fixedSupplyToken.transfer(ADDRESS0, "123456789"))
+        .to.emit(fixedSupplyToken, "Transfer")
+        .withArgs(accounts[0], ADDRESS0, "123456789");
+      expect(await fixedSupplyToken.balanceOf(accounts[0])).to.equal("999999999999999876543211");
+      expect(await fixedSupplyToken.balanceOf(ADDRESS0)).to.equal("123456789");
+      expect(await fixedSupplyToken.totalSupply()).to.equal("999999999999999876543211");
     });
 
     // it("ERC20 token should emit an event on transfers and balanceOf adds up", async function () {

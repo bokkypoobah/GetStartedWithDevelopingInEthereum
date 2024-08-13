@@ -8,8 +8,10 @@
           * name: Hi 👋, Hi 👋, Hi 👋
           * decimals: 18
           * totalSupply: 1000000000000000000000000
-      ✔ FixedSupplyToken should have the correct symbol, name, decimals, totalSupply and balanceOf (441ms)
+      ✔ FixedSupplyToken - Test symbol, name, decimals, totalSupply and balanceOf (524ms)
+      ✔ FixedSupplyToken - Test transfers, including burn to address(0)
+      ✔ FixedSupplyToken - Test burns, i.e., transfers to address(0) that reduce totalSupply
 
 
-  1 passing (443ms)
+  3 passing (537ms)
 
