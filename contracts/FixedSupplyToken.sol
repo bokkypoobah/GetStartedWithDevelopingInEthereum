@@ -33,7 +33,7 @@ contract FixedSupplyToken is IERC20 {
     string constant public symbol = "HIHIHI";
     string constant public name = unicode"Hi 👋, Hi 👋, Hi 👋";
     uint8 constant public decimals = 18;
-    uint constant public _totalSupply= 1_000_000_000_000_000_000_000_000; // 1,000,000.000000000000000000
+    uint constant public _totalSupply = 1_000_000_000_000_000_000_000_000; // 1,000,000.000000000000000000
 
     // owner => tokens
     mapping(address => uint) public balanceOf;
