@@ -85,9 +85,22 @@ In this case, my contract code can be viewed at https://sepolia.etherscan.io/add
 
 <kbd><img src="images/Exercise-DeployERC20-13.png" /></kbd>
 
+My ERC-20 token transactions can be viewed at https://sepolia.etherscan.io/token/0xac09587d186d70d93dd9b16328c2e4fa845cc9cf. You can see `1,000,000` tokens being minted from address `0x0000...0000` to my address.
+
+<kbd><img src="images/Exercise-DeployERC20-14.png" /></kbd>
+
+Click on the [Holders] tab to view the account holdings.
+
+<kbd><img src="images/Exercise-DeployERC20-15.png" /></kbd>
+
 #### Exercise 2 - Interact With Your ERC-20 Token Contract
 
-View your ERC-20 token contract on [https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/](https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/)
+View your ERC-20 token contract on [https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/](https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/).
+
+Use my newly deployed ERC-20 token contract `0xAC09587d186D70d93dd9B16328C2E4fA845cC9CF`, you can see the initially minted `1,000,000` `TOOSEXY` tokens transferred to my account when my ERC-20 token contract was deployed.
+
+<kbd><img src="images/Exercise-ExplorerERC20-1.png" /></kbd>
+
 
 --- TODO BELOW ---
 
