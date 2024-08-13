@@ -84,25 +84,38 @@ Events below show:
 ### Set up Hardhat Environment
 
 ```bash
-npx hardhat init
+npm install --save-dev hardhat
+
+# Project in GitHub created using the following:
+# npx hardhat init
 # Create a JavaScript project
 # Hardhat project root: {current directory}
 # Add .gitignore? (Y/n) · y
 # Do you want to install this sample project's dependencies with npm (hardhat @nomicfoundation/hardhat-toolbox)? (Y/n) · y
 
+# Run test
 npx hardhat test
-# Downloading compiler 0.8.24
-# Error: Cannot find module '@openzeppelin/test-helpers'
 
-# https://docs.openzeppelin.com/test-helpers/0.5/
-npm install --save-dev @openzeppelin/test-helpers
-
-#npm install --save-dev @nomiclabs/hardhat-truffle5 @nomiclabs/hardhat-web3 web3
-
-# npm install --save-dev @nomiclabs/hardhat-ethers 'ethers@^5.0.0'
-
-# npm install --save-dev @openzeppelin/test-helpers
-# npm install --save-dev solidity-coverage
+# Run test and save output in ./testIt.out
+./10_testIt.sh
+#  00_test_0
+#    Deployment
+#        Signers
+#        * owner: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+#        * otherAccount: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+#        Deploying ERC20
+#        * symbol: MYSYMBOL
+#        * name: My Name
+#        * decimals: 18
+#        * totalSupply: 1000000000000000000000000
+#        Deploying SimpleVault
+#        * owner: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+#      ✔ ERC20 token should have the correct symbol, name, decimals and totalSupply (548ms)
+#      ✔ ERC20 token should emit an event on transfers and balanceOf adds up
+#      ✔ SimpleVault should process token deposits and withdrawals correctly
+#
+#
+#  3 passing (581ms)
 ```
 
 
