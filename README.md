@@ -111,12 +111,19 @@ After MetaMask sends your transaction, you should see your `txHash:`. Click on t
 
 <kbd><img src="images/Exercise-ExplorerERC20-3.png" /></kbd>
 
-Click [Retrieve], and you can see the new transaction of `10` `TOOSEXY` tokens, and 3 rows in the **balances:** table.
+Click [Retrieve], and you can see the new transaction of `10` tokens, and 3 rows in the **balances:** table.
 
 <kbd><img src="images/Exercise-ExplorerERC20-4.png" /></kbd>
 
+Execute a second transfer of `1` token to your second account.
+
+<kbd><img src="images/Exercise-ExplorerERC20-5.png" /></kbd>
+
+Click [Retrieve], and you can see the new transaction of `1` token, and **balances:** table updated appropriately.
+
+<kbd><img src="images/Exercise-ExplorerERC20-6.png" /></kbd>
+
 ##### TODO
-* Transfer of 1 token from account1 to account2
 * account1 approves for account2 to spend 100 tokens
 * account2 transfers from account1 0.12345 tokens
 
