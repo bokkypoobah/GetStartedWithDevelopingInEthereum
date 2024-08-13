@@ -3,21 +3,21 @@
 Materials prepared for [ETHSydney August - Get started with developing in Ethereum](https://lu.ma/42iq2h0p), Tuesday Aug 13 2024.
 
 ##### Aim
-* Deploy your own ERC-20 token contract
+* Deploy your own ERC-20 token contract - [contracts/ERC20Token.sol](contracts/ERC20Token.sol)
 * Interact with your own ERC-20 token contract
-* Deploy a "SimpleVault" that operates with your ERC-20 token contract
-* Interact with your "SimpleVault"
+* Deploy a simple vault that operates with your ERC-20 token contract - [contracts/SimpleVault.sol](contracts/SimpleVault.sol)
+* Interact with your simple vault
 
-##### UI For Testing Smart Contracts On Sepolia
+##### UI For ERC-20 Token Contracts
 
-[https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/](https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/)
+https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/
 
 ##### Requirements
-* Web browser, with the MetaMask browser plug-in - [https://metamask.io/](https://metamask.io/)
-* Sepolia testnet ethers in your MetaMask account. Try https://www.alchemy.com/faucets
+* Web browser, with the MetaMask https://metamask.io/, or Rabby https://rabby.io/ browser plug-in
+* Sepolia testnet ethers in your MetaMask account. Try https://www.alchemy.com/faucets, https://www.infura.io/faucet/sepolia, https://sepolia-faucet.pk910.de/ or https://cloud.google.com/application/web3/faucet/ethereum/sepolia
 * For developing and testing on your local computer, familiarity with the Linux, MacOS or Windows command line. And [npx](https://docs.npmjs.com/cli/v10/commands/npx) to run commands from Node packages.
 
-##### For Later
+##### TODO
 * ERC-721 and ERC-1155
 
 <br />
@@ -44,7 +44,7 @@ Materials prepared for [ETHSydney August - Get started with developing in Ethere
 
 ## Exercise 1 - Deploy Your Own ERC-20 Token Contract
 
-Go to [https://remix.ethereum.org/](https://remix.ethereum.org/). In the `FILE EXPLORER` tab, create a new `ERC20Token.sol` document under `default_workspace` -> `contracts`. Copy the content from [contracts/ERC20Token.sol](contracts/ERC20Token.sol) and paste into your newly created `ERC20Token.sol` document.
+Go to https://remix.ethereum.org/. In the `FILE EXPLORER` tab, create a new `ERC20Token.sol` document under `default_workspace` -> `contracts`. Copy the content from [contracts/ERC20Token.sol](contracts/ERC20Token.sol) and paste into your newly created `ERC20Token.sol` document.
 
 <kbd><img src="images/Exercise-DeployERC20-1.png" /></kbd>
 
@@ -114,7 +114,7 @@ Click on the [Holders] tab to view the account holdings.
 
 ## Exercise 2 - Interact With Your ERC-20 Token Contract
 
-View your ERC-20 token contract on [https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/](https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/).
+View your ERC-20 token contract on https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/.
 
 Use my newly deployed ERC-20 token contract `0xAC09587d186D70d93dd9B16328C2E4fA845cC9CF`, you can see the initially minted `1,000,000` `TOOSEXY` tokens transferred to my account when my ERC-20 token contract was deployed.
 
@@ -184,7 +184,7 @@ TODO
 * Deploy and interact with a simple gadget that uses the ERC-20 basic building block
 
 ##### Steps
-1. Set up the Hardhat testing environment - [https://hardhat.org/docs](https://hardhat.org/docs)
+1. Set up the Hardhat testing environment - https://hardhat.org/docs
 2. Modify [contracts/SimpleVault.sol](contracts/SimpleVault.sol) to break the functionality and confirm with the tests
 3. Deploy your own SimpleVault to the Sepolia testnet
 4. Send and withdraw some of your very own ERC-20 tokens created in Exercise 1
