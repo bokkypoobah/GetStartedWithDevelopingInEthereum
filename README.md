@@ -2,12 +2,12 @@
 
 Materials prepared for [ETHSydney August - Get started with developing in Ethereum](https://lu.ma/42iq2h0p), Tuesday Aug 13 2024.
 
-If you like this, please share this link.
+If you like this, please share it.
 
 ##### Aim
 * Have the capabilities to launch your own **sh*tcoin** within minutes!
 
-You can do this on Ethereum mainnet for the cost of ~600k gas or ~USD 3, at time of writing. As well as most "EVM" (Ethereum Virtual Machine) compatible chains like Arbitrum, Base or Optimism.
+You can do this on Ethereum mainnet for the cost of ~600k gas or ~USD 3, at time of writing. As well as most "EVM" (Ethereum Virtual Machine) [compatible chains](https://l2beat.com/scaling/summary) like Arbitrum, Base or Optimism.
 
 ##### Steps
 * Deploy your own ERC-20 token contract - [contracts/ERC20Token.sol](contracts/ERC20Token.sol) or [contracts/FixedSupplyToken.sol](contracts/FixedSupplyToken.sol).
@@ -21,7 +21,9 @@ On completion of Exercises 1 & 2, you will have deployed and interacted with you
 ##### ERC-20 Token Browser
 * https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/
 
-Main source code file in [docs/index.html](docs/index.html). Can be installed locally by running e.g. [anywhere](https://www.npmjs.com/package/anywhere?activeTab=readme) in the [docs/](docs/) folder on your local machine
+I built a simple tool to inspect and interact with ERC-20 token contracts. The main source code file is [docs/index.html](docs/index.html). View the developer pane when running this tool to see the simple interactions required between your web browser and the blockchain.
+
+This tool can also be run locally by executing e.g. [anywhere](https://www.npmjs.com/package/anywhere?activeTab=readme) in the [docs/](docs/) folder of this GitHub repository downloaded onto your local machine
 
 ##### Requirements
 * Web browser, with the MetaMask https://metamask.io/, or Rabby https://rabby.io/ browser plug-in
