@@ -103,7 +103,7 @@ Use my newly deployed ERC-20 token contract `0xAC09587d186D70d93dd9B16328C2E4fA8
 
 If required, create your second MetaMask account and transfers some Sepolia testnet ethers to it.
 
-In the **transfer** block, set `to:` to your second MetaMask account, and `tokens:` to `10`. Click [Transfer], then confirm the transaction in MetaMask.
+In the **transfer:** block, set `to:` to your second MetaMask account, and `tokens:` to `10`. Click [Transfer], then confirm the transaction in MetaMask.
 
 <kbd><img src="images/Exercise-ExplorerERC20-2.png" /></kbd>
 
@@ -119,13 +119,39 @@ Execute a second transfer of `1` token to your second account.
 
 <kbd><img src="images/Exercise-ExplorerERC20-5.png" /></kbd>
 
-Click [Retrieve], and you can see the new transaction of `1` token, and **balances:** table updated appropriately.
+Click [Retrieve] at the top of the page, and you can see the new transaction of `1` token, and **balances:** table updated appropriately.
 
 <kbd><img src="images/Exercise-ExplorerERC20-6.png" /></kbd>
 
-##### TODO
-* account1 approves for account2 to spend 100 tokens
-* account2 transfers from account1 0.12345 tokens
+In the **approve:** block, set `spender:` to your second MetaMask account, and `tokens:` to `100`. Click [Approve], then confirm the transaction in MetaMask.
+
+<kbd><img src="images/Exercise-ExplorerERC20-7.png" /></kbd>
+
+After MetaMask sends your transaction, you should see your `txHash:`. Click on the link to `View in explorer` if you want to view your transaction.
+
+<kbd><img src="images/Exercise-ExplorerERC20-8.png" /></kbd>
+
+Click [Retrieve] at the top of the page, and you can see the new `Approval` transaction of `100` token, and **allowances:** table updated appropriately.
+
+<kbd><img src="images/Exercise-ExplorerERC20-9.png" /></kbd>
+
+In the **allowance:** block, you can check the allowance just set.
+
+<kbd><img src="images/Exercise-ExplorerERC20-10.png" /></kbd>
+
+Switch to your second account in MetaMask.
+
+In the **transferFrom:** block, set `from:` to be your first account, and `tokens:` to be `0.12345`. Click [Transfer From], then confirm the transaction in MetaMask.
+
+<kbd><img src="images/Exercise-ExplorerERC20-11.png" /></kbd>
+
+Click [Retrieve] at the top of the page, and you can see the new `Transfer` transaction of `0.12345` token, and **balances:** table updated appropriately.
+
+<kbd><img src="images/Exercise-ExplorerERC20-12.png" /></kbd>
+
+In the **allowance:** block, you can see that the allowance of `100` that you set has now been reduced to `99.87655`, as account2 has used `0.12345` of their allowance.
+
+<kbd><img src="images/Exercise-ExplorerERC20-13.png" /></kbd>
 
 <br />
 
