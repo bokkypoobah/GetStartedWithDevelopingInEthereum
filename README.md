@@ -10,7 +10,7 @@ Materials prepared for [ETHSydney August - Get started with developing in Ethere
 
 ##### UI For ERC-20 Token Contracts
 
-https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/
+* https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/
 
 ##### Requirements
 * Web browser, with the MetaMask https://metamask.io/, or Rabby https://rabby.io/ browser plug-in
