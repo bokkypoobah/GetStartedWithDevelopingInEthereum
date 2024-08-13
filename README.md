@@ -5,14 +5,16 @@ Materials prepared for [ETHSydney August - Get started with developing in Ethere
 If you like this, please share this link.
 
 ##### Aim
-* Deploy your own ERC-20 token contract - [contracts/ERC20Token.sol](contracts/ERC20Token.sol)
+* Launch your own `sh*tcoin`. You can do this on Ethereum mainnet for the cost of ~600k gas or ~USD 3, at time of writing. As well as most "EVM" (Ethereum Virtual Machine) chains.
+
+##### Steps
+* Deploy your own ERC-20 token contract - [contracts/ERC20Token.sol](contracts/ERC20Token.sol) or [contracts/FixedSupplyToken.sol](contracts/FixedSupplyToken.sol).
 * Interact with your own ERC-20 token contract
 * Deploy a simple vault that operates with your ERC-20 token contract - [contracts/SimpleVault.sol](contracts/SimpleVault.sol)
 * Interact with your simple vault
 
 ##### Outcome
-* On completion of Exercise 1, you will have deployed your first ERC-20 token contract on the Ethereum Sepolia testnet
-* On completion of Exercise 2, you will have interacted with your ERC-20 token contract
+* On completion of Exercises 1 & 2, you will have deployed and interacted with your first ERC-20 token contract on the Ethereum Sepolia testnet
 
 ##### ERC-20 Token Browser
 * https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/
@@ -51,7 +53,7 @@ If you like this, please share this link.
 
 ## Exercise 1 - Deploy Your Own ERC-20 Token Contract
 
-Go to https://remix.ethereum.org/. In the `FILE EXPLORER` tab, create a new `ERC20Token.sol` document under `default_workspace` -> `contracts`. Copy the content from [contracts/ERC20Token.sol](contracts/ERC20Token.sol) and paste into your newly created `ERC20Token.sol` document.
+Go to https://remix.ethereum.org/. In the `FILE EXPLORER` tab, create a new `ERC20Token.sol` document under `default_workspace` -> `contracts`. Copy the content from [contracts/ERC20Token.sol](contracts/ERC20Token.sol) or , or [contracts/FixedSupplyToken.sol](contracts/FixedSupplyToken.sol) and paste into your newly created `ERC20Token.sol` document.
 
 <kbd><img src="images/Exercise-DeployERC20-1.png" /></kbd>
 
