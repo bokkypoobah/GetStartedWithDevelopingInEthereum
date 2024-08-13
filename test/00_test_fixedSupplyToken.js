@@ -48,7 +48,7 @@ describe("00_test_0", function () {
       expect(await fixedSupplyToken.balanceOf(accounts[1])).to.equal("11");
     });
 
-    it("FixedSupplyToken - Test transferFrom", async function () {
+    it("FixedSupplyToken - Test approve and transferFrom", async function () {
       const { CONSTANTS, accounts, fixedSupplyToken } = await loadFixture(deployContracts);
       await expect(fixedSupplyToken.approve(accounts[1], "100"))
         .to.emit(fixedSupplyToken, "Approval")

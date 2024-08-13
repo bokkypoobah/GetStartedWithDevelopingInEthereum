@@ -6,7 +6,7 @@
         * FixedSupplyToken: 'HIHIHI', 'Hi 👋, Hi 👋, Hi 👋', 18, 1000000000000000000000000
       ✔ FixedSupplyToken - Test symbol, name, decimals, totalSupply and balanceOf (514ms)
       ✔ FixedSupplyToken - Test transfer
-      ✔ FixedSupplyToken - Test transferFrom
+      ✔ FixedSupplyToken - Test approve and transferFrom
       ✔ FixedSupplyToken - Test burns, i.e., transfer to address(0) that reduces totalSupply
       ✔ FixedSupplyToken - Test invalid transfer and transferFrom
 
