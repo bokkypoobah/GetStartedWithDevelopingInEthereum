@@ -25,11 +25,11 @@ describe("00_test_0", function () {
     it("FixedSupplyToken - Test symbol, name, decimals, totalSupply and balanceOf", async function () {
       const { FIXEDSUPPLYTOKEN, accounts, fixedSupplyToken } = await loadFixture(deployContracts);
       console.log("        * accounts: " + JSON.stringify(accounts.slice(0, 2).map(e => e.address)));
-      console.log("        * FixedSupplyToken:");
-      console.log("          * symbol: " + await fixedSupplyToken.symbol());
-      console.log("          * name: " + await fixedSupplyToken.name());
-      console.log("          * decimals: " + await fixedSupplyToken.decimals());
-      console.log("          * totalSupply: " + await fixedSupplyToken.totalSupply());
+      console.log("        * FixedSupplyToken: '" + await fixedSupplyToken.symbol() + "', '" + await fixedSupplyToken.name() + "', " + await fixedSupplyToken.decimals() + ", " + await fixedSupplyToken.totalSupply());
+      // console.log("          * symbol: " + await fixedSupplyToken.symbol());
+      // console.log("          * name: " + await fixedSupplyToken.name());
+      // console.log("          * decimals: " + await fixedSupplyToken.decimals());
+      // console.log("          * totalSupply: " + await fixedSupplyToken.totalSupply());
       expect(await fixedSupplyToken.symbol()).to.equal(FIXEDSUPPLYTOKEN.SYMBOL);
       expect(await fixedSupplyToken.name()).to.equal(FIXEDSUPPLYTOKEN.NAME);
       expect(await fixedSupplyToken.decimals()).to.equal(FIXEDSUPPLYTOKEN.DECIMALS);
@@ -38,7 +38,7 @@ describe("00_test_0", function () {
       expect(await fixedSupplyToken.balanceOf(accounts[1])).to.equal(0);
     });
 
-    it("FixedSupplyToken - Test transfers, including burn to address(0)", async function () {
+    it("FixedSupplyToken - Test transfers", async function () {
       const { FIXEDSUPPLYTOKEN, accounts, fixedSupplyToken } = await loadFixture(deployContracts);
       await expect(fixedSupplyToken.transfer(accounts[1], "10"))
         .to.emit(fixedSupplyToken, "Transfer")
@@ -60,6 +60,11 @@ describe("00_test_0", function () {
       expect(await fixedSupplyToken.balanceOf(accounts[0])).to.equal("999999999999999876543211");
       expect(await fixedSupplyToken.balanceOf(ADDRESS0)).to.equal("123456789");
       expect(await fixedSupplyToken.totalSupply()).to.equal("999999999999999876543211");
+    });
+
+    it("FixedSupplyToken - Test invalid transfers", async function () {
+      const { FIXEDSUPPLYTOKEN, accounts, fixedSupplyToken } = await loadFixture(deployContracts);
+      await expect(fixedSupplyToken.connect(accounts[1]).transfer(accounts[0], "1")).to.be.revertedWithPanic(0x11);
     });
 
     // it("ERC20 token should emit an event on transfers and balanceOf adds up", async function () {

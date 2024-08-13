@@ -3,15 +3,12 @@
   00_test_0
     Deployment
         * accounts: ["0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266","0x70997970C51812dc3A010C7d01b50e0d17dc79C8"]
-        * FixedSupplyToken:
-          * symbol: HIHIHI
-          * name: Hi 👋, Hi 👋, Hi 👋
-          * decimals: 18
-          * totalSupply: 1000000000000000000000000
-      ✔ FixedSupplyToken - Test symbol, name, decimals, totalSupply and balanceOf (524ms)
-      ✔ FixedSupplyToken - Test transfers, including burn to address(0)
+        * FixedSupplyToken: 'HIHIHI', 'Hi 👋, Hi 👋, Hi 👋', 18, 1000000000000000000000000
+      ✔ FixedSupplyToken - Test symbol, name, decimals, totalSupply and balanceOf (517ms)
+      ✔ FixedSupplyToken - Test transfers
       ✔ FixedSupplyToken - Test burns, i.e., transfers to address(0) that reduce totalSupply
+      ✔ FixedSupplyToken - Test invalid transfers
 
 
-  3 passing (537ms)
+  4 passing (538ms)
 
