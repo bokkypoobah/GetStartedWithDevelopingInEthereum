@@ -92,7 +92,7 @@ Set `Optimization` to `Yes` and `Runs` to `200`, matching the same parameters in
 
 Click [Verify and Publish].
 
-**CONGRATULATIONS** You have published your contract!
+**CONGRATULATIONS** You have published your ?first contract!
 
 <kbd><img src="images/Exercise-DeployERC20-12.png" /></kbd>
 
