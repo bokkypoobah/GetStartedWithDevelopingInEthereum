@@ -3,9 +3,9 @@ pragma solidity ^0.8.0;
 // ----------------------------------------------------------------------------
 // Fixed Supply ERC-20 Token
 //
-// https://github.com/bokkypoobah/GettingStartedInEthereum
-//
 // Deployed to Sepolia
+//
+// https://github.com/bokkypoobah/GettingStartedInEthereum
 //
 // SPDX-License-Identifier: MIT
 //
@@ -20,7 +20,6 @@ interface IERC20 {
     function name() external view returns (string memory);
     function symbol() external view returns (string memory);
     function decimals() external view returns (uint8);
-
     function totalSupply() external view returns (uint);
     function balanceOf(address owner) external view returns (uint balance);
     function allowance(address owner, address spender) external view returns (uint remaining);
@@ -36,7 +35,7 @@ contract FixedSupplyToken is IERC20 {
     uint8 constant public decimals = 18;
     uint constant public _totalSupply= 1_000_000_000_000_000_000_000_000; // 1,000,000.000000000000000000
 
-    // owner => balance
+    // owner => tokens
     mapping(address => uint) public balanceOf;
     // owner => spender => tokens
     mapping(address => mapping(address => uint)) public allowance;
