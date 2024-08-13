@@ -12,15 +12,9 @@ describe("00_test_0", function () {
     };
 
     const accounts = await ethers.getSigners();
-    console.log("        Accounts: " + JSON.stringify(accounts.slice(0, 2).map(e => e.address)));
 
-    console.log("        Deploying FixedSupplyToken");
     const FixedSupplyToken = await ethers.getContractFactory("FixedSupplyToken");
     const fixedSupplyToken = await FixedSupplyToken.deploy();
-    console.log("        * symbol: " + await fixedSupplyToken.symbol());
-    console.log("        * name: " + await fixedSupplyToken.name());
-    console.log("        * decimals: " + await fixedSupplyToken.decimals());
-    console.log("        * totalSupply: " + await fixedSupplyToken.totalSupply());
 
     return { FIXEDSUPPLYTOKEN, accounts, fixedSupplyToken };
   }
@@ -29,6 +23,12 @@ describe("00_test_0", function () {
 
     it("FixedSupplyToken should have the correct symbol, name, decimals, totalSupply and balanceOf", async function () {
       const { FIXEDSUPPLYTOKEN, accounts, fixedSupplyToken } = await loadFixture(deployContracts);
+      console.log("        * accounts: " + JSON.stringify(accounts.slice(0, 2).map(e => e.address)));
+      console.log("        * FixedSupplyToken:");
+      console.log("          * symbol: " + await fixedSupplyToken.symbol());
+      console.log("          * name: " + await fixedSupplyToken.name());
+      console.log("          * decimals: " + await fixedSupplyToken.decimals());
+      console.log("          * totalSupply: " + await fixedSupplyToken.totalSupply());
       expect(await fixedSupplyToken.symbol()).to.equal(FIXEDSUPPLYTOKEN.SYMBOL);
       expect(await fixedSupplyToken.name()).to.equal(FIXEDSUPPLYTOKEN.NAME);
       expect(await fixedSupplyToken.decimals()).to.equal(FIXEDSUPPLYTOKEN.DECIMALS);
