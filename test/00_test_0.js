@@ -3,7 +3,7 @@ const {
   loadFixture,
 } = require("@nomicfoundation/hardhat-toolbox/network-helpers");
 const { anyValue } = require("@nomicfoundation/hardhat-chai-matchers/withArgs");
-const { expect } = require("chai");
+const { expect } = require("chai"); // https://hardhat.org/hardhat-chai-matchers/docs/reference
 
 describe("00_test_0", function () {
   // We define a fixture to reuse the same setup in every test.
@@ -90,15 +90,15 @@ describe("00_test_0", function () {
 
       await expect(simpleVault.connect(otherAccount).withdrawTokens(erc20Token, "1")).to.be.reverted;
 
-      const withdrawTokens = expect(await simpleVault.withdrawTokens(erc20Token, "1"));
+      const withdrawTokens = await simpleVault.withdrawTokens(erc20Token, "1");
       expect(withdrawTokens)
         .to.emit(erc20Token, "Transfer")
         .withArgs(simpleVault, owner, "1")
         .to.emit(simpleVault, "TokensWithdrawn")
         .withArgs(owner, erc20Token, "1");
       // console.log("withdrawTokens: " + JSON.stringify(withdrawTokens, null, 2));
-      // const receipt = await withdrawTokens.wait();
-      // console.log("receipt: " + JSON.stringify(receipt, null, 2));
+      const receipt = await withdrawTokens.wait();
+      console.log("receipt: " + JSON.stringify(receipt, null, 2));
 
       expect(await erc20Token.balanceOf(owner)).to.equal(TOTALSUPPLY);
       expect(await erc20Token.balanceOf(simpleVault)).to.equal("0");

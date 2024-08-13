@@ -12,10 +12,59 @@
         * totalSupply: 1000000000000000000000000
         Deploying SimpleVault
         * owner: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
-      ✔ ERC20 token should have the correct symbol, name, decimals and totalSupply (552ms)
+      ✔ ERC20 token should have the correct symbol, name, decimals and totalSupply (548ms)
       ✔ ERC20 token should emit an event on transfers and balanceOf adds up
+receipt: {
+  "_type": "TransactionReceipt",
+  "blockHash": "0x2402db0d1b2defdd7fa20f3f406bb38da8f1dc27a191af3b1cf32b359de76bee",
+  "blockNumber": 7,
+  "contractAddress": null,
+  "cumulativeGasUsed": "38271",
+  "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+  "gasPrice": "1398069823",
+  "blobGasUsed": null,
+  "blobGasPrice": null,
+  "gasUsed": "38271",
+  "hash": "0x9bd89fe486fef6c53d9b13a4d08eaf7b2072ccc8cb4f6f89260f723488dac68b",
+  "index": 0,
+  "logs": [
+    {
+      "_type": "log",
+      "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+      "blockHash": "0x2402db0d1b2defdd7fa20f3f406bb38da8f1dc27a191af3b1cf32b359de76bee",
+      "blockNumber": 7,
+      "data": "0x0000000000000000000000000000000000000000000000000000000000000001",
+      "index": 0,
+      "topics": [
+        "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+        "0x000000000000000000000000e7f1725e7734ce288f8367e1bb143e90bb3f0512",
+        "0x000000000000000000000000f39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+      ],
+      "transactionHash": "0x9bd89fe486fef6c53d9b13a4d08eaf7b2072ccc8cb4f6f89260f723488dac68b",
+      "transactionIndex": 0
+    },
+    {
+      "_type": "log",
+      "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+      "blockHash": "0x2402db0d1b2defdd7fa20f3f406bb38da8f1dc27a191af3b1cf32b359de76bee",
+      "blockNumber": 7,
+      "data": "0x0000000000000000000000000000000000000000000000000000000000000001",
+      "index": 1,
+      "topics": [
+        "0x6337ed398c0e8467698c581374fdce4db14922df487b5a39483079f5f59b60a4",
+        "0x000000000000000000000000f39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x0000000000000000000000005fbdb2315678afecb367f032d93f642f64180aa3"
+      ],
+      "transactionHash": "0x9bd89fe486fef6c53d9b13a4d08eaf7b2072ccc8cb4f6f89260f723488dac68b",
+      "transactionIndex": 0
+    }
+  ],
+  "logsBloom": "0x00000200000000000400000000000000000000000000000000000000000000000000000000000000040000000000000010000000000000000000000000000000000000000000000000000008000000000000000000000000000800000000000000000040000000000000000100800000000004000000000000000014000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000002000000000000000000000000000000000000000000000042000000200000000000001000000000002008000000000000000000000000000000000000000000000000000000000000000000800000000000000000",
+  "status": 1,
+  "to": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
+}
       ✔ SimpleVault should process token deposits and withdrawals correctly
 
 
-  3 passing (584ms)
+  3 passing (581ms)
 
