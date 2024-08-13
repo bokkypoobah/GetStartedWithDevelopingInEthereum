@@ -101,6 +101,20 @@ Use my newly deployed ERC-20 token contract `0xAC09587d186D70d93dd9B16328C2E4fA8
 
 <kbd><img src="images/Exercise-ExplorerERC20-1.png" /></kbd>
 
+If required, create your second MetaMask account and transfers some Sepolia testnet ethers to it.
+
+In the **transfer** block, set `to:` to your second MetaMask account, and `tokens:` to `10`. Click [Transfer], then confirm the transaction in MetaMask.
+
+<kbd><img src="images/Exercise-ExplorerERC20-2.png" /></kbd>
+
+After MetaMask sends your transaction, you should see your `txHash:`. Click on the link to `View in explorer` if you want to view your transaction.
+
+<kbd><img src="images/Exercise-ExplorerERC20-3.png" /></kbd>
+
+Click [Retrieve], and you can see the new transaction of `10` `TOOSEXY` tokens, and 3 rows in the **balances:** table.
+
+<kbd><img src="images/Exercise-ExplorerERC20-4.png" /></kbd>
+
 
 --- TODO BELOW ---
 
