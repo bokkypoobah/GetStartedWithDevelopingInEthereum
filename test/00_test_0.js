@@ -73,7 +73,7 @@ describe("00_test_0", function () {
     it("SimpleVault should process token deposits and withdrawals correctly", async function () {
       const { erc20Token, simpleVault, owner, otherAccount, TOTALSUPPLY } = await loadFixture(deployOneYearLockFixture);
 
-      await expect(simpleVault.depositTokens(erc20Token, "1")).to.be.reverted;
+      await expect(simpleVault.depositTokens(erc20Token, "1")).to.be.revertedWithPanic(0x11);
 
       await expect(erc20Token.approve(simpleVault, "100"))
         .to.emit(erc20Token, "Approval")
@@ -88,11 +88,17 @@ describe("00_test_0", function () {
       expect(await erc20Token.balanceOf(owner)).to.equal("999999999999999999999999");
       expect(await erc20Token.balanceOf(simpleVault)).to.equal("1");
 
-      await expect(simpleVault.withdrawTokens(erc20Token, "1"))
+      await expect(simpleVault.connect(otherAccount).withdrawTokens(erc20Token, "1")).to.be.reverted;
+
+      const withdrawTokens = expect(await simpleVault.withdrawTokens(erc20Token, "1"));
+      expect(withdrawTokens)
         .to.emit(erc20Token, "Transfer")
         .withArgs(simpleVault, owner, "1")
         .to.emit(simpleVault, "TokensWithdrawn")
         .withArgs(owner, erc20Token, "1");
+      // console.log("withdrawTokens: " + JSON.stringify(withdrawTokens, null, 2));
+      // const receipt = await withdrawTokens.wait();
+      // console.log("receipt: " + JSON.stringify(receipt, null, 2));
 
       expect(await erc20Token.balanceOf(owner)).to.equal(TOTALSUPPLY);
       expect(await erc20Token.balanceOf(simpleVault)).to.equal("0");
