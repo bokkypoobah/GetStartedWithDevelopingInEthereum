@@ -771,6 +771,97 @@
               <b-form-group label="" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
                 <b-button size="sm" :disabled="!validAddress(settings.erc1155.contract)" @click="retrieveERC1155" variant="primary">Retrieve</b-button>
               </b-form-group>
+
+              <b-form-group label="events:" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
+                <div class="d-flex flex-wrap m-0 p-0">
+                  <div class="mt-0 pr-1" style="width: 20.0rem;">
+                    <b-form-input type="text" size="sm" v-model.trim="settings.erc1155.eventsTable.filter" @change="saveSettings" debounce="600" placeholder="🔍 address/blocknumber/txhash regex"></b-form-input>
+                  </div>
+                  <div class="mt-0 flex-grow-1">
+                  </div>
+                  <div class="mt-0 pr-1">
+                    <b-button size="sm" @click="retrieveTimestamps(pagedSortedFilteredERC1155Events.map(e => e.blockNumber))" variant="link" v-b-popover.hover.ds500="'Retrieve timestamps for events below'"><b-icon-clock-history shift-v="+1" font-scale="1.2"></b-icon-clock-history></b-button>
+                  </div>
+                  <div class="mt-0 flex-grow-1">
+                  </div>
+                  <div class="mt-0 pl-1">
+                    <b-form-select size="sm" v-model="settings.erc1155.eventsTable.sortOption" @change="saveSettings" :options="eventsSortOptions" v-b-popover.hover.bottom="'Yeah. Sort'"></b-form-select>
+                  </div>
+                  <div class="mt-0 pl-1">
+                    <font size="-2" v-b-popover.hover.bottom="'# filtered / total events'">{{ formatNumber(sortedFilteredERC721Events.length) + '/' + formatNumber(erc1155.events.length) }}</font>
+                  </div>
+                  <div class="mt-0 pl-1">
+                    <b-pagination size="sm" v-model="settings.erc1155.eventsTable.currentPage" @input="saveSettings" :total-rows="sortedFilteredERC1155Events.length" :per-page="settings.erc1155.eventsTable.pageSize" style="height: 0;"></b-pagination>
+                  </div>
+                  <div class="mt-0 pl-1">
+                    <b-form-select size="sm" v-model="settings.erc1155.eventsTable.pageSize" @change="saveSettings();" :options="pageSizes" v-b-popover.hover.bottom="'Yeah. Page size'"></b-form-select>
+                  </div>
+                </div>
+                <b-table small fixed striped :fields="erc1155EventsFields" :items="pagedSortedFilteredERC1155Events" show-empty empty-html="Click [Retrieve] above" head-variant="light" class="mt-1">
+                  <template #cell(number)="data">
+                      <font size="-1" class="text-muted">{{ parseInt(data.index) + ((settings.erc1155.eventsTable.currentPage - 1) * settings.erc1155.eventsTable.pageSize) + 1 }}</font>
+                  </template>
+                  <template #cell(when)="data">
+                    <font size="-1">
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.txHash + '#eventlog#' + data.item.logIndex" variant="link" v-b-popover.hover.ds500="(timestamps[chainId] && timestamps[chainId][data.item.blockNumber]) ? ('Block ' + formatNumber(data.item.blockNumber)) : 'blockNumber:txIndex'" target="_blank">
+                        <span v-if="timestamps[chainId] && timestamps[chainId][data.item.blockNumber]">
+                          {{ formatTimestamp(timestamps[chainId][data.item.blockNumber]) }}
+                        </span>
+                        <span v-else>
+                          {{ data.item.blockNumber + ':' + data.item.txIndex }}
+                        </span>
+                      </b-link>
+                      <font size="-1" v-b-popover.hover.ds500="'logIndex'" class="text-muted">{{ data.item.logIndex }}</font>
+                      <font size="-1" v-b-popover.hover.ds500="'txHash'" class="text-muted">{{ data.item.txHash.substring(0, 8) + '...' + data.item.txHash.slice(-6) }}</font>
+                    </font>
+                  </template>
+                  <template #cell(fromOwner)="data">
+                    <div v-if="data.item.name == 'TransferSingle'">
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.from" variant="link" v-b-popover.hover.ds500="'TransferSingle from ' + data.item.from" target="_blank">
+                        {{ data.item.from.substring(0, 8) + '...' + data.item.from.slice(-6) }}
+                      </b-link>
+                    </div>
+                    <div v-else-if="data.item.name == 'TransferBatch'">
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.from" variant="link" v-b-popover.hover.ds500="'TransferBatch from ' + data.item.from" target="_blank">
+                        {{ data.item.from.substring(0, 8) + '...' + data.item.from.slice(-6) }}
+                      </b-link>
+                    </div>
+                    <div v-else-if="data.item.name == 'ApprovalForAll' ">
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.owner" variant="link" v-b-popover.hover.ds500="'ApprovalForAll owner ' + data.item.owner" target="_blank">
+                        {{ data.item.owner.substring(0, 8) + '...' + data.item.owner.slice(-6) }}
+                      </b-link>
+                    </div>
+                  </template>
+                  <template #cell(toOperator)="data">
+                    <div v-if="data.item.name == 'TransferSingle'">
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.to" variant="link" v-b-popover.hover.ds500="'TransferSingle to ' + data.item.to" target="_blank">
+                        {{ data.item.to.substring(0, 8) + '...' + data.item.to.slice(-6) }}
+                      </b-link>
+                    </div>
+                    <div v-else-if="data.item.name == 'TransferBatch'">
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.to" variant="link" v-b-popover.hover.ds500="'TransferBatch to ' + data.item.to" target="_blank">
+                        {{ data.item.to.substring(0, 8) + '...' + data.item.to.slice(-6) }}
+                      </b-link>
+                    </div>
+                    <div v-else-if="data.item.name == 'ApprovalForAll'">
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.operator" variant="link" v-b-popover.hover.ds500="'ApprovalForAll operator ' + data.item.operator" target="_blank">
+                        {{ data.item.operator.substring(0, 8) + '...' + data.item.operator.slice(-6) }}
+                      </b-link>
+                    </div>
+                  </template>
+                  <!-- <template #cell(tokenIdApproved)="data">
+                    <div v-if="data.item.name == 'Transfer' || data.item.name == 'Approval'">
+                      <b-link size="sm" :href="'https://testnets.opensea.io/assets/sepolia/' + settings.erc721.contract + '/' + data.item.tokenId" variant="link" v-b-popover.hover.ds500="'Token Id ' + data.item.tokenId" target="_blank">
+                        {{ data.item.tokenId }}
+                      </b-link>
+                    </div>
+                    <div v-else-if="data.item.name == 'ApprovalForAll'">
+                        {{ data.item.approved }}
+                    </div>
+                  </template> -->
+                </b-table>
+              </b-form-group>
+
             </b-card>
 
             <b-card-text class="m-0 p-0">
@@ -940,8 +1031,26 @@
             },
             erc1155: {
               contract: null,
+              eventsTable: {
+                filter: null,
+                currentPage: 1,
+                pageSize: 10,
+                sortOption: 'txorderdsc',
+              },
+              tokensTable: {
+                filter: null,
+                currentPage: 1,
+                pageSize: 10,
+                sortOption: 'txorderdsc',
+              },
+              approvalForAllsTable: {
+                filter: null,
+                currentPage: 1,
+                pageSize: 10,
+                sortOption: 'txorderdsc',
+              },
             },
-            version: 10,
+            version: 11,
           },
           erc20: {
             symbol: null,
@@ -1090,6 +1199,27 @@
             { key: 'owner', label: 'Owner', sortable: false, thStyle: 'width: 20%;', thClass: 'text-left', tdClass: 'text-left' },
             { key: 'spender', label: 'Spender', sortable: false, thStyle: 'width: 20%;', thClass: 'text-left', tdClass: 'text-left' },
             { key: 'tokenId', label: 'Token Id', sortable: false, thStyle: 'width: 25%;', thClass: 'text-right', tdClass: 'text-right' },
+          ],
+          erc1155EventsFields: [
+            { key: 'number', label: '#', sortable: false, thStyle: 'width: 5%;', tdClass: 'text-truncate' },
+            { key: 'when', label: 'When', sortable: false, thStyle: 'width: 30%;', thClass: 'text-left', tdClass: 'text-left' },
+            { key: 'name', label: 'Name', sortable: false, thStyle: 'width: 15%;', tdClass: 'text-truncate' },
+            { key: 'fromOwner', label: 'From / Owner', sortable: false, thStyle: 'width: 15%;', tdClass: 'text-truncate' },
+            { key: 'toOperator', label: 'To / Operator', sortable: false, thStyle: 'width: 20%;', tdClass: 'text-truncate' },
+            { key: 'tokenIdApproved', label: 'Token Id / Approved', sortable: false, thStyle: 'width: 15%;', thClass: 'text-right', tdClass: 'text-right' },
+          ],
+          erc1155TokensFields: [
+            { key: 'number', label: '#', sortable: false, thStyle: 'width: 5%;', tdClass: 'text-truncate' },
+            { key: 'latestUpdate', label: 'Latest Update', sortable: false, thStyle: 'width: 30%;', thClass: 'text-left', tdClass: 'text-left' },
+            { key: 'tokenId', label: 'Token Id', sortable: false, thStyle: 'width: 35%;', thClass: 'text-right', tdClass: 'text-right' },
+            { key: 'owner', label: 'Owner', sortable: false, thStyle: 'width: 30%;', thClass: 'text-left', tdClass: 'text-left' },
+          ],
+          erc1155ApprovalForAllsFields: [
+            { key: 'number', label: '#', sortable: false, thStyle: 'width: 5%;', tdClass: 'text-truncate' },
+            { key: 'latestUpdate', label: 'Latest Update', sortable: false, thStyle: 'width: 30%;', thClass: 'text-left', tdClass: 'text-left' },
+            { key: 'owner', label: 'Owner', sortable: false, thStyle: 'width: 20%;', thClass: 'text-left', tdClass: 'text-left' },
+            { key: 'operator', label: 'Operator', sortable: false, thStyle: 'width: 20%;', thClass: 'text-left', tdClass: 'text-left' },
+            { key: 'approved', label: 'Approved', sortable: false, thStyle: 'width: 25%;', thClass: 'text-right', tdClass: 'text-right' },
           ],
         },
 
@@ -1280,7 +1410,7 @@
 
           // --- ERC-721: ---
           sortedFilteredERC721Events() {
-            // console.log(moment().format("HH:mm:ss") + " sortedFilteredERC721Events - this.settings.erc20.eventsTable: " + JSON.stringify(this.settings.erc20.eventsTable));
+            // console.log(moment().format("HH:mm:ss") + " sortedFilteredERC721Events - this.settings.erc721.eventsTable: " + JSON.stringify(this.settings.erc721.eventsTable));
             const results = [];
             let regex = null;
             if (this.settings.erc721.eventsTable.filter != null && this.settings.erc721.eventsTable.filter.length > 0) {
@@ -1612,6 +1742,60 @@
           },
           pagedSortedFilteredERC721Approvals() {
             return this.sortedFilteredERC721Approvals.slice((this.settings.erc721.approvalsTable.currentPage - 1) * this.settings.erc721.approvalsTable.pageSize, this.settings.erc721.approvalsTable.currentPage * this.settings.erc721.approvalsTable.pageSize);
+          },
+
+          // --- ERC-1155: ---
+          sortedFilteredERC1155Events() {
+            console.log(moment().format("HH:mm:ss") + " sortedFilteredERC1155Events - this.settings.erc1155.eventsTable: " + JSON.stringify(this.settings.erc1155.eventsTable));
+            const results = [];
+            let regex = null;
+            if (this.settings.erc1155.eventsTable.filter != null && this.settings.erc1155.eventsTable.filter.length > 0) {
+              try {
+                regex = new RegExp(this.settings.erc1155.eventsTable.filter, 'i');
+              } catch (e) {
+                console.log(moment().format("HH:mm:ss") + " sortedFilteredERC1155Events - regex error: " + e.message);
+                regex = new RegExp(/thequickbrowndogjumpsoverthelazyfox/, 'i');
+              }
+            }
+            for (const event of this.erc1155.events) {
+              let include = true;
+              if (regex) {
+                if (event.name == "Transfer") {
+                  if (!(regex.test(event.from) || regex.test(event.to) || regex.test(event.txHash) || regex.test(event.blockNumber.toString()))) {
+                    include = false;
+                  }
+                } else if (event.name == "Approval") {
+                  if (!(regex.test(event.owner) || regex.test(event.spender) || regex.test(event.txHash) || regex.test(event.blockNumber))) {
+                    include = false;
+                  }
+                }
+              }
+              if (include) {
+                results.push(event);
+              }
+            }
+            // console.log("results: " + JSON.stringify(results));
+            if (this.settings.erc1155.eventsTable.sortOption == "txorderasc") {
+              results.sort((a, b) => {
+                if (a.blockNumber == b.blockNumber) {
+                  return a.logIndex - b.logIndex;
+                } else {
+                  return a.blockNumber - b.blockNumber;
+                }
+              });
+            } else if (this.settings.erc1155.eventsTable.sortOption == "txorderdsc") {
+              results.sort((a, b) => {
+                if (a.blockNumber == b.blockNumber) {
+                  return b.logIndex - a.logIndex;
+                } else {
+                  return b.blockNumber - a.blockNumber;
+                }
+              });
+            }
+            return results;
+          },
+          pagedSortedFilteredERC1155Events() {
+            return this.sortedFilteredERC1155Events.slice((this.settings.erc1155.eventsTable.currentPage - 1) * this.settings.erc1155.eventsTable.pageSize, this.settings.erc1155.eventsTable.currentPage * this.settings.erc1155.eventsTable.pageSize);
           },
 
         },
@@ -2159,7 +2343,7 @@
               }
             }
             Vue.set(this.erc1155, 'approvalForAlls', approvalForAlls);
-            console.log(moment().format("HH:mm:ss") + " retrieveERC1155 END - erc1155: " + JSON.stringify(this.erc1155, null, 2));
+            // console.log(moment().format("HH:mm:ss") + " retrieveERC1155 END - erc1155: " + JSON.stringify(this.erc1155, null, 2));
           },
 
           async retrieveERC20BalanceOf() {
@@ -2189,7 +2373,6 @@
           async retrieveTimestamps(blockNumbers) {
             console.log(moment().format("HH:mm:ss") + " retrieveTimestamps BEGIN - blockNumbers: " + JSON.stringify(blockNumbers, null, 2));
             const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const contract = new ethers.Contract(this.settings.erc20.contract, ERC20ABI, provider);
             if (!(this.chainId in this.timestamps)) {
               Vue.set(this.timestamps, this.chainId, {});
             }
