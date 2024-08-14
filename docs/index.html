@@ -2157,7 +2157,10 @@
             return this.nonFungibleViewer.replace(/\${contract}/, contract).replace(/\${tokenId}/, tokenId);
           },
           viewNonFungible(type, contract, tokenId) {
-            Vue.set(this, 'nonFungibleModal', { show: true, type, contract, tokenId });
+            Vue.set(this.nonFungibleModal, 'show', true);
+            Vue.set(this.nonFungibleModal, 'type', type);
+            Vue.set(this.nonFungibleModal, 'contract', contract);
+            Vue.set(this.nonFungibleModal, 'tokenId', tokenId);
             console.log(moment().format("HH:mm:ss") + " viewNonFungible - this.nonFungibleModal: " + JSON.stringify(this.nonFungibleModal, null, 2));
           },
 
