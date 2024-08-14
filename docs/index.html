@@ -578,12 +578,12 @@
                   <div class="mt-0 flex-grow-1">
                   </div>
                   <div class="mt-0 pr-1">
-                    <b-button size="sm" @click="retrieveTimestamps(pagedSortedFilteredERC20Balances.map(e => e.balance.blockNumber))" variant="link" v-b-popover.hover.ds500="'Retrieve timestamps for balances below'"><b-icon-clock-history shift-v="+1" font-scale="1.2"></b-icon-clock-history></b-button>
+                    <b-button size="sm" @click="retrieveTimestamps(pagedSortedFilteredERC721Tokens.map(e => e.blockNumber))" variant="link" v-b-popover.hover.ds500="'Retrieve timestamps for balances below'"><b-icon-clock-history shift-v="+1" font-scale="1.2"></b-icon-clock-history></b-button>
                   </div>
                   <div class="mt-0 flex-grow-1">
                   </div>
                   <div class="mt-0 pl-1">
-                    <b-form-select size="sm" v-model="settings.erc721.tokensTable.sortOption" @change="saveSettings" :options="erc721TokensSortOptions" v-b-popover.hover.bottom="'Yeah. Sort'"></b-form-select>
+                    <b-form-select size="sm" v-model="settings.erc721.tokensTable.sortOption" @change="saveSettings" :options="erc721And1155TokensSortOptions" v-b-popover.hover.bottom="'Yeah. Sort'"></b-form-select>
                   </div>
                   <div class="mt-0 pl-1">
                     <font size="-2" v-b-popover.hover.bottom="'# filtered / total events'">{{ formatNumber(sortedFilteredERC721Tokens.length) + '/' + formatNumber(erc721.tokens.length) }}</font>
@@ -618,12 +618,6 @@
                       {{ data.item.owner.substring(0, 8) + '...' + data.item.owner.slice(-6) }}
                     </b-link>
                   </template>
-                  <!-- <template #cell(balance)="data">
-                    <font size="-2" class="text-muted">
-                      {{ formatNumber(data.item.balance.tokens) }}
-                    </font>
-                    {{ formatDecimals(data.item.balance.tokens, erc20.decimals) }}
-                  </template> -->
                 </b-table>
               </b-form-group>
 
@@ -640,7 +634,7 @@
                   <div class="mt-0 flex-grow-1">
                   </div>
                   <div class="mt-0 pl-1">
-                    <b-form-select size="sm" v-model="settings.erc721.approvalForAllsTable.sortOption" @change="saveSettings" :options="erc721ApprovalForAllsSortOptions" v-b-popover.hover.bottom="'Yeah. Sort'"></b-form-select>
+                    <b-form-select size="sm" v-model="settings.erc721.approvalForAllsTable.sortOption" @change="saveSettings" :options="erc721And1155ApprovalForAllsSortOptions" v-b-popover.hover.bottom="'Yeah. Sort'"></b-form-select>
                   </div>
                   <div class="mt-0 pl-1">
                     <font size="-2" v-b-popover.hover.bottom="'# filtered / total events'">{{ formatNumber(sortedFilteredERC721ApprovalForAlls.length) + '/' + formatNumber(erc721.approvalForAlls.length) }}</font>
@@ -867,6 +861,58 @@
                     <div v-else-if="data.item.name == 'ApprovalForAll'">
                         {{ data.item.approved }}
                     </div>
+                  </template>
+                </b-table>
+              </b-form-group>
+
+              <b-form-group label="tokens:" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
+                <div class="d-flex flex-wrap m-0 p-0">
+                  <div class="mt-0 pr-1" style="width: 20.0rem;">
+                    <b-form-input type="text" size="sm" v-model.trim="settings.erc1155.tokensTable.filter" @change="saveSettings" debounce="600" placeholder="🔍 address/blocknumber/txhash regex"></b-form-input>
+                  </div>
+                  <div class="mt-0 flex-grow-1">
+                  </div>
+                  <div class="mt-0 pr-1">
+                    <b-button size="sm" @click="retrieveTimestamps(pagedSortedFilteredERC1155Tokens.map(e => e.blockNumber))" variant="link" v-b-popover.hover.ds500="'Retrieve timestamps for balances below'"><b-icon-clock-history shift-v="+1" font-scale="1.2"></b-icon-clock-history></b-button>
+                  </div>
+                  <div class="mt-0 flex-grow-1">
+                  </div>
+                  <div class="mt-0 pl-1">
+                    <b-form-select size="sm" v-model="settings.erc1155.tokensTable.sortOption" @change="saveSettings" :options="erc721And1155TokensSortOptions" v-b-popover.hover.bottom="'Yeah. Sort'"></b-form-select>
+                  </div>
+                  <div class="mt-0 pl-1">
+                    <font size="-2" v-b-popover.hover.bottom="'# filtered / total events'">{{ formatNumber(sortedFilteredERC1155Tokens.length) + '/' + formatNumber(erc1155.tokens.length) }}</font>
+                  </div>
+                  <div class="mt-0 pl-1">
+                    <b-pagination size="sm" v-model="settings.erc1155.tokensTable.currentPage" @input="saveSettings" :total-rows="sortedFilteredERC1155Tokens.length" :per-page="settings.erc1155.tokensTable.pageSize" style="height: 0;"></b-pagination>
+                  </div>
+                  <div class="mt-0 pl-1">
+                    <b-form-select size="sm" v-model="settings.erc1155.tokensTable.pageSize" @change="saveSettings();" :options="pageSizes" v-b-popover.hover.bottom="'Yeah. Page size'"></b-form-select>
+                  </div>
+                </div>
+                <b-table small fixed striped :fields="erc1155TokensFields" :items="pagedSortedFilteredERC1155Tokens" show-empty empty-html="Click [Retrieve] above" head-variant="light" class="mt-1">
+                  <template #cell(number)="data">
+                      <font size="-1" class="text-muted">{{ parseInt(data.index) + ((settings.erc1155.tokensTable.currentPage - 1) * settings.erc1155.tokensTable.pageSize) + 1 }}</font>
+                  </template>
+                  <template #cell(latestUpdate)="data">
+                    <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.txHash + '#eventlog#' + data.item.logIndex" variant="link" v-b-popover.hover.ds500="(timestamps[chainId] && timestamps[chainId][data.item.blockNumber]) ? ('Block ' + formatNumber(data.item.blockNumber)) : 'blockNumber:txIndex'" target="_blank">
+                      <font size="-1">
+                        <span v-if="timestamps[chainId] && timestamps[chainId][data.item.blockNumber]">
+                          {{ formatTimestamp(timestamps[chainId][data.item.blockNumber]) }}
+                        </span>
+                        <span v-else>
+                          {{ data.item.blockNumber + ':' + data.item.txIndex }}
+                        </span>
+                      </font>
+                    </b-link>
+                    <font size="-1" v-b-popover.hover.ds500="'logIndex'" class="text-muted">{{ data.item.logIndex }}</font>
+                    <font size="-1" v-b-popover.hover.ds500="'txHash'" class="text-muted">{{ data.item.txHash.substring(0, 8) + '...' + data.item.txHash.slice(-6) }}</font>
+                  </template>
+                  <template #cell(owner)="data">
+                    <b-link size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc1155.contract + '?a=' + data.item.owner" variant="link" v-b-popover.hover.ds500="data.item.owner" target="_blank">
+                      {{ data.item.owner.substring(0, 8) + '...' + data.item.owner.slice(-6) }}
+                    </b-link>
+                    <font size="-1" class="text-muted">{{ 'x' + data.item.value }}</font>
                   </template>
                 </b-table>
               </b-form-group>
@@ -1121,15 +1167,15 @@
             { value: 'tokensasc', text: '▲ Tokens' },
             { value: 'tokensdsc', text: '▼ Tokens' },
           ],
-          erc721TokensSortOptions: [
+          erc721And1155TokensSortOptions: [
             { value: 'txorderasc', text: '▲ Latest Update' },
             { value: 'txorderdsc', text: '▼ Latest Update' },
-            { value: 'tokenidasc', text: '▲ Token Id' },
-            { value: 'tokeniddsc', text: '▼ Token Id' },
-            { value: 'ownerasc', text: '▲ Owner' },
-            { value: 'ownerdsc', text: '▼ Owner' },
+            { value: 'tokenidasc', text: '▲ Token Id, ▲ Owner' },
+            { value: 'tokeniddsc', text: '▼ Token Id, ▲ Owner' },
+            { value: 'ownerasc', text: '▲ Owner, ▲ Token Id' },
+            { value: 'ownerdsc', text: '▼ Owner, ▲ Token Id' },
           ],
-          erc721ApprovalForAllsSortOptions: [
+          erc721And1155ApprovalForAllsSortOptions: [
             { value: 'txorderasc', text: '▲ Latest Update' },
             { value: 'txorderdsc', text: '▼ Latest Update' },
             { value: 'ownerasc', text: '▲ Owner, ▼ Latest Update' },
@@ -1809,6 +1855,86 @@
             return this.sortedFilteredERC1155Events.slice((this.settings.erc1155.eventsTable.currentPage - 1) * this.settings.erc1155.eventsTable.pageSize, this.settings.erc1155.eventsTable.currentPage * this.settings.erc1155.eventsTable.pageSize);
           },
 
+          sortedFilteredERC1155Tokens() {
+            // console.log(moment().format("HH:mm:ss") + " sortedFilteredERC1155Tokens - this.settings.erc1155.tokensTable: " + JSON.stringify(this.settings.erc1155.tokensTable));
+            const results = [];
+            let regex = null;
+            if (this.settings.erc1155.tokensTable.filter != null && this.settings.erc1155.tokensTable.filter.length > 0) {
+              try {
+                regex = new RegExp(this.settings.erc1155.tokensTable.filter, 'i');
+              } catch (e) {
+                console.log(moment().format("HH:mm:ss") + " sortedFilteredERC1155Tokens - regex error: " + e.message);
+                regex = new RegExp(/thequickbrowndogjumpsoverthelazyfox/, 'i');
+              }
+            }
+            for (const token of this.erc1155.tokens) {
+              // console.log(JSON.stringify(token));
+              let include = true;
+              if (regex) {
+                if (!(regex.test(token.tokenId) || regex.test(token.owner) || regex.test(token.txHash) || regex.test(token.blockNumber))) {
+                  include = false;
+                }
+              }
+              if (include) {
+                results.push(token);
+              }
+            }
+            if (this.settings.erc1155.tokensTable.sortOption == "txorderasc") {
+              results.sort((a, b) => {
+                if (a.blockNumber == b.blockNumber) {
+                  return a.logIndex - b.logIndex;
+                } else {
+                  return a.blockNumber - b.blockNumber;
+                }
+              });
+            } else if (this.settings.erc1155.tokensTable.sortOption == "txorderdsc") {
+              results.sort((a, b) => {
+                if (a.blockNumber == b.blockNumber) {
+                  return b.logIndex - a.logIndex;
+                } else {
+                  return b.blockNumber - a.blockNumber;
+                }
+              });
+            } else if (this.settings.erc1155.tokensTable.sortOption == "tokenidasc") {
+              results.sort((a, b) => {
+                if (a.tokenId == b.tokenId) {
+                  return ('' + a.owner).localeCompare(b.owner);
+                } else {
+                  return a.tokenId - b.tokenId;
+                }
+              });
+            } else if (this.settings.erc1155.tokensTable.sortOption == "tokeniddsc") {
+              results.sort((a, b) => {
+                if (a.tokenId == b.tokenId) {
+                  return ('' + a.owner).localeCompare(b.owner);
+                } else {
+                  return b.tokenId - a.tokenId;
+                }
+              });
+            } else if (this.settings.erc1155.tokensTable.sortOption == "ownerasc") {
+              results.sort((a, b) => {
+                if (('' + a.owner).localeCompare(b.owner) == 0) {
+                  return a.tokenId - b.tokenId;
+                } else {
+                  return ('' + a.owner).localeCompare(b.owner);
+                }
+              });
+            } else if (this.settings.erc1155.tokensTable.sortOption == "ownerdsc") {
+              results.sort((a, b) => {
+                if (('' + a.owner).localeCompare(b.owner) == 0) {
+                  return a.tokenId - b.tokenId;
+                } else {
+                  return ('' + b.owner).localeCompare(a.owner);
+                }
+              });
+            }
+            return results;
+          },
+          pagedSortedFilteredERC1155Tokens() {
+            // console.log(moment().format("HH:mm:ss") + " pagedSortedFilteredERC1155Tokens - this.settings.erc1155.tokensTable: " + JSON.stringify(this.settings.erc1155.tokensTable));
+            return this.sortedFilteredERC1155Tokens.slice((this.settings.erc1155.tokensTable.currentPage - 1) * this.settings.erc1155.tokensTable.pageSize, this.settings.erc1155.tokensTable.currentPage * this.settings.erc1155.tokensTable.pageSize);
+          },
+
         },
 
         // --- METHODS ---
@@ -2148,7 +2274,7 @@
           },
 
           async retrieveERC1155() {
-            console.log(moment().format("HH:mm:ss") + " retrieveERC1155 BEGIN - settings.erc20: " + JSON.stringify(this.settings.erc20, null, 2));
+            // console.log(moment().format("HH:mm:ss") + " retrieveERC1155 BEGIN - settings.erc20: " + JSON.stringify(this.settings.erc20, null, 2));
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const contract = new ethers.Contract(this.settings.erc1155.contract, ERC1155ABI, provider);
             const block = await provider.getBlock("latest");
@@ -2344,9 +2470,12 @@
             Vue.set(this.erc1155, 'events', events);
             const tokens = [];
             for (const [ tokenId, tokenData ] of Object.entries(tokensCollator)) {
-              tokens.push({ tokenId, ...tokenData });
+              for (const [ owner, ownerData ] of Object.entries(tokenData)) {
+                tokens.push({ tokenId, owner, ...ownerData });
+              }
             }
             Vue.set(this.erc1155, 'tokens', tokens);
+            // console.log(moment().format("HH:mm:ss") + " retrieveERC1155 - tokens: " + JSON.stringify(tokens, null, 2));
             const approvalForAlls = [];
             for (const [ owner, ownerData ] of Object.entries(approvalForAllsCollator)) {
               for (const [ operator, operatorData ] of Object.entries(ownerData)) {
