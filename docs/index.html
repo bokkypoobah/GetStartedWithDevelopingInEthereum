@@ -1581,15 +1581,17 @@
               let include = true;
               if (regex) {
                 if (event.name == "Transfer") {
-                  if (!(regex.test(event.from) || regex.test(event.to) || regex.test(event.txHash) || regex.test(event.blockNumber.toString()))) {
+                  if (!(regex.test(event.from) || regex.test(event.to)  || regex.test(event.tokenId.toString())|| regex.test(event.txHash) || regex.test(event.blockNumber.toString()))) {
                     include = false;
                   }
                 } else if (event.name == "Approval") {
-                  if (!(regex.test(event.owner) || regex.test(event.spender) || regex.test(event.txHash) || regex.test(event.blockNumber))) {
+                  if (!(regex.test(event.owner) || regex.test(event.spender)  || regex.test(event.tokenId.toString())|| regex.test(event.txHash) || regex.test(event.blockNumber))) {
                     include = false;
                   }
-                } else {
-                  console.log(JSON.stringify(event));
+                } else if (event.name == "ApprovalForAll") {
+                  if (!(regex.test(event.owner) || regex.test(event.operator)  || regex.test(event.txHash) || regex.test(event.blockNumber))) {
+                    include = false;
+                  }
                 }
               }
               if (include) {
@@ -2162,6 +2164,7 @@
             return this.nonFungibleViewer.replace(/\${contract}/, contract).replace(/\${tokenId}/, tokenId);
           },
           async viewNonFungible(type, contract, tokenId) {
+            console.log(now() + " retrieveERC20 viewNonFungible - type: " + type + ", contract: " + contract + ", tokenId: " + tokenId);
             Vue.set(this.nonFungibleModal, 'show', true);
             Vue.set(this.nonFungibleModal, 'type', type);
             Vue.set(this.nonFungibleModal, 'contract', contract);
@@ -2202,6 +2205,15 @@
                 this.nonFungibleModal.logs.push({ log:now() + " Updated URI to " + uriResults });
               }
             }
+            try {
+              this.nonFungibleModal.logs.push({ log:now() + " Fetching " + uriResults });
+              const fileContent = await fetch(uriResults, { mode: 'cors', signal: AbortSignal.timeout(10000) }).then(response => response.json());
+              this.nonFungibleModal.logs.push({ log:now() + " Fetched " + JSON.stringify(fileContent, null, 2) });
+              console.log(now() + " retrieveERC20 viewNonFungible - fileContent: " + JSON.stringify(fileContent, null, 2));
+            } catch (e) {
+              console.log(now() + " viewNonFungible - ERROR: " + e.message);
+            }
+
 
           },
 
