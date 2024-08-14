@@ -61,6 +61,30 @@
           </b-card>
 
           <b-card class="m-0 p-0 border-0" body-class="m-1 p-0">
+
+            <b-modal ref="viewname" v-model="nonFungibleModal.show" hide-footer header-class="m-0 px-3 py-2" body-bg-variant="light" size="lg">
+              <template #modal-title>{{ nonFungibleModal.type.replace(/erc/, "ERC-") + ' Non-Fungible Token' }}</template>
+
+              <b-form-group label="contract:" label-for="nonfungiblemodal-contract" label-size="sm" label-cols-sm="4" label-align-sm="right" class="mx-0 my-1 p-0">
+                <b-input-group size="sm" class="w-100">
+                  <b-form-input type="text" readonly size="sm" id="nonfungiblemodal-contract" v-model="nonFungibleModal.contract"></b-form-input>
+                  <b-input-group-append>
+                    <b-button size="sm" :href="explorer + 'token/' + nonFungibleModal.contract + '#code'" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                  </b-input-group-append>
+                </b-input-group>
+              </b-form-group>
+
+              <b-form-group label="tokenId:" label-for="nonfungiblemodal-tokenid" label-size="sm" label-cols-sm="4" label-align-sm="right" class="mx-0 my-1 p-0">
+                <b-input-group size="sm" class="w-100">
+                  <b-form-input type="text" readonly size="sm" id="nonfungiblemodal-tokenid" v-model="nonFungibleModal.tokenId"></b-form-input>
+                  <b-input-group-append>
+                    <b-button size="sm" :href="nonFungibleViewerURL(nonFungibleModal.contract, nonFungibleModal.tokenId)" variant="link" v-b-popover.hover.ds500="'View in NFT viewer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                  </b-input-group-append>
+                </b-input-group>
+              </b-form-group>
+
+            </b-modal>
+
             <!-- ERC-20: -->
             <b-card v-if="settings.tabIndex == 0" header="ERC-20" class="m-0 p-0">
               <b-form-group label="contract:" label-for="erc20-contract" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" description="e.g., '0xc21d97673B9E0B3AA53a06439F71fDc1facE393B' for XEENUS and '0x1e5df6db242d07cc40a37b634022c02f73a74d59' for MYERC20TOKEN on Sepolia" :state="!settings.erc20.contract || validAddress(settings.erc20.contract)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
@@ -560,9 +584,9 @@
                   </template>
                   <template #cell(tokenIdApproved)="data">
                     <div v-if="data.item.name == 'Transfer' || data.item.name == 'Approval'">
-                      <b-link size="sm" :href="nonFungibleViewerURL(settings.erc721.contract, data.item.tokenId)" variant="link" v-b-popover.hover.ds500="'Token Id ' + data.item.tokenId" target="_blank">
+                      <b-badge pill @click="viewNonFungible('erc721', settings.erc721.contract, data.item.tokenId)" v-b-popover.hover.ds500="'Click to view token'" variant="info">
                         {{ data.item.tokenId }}
-                      </b-link>
+                      </b-badge>
                     </div>
                     <div v-else-if="data.item.name == 'ApprovalForAll'">
                         {{ data.item.approved }}
@@ -615,9 +639,9 @@
                     <font size="-1" v-b-popover.hover.ds500="'txHash'" class="text-muted">{{ data.item.txHash.substring(0, 8) + '...' + data.item.txHash.slice(-6) }}</font>
                   </template>
                   <template #cell(tokenId)="data">
-                    <b-link size="sm" :href="nonFungibleViewerURL(settings.erc721.contract, data.item.tokenId)" variant="link" v-b-popover.hover.ds500="'Token Id ' + data.item.tokenId" target="_blank">
+                    <b-badge pill @click="viewNonFungible('erc721', settings.erc721.contract, data.item.tokenId)" v-b-popover.hover.ds500="'Click to view token'" variant="info">
                       {{ data.item.tokenId }}
-                    </b-link>
+                    </b-badge>
                   </template>
                   <template #cell(owner)="data">
                     <b-link size="sm" :href="explorer + 'token/' + settings.erc721.contract + '?a=' + data.item.owner" variant="link" v-b-popover.hover.ds500="data.item.owner" target="_blank">
@@ -680,19 +704,6 @@
                       {{ data.item.operator.substring(0, 8) + '...' + data.item.operator.slice(-6) }}
                     </b-link>
                   </template>
-                  <template #cell(tokens)="data">
-                    <!-- <font size="-2" class="text-muted">
-                      {{ formatNumber(data.item.tokens.tokens) }}
-                    </font>
-                    <b-link size="sm" :href="explorer + 'tx/' + data.item.tokens.txHash + '#eventlog#' + data.item.tokens.logIndex" variant="link" v-b-popover.hover.ds500="formatDecimals(data.item.tokens.tokens, data.item.decimals)" target="_blank">
-                      <span v-if="data.item.tokens.tokens.toString().length > 30">
-                        &infin;
-                      </span>
-                      <span v-else>
-                        {{ formatDecimals(data.item.tokens.tokens, erc20.decimals) }}
-                      </span>
-                    </b-link> -->
-                  </template>
                 </b-table>
               </b-form-group>
 
@@ -750,9 +761,9 @@
                     </b-link>
                   </template>
                   <template #cell(tokenId)="data">
-                    <b-link size="sm" :href="nonFungibleViewerURL(settings.erc721.contract, data.item.tokenId)" variant="link" v-b-popover.hover.ds500="'Token Id ' + data.item.tokenId" target="_blank">
+                    <b-badge pill @click="viewNonFungible('erc721', settings.erc721.contract, data.item.tokenId)" v-b-popover.hover.ds500="'Click to view token'" variant="info">
                       {{ data.item.tokenId }}
-                    </b-link>
+                    </b-badge>
                   </template>
                 </b-table>
               </b-form-group>
@@ -851,16 +862,16 @@
                   </template>
                   <template #cell(tokenIdApproved)="data">
                     <div v-if="data.item.name == 'TransferSingle'">
-                      <b-link size="sm" :href="nonFungibleViewerURL(settings.erc1155.contract, data.item.tokenId)" variant="link" v-b-popover.hover.ds500="'Token Id ' + data.item.tokenId" target="_blank">
+                      <b-badge pill @click="viewNonFungible('erc1155', settings.erc1155.contract, data.item.tokenId)" v-b-popover.hover.ds500="'Click to view token'" variant="info">
                         {{ data.item.tokenId }}
-                      </b-link>
+                      </b-badge>
                       <font size="-1" class="text-muted">{{ 'x' + data.item.value }}</font>
                     </div>
                     <div v-else-if="data.item.name == 'TransferBatch'">
                       <span v-for="(item, index) of data.item.tokenIds" v-bind:key="index">
-                        <b-link size="sm" :href="nonFungibleViewerURL(settings.erc1155.contract, data.item.tokenIds[index])" variant="link" v-b-popover.hover.ds500="'Token Id ' + data.item.tokenId" target="_blank">
+                        <b-badge pill @click="viewNonFungible('erc1155', settings.erc1155.contract, data.item.tokenIds[index])" variant="info">
                           {{ data.item.tokenIds[index] }}
-                        </b-link>
+                        </b-badge>
                         <font size="-1" class="text-muted">{{ 'x' + data.item.values[index] }}</font>
                       </span>
                     </div>
@@ -915,9 +926,9 @@
                     <font size="-1" v-b-popover.hover.ds500="'txHash'" class="text-muted">{{ data.item.txHash.substring(0, 8) + '...' + data.item.txHash.slice(-6) }}</font>
                   </template>
                   <template #cell(tokenId)="data">
-                    <b-link size="sm" :href="nonFungibleViewerURL(settings.erc1155.contract, data.item.tokenId)" variant="link" v-b-popover.hover.ds500="'Token Id ' + data.item.tokenId" target="_blank">
+                    <b-badge pill @click="viewNonFungible('erc1155', settings.erc1155.contract, data.item.tokenId)" v-b-popover.hover.ds500="'Click to view token'" variant="info">
                       {{ data.item.tokenId }}
-                    </b-link>
+                    </b-badge>
                   </template>
                   <template #cell(owner)="data">
                     <b-link size="sm" :href="explorer + 'token/' + settings.erc1155.contract + '?a=' + data.item.owner" variant="link" v-b-popover.hover.ds500="data.item.owner" target="_blank">
@@ -1210,6 +1221,12 @@
             events: [],
             tokens: [],
             approvalForAlls: [],
+          },
+          nonFungibleModal: {
+            show: false,
+            type: null,
+            contract: null,
+            tokenId: null,
           },
           timestamps: {},
           eventsSortOptions: [
@@ -2138,6 +2155,10 @@
         methods: {
           nonFungibleViewerURL(contract, tokenId) {
             return this.nonFungibleViewer.replace(/\${contract}/, contract).replace(/\${tokenId}/, tokenId);
+          },
+          viewNonFungible(type, contract, tokenId) {
+            Vue.set(this, 'nonFungibleModal', { show: true, type, contract, tokenId });
+            console.log(moment().format("HH:mm:ss") + " viewNonFungible - this.nonFungibleModal: " + JSON.stringify(this.nonFungibleModal, null, 2));
           },
 
           async retrieveERC20() {
