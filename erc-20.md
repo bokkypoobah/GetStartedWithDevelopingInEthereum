@@ -20,16 +20,15 @@
 
 # What is ERC-20?
 
-The ERC-20 fungible token standard https://eips.ethereum.org/EIPS/eip-20, originally proposed in Nov 2015 and finalised in [Apr 2018](https://github.com/ethereum/ERCs/commit/ef9dc7ece65fcf8c9858993073086c188a71f8ed), specifies a set of functions and events a smart contract must implement to be ERC-20 compliant.
+The ERC-20 fungible token standard at https://eips.ethereum.org/EIPS/eip-20, originally proposed in Nov 2015 and finalised in [Apr 2018](https://github.com/ethereum/ERCs/commit/ef9dc7ece65fcf8c9858993073086c188a71f8ed), specifies a set of functions and events a smart contract must implement to be ERC-20 compliant.
 
 ##### FixedSupplyToken.sol
 
 Following are snippets from a simple ERC-20 compliant fixed supply token contract, from [contracts/FixedSupplyToken.sol](contracts/FixedSupplyToken.sol).
 
-The following interface specifies the events and functions required for a smart contract to be ERC-20 compliant.
+The following `IERC20` interface specifies the events and functions required for a smart contract to be compliant with https://eips.ethereum.org/EIPS/eip-20.
 
 ```solidity
-// https://eips.ethereum.org/EIPS/eip-20
 interface IERC20 {
     event Transfer(address indexed from, address indexed to, uint tokens);
     event Approval(address indexed owner, address indexed spender, uint tokens);
@@ -48,7 +47,8 @@ interface IERC20 {
 ```
 
 The following `FixedSupplyToken` contract implements the ERC-20 interface above.
-Note that the Solidity compiler automatically generates the getter functions for public variables. The functions `name()`, `symbol()`, `decimals()`, `balanceOf(owner)` and `allowance(owner, spender)` have been automatically generated for the variables `name`, `symbol`, `decimals`, `balanceOf` and `allowance` respectively.
+
+Note that the Solidity compiler automatically generates the getter functions for public variables: `name()`, `symbol()`, `decimals()`, `balanceOf(owner)` and `allowance(owner, spender)`.
 
 ```
 contract FixedSupplyToken is IERC20 {

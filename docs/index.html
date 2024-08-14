@@ -174,7 +174,7 @@
                   <div class="mt-0 flex-grow-1">
                   </div>
                   <div class="mt-0 pl-1">
-                    <b-form-select size="sm" v-model="settings.erc20.balancesTable.sortOption" @change="saveSettings" :options="balancesAndAllowancesSortOptions" v-b-popover.hover.bottom="'Yeah. Sort'"></b-form-select>
+                    <b-form-select size="sm" v-model="settings.erc20.balancesTable.sortOption" @change="saveSettings" :options="balancesSortOptions" v-b-popover.hover.bottom="'Yeah. Sort'"></b-form-select>
                   </div>
                   <div class="mt-0 pl-1">
                     <font size="-2" v-b-popover.hover.bottom="'# filtered / total events'">{{ formatNumber(sortedFilteredBalances.length) + '/' + formatNumber(erc20.balances.length) }}</font>
@@ -231,7 +231,7 @@
                   <div class="mt-0 flex-grow-1">
                   </div>
                   <div class="mt-0 pl-1">
-                    <b-form-select size="sm" v-model="settings.erc20.allowancesTable.sortOption" @change="saveSettings" :options="balancesAndAllowancesSortOptions" v-b-popover.hover.bottom="'Yeah. Sort'"></b-form-select>
+                    <b-form-select size="sm" v-model="settings.erc20.allowancesTable.sortOption" @change="saveSettings" :options="allowancesSortOptions" v-b-popover.hover.bottom="'Yeah. Sort'"></b-form-select>
                   </div>
                   <div class="mt-0 pl-1">
                     <font size="-2" v-b-popover.hover.bottom="'# filtered / total events'">{{ formatNumber(sortedFilteredAllowances.length) + '/' + formatNumber(erc20.allowances.length) }}</font>
@@ -291,7 +291,7 @@
                 <b-card bg-variant="light">
                   <b-form-group label="owner:" label-for="erc20-balanceof-owner" label-size="sm" label-cols-sm="3" label-align-sm="right" :state="!settings.erc20.balanceOf.owner || validAddress(settings.erc20.balanceOf.owner)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
                     <b-input-group size="sm" class="w-50">
-                      <b-form-input type="text" size="sm" id="erc20-balanceof-owner" v-model="settings.erc20.balanceOf.owner" @change="saveSettings"></b-form-input>
+                      <b-form-input type="text" size="sm" id="erc20-balanceof-owner" v-model="settings.erc20.balanceOf.owner" @change="saveSettings" placeholder="owner"></b-form-input>
                       <b-input-group-append>
                         <b-button size="sm" :disabled="!validAddress(settings.erc20.balanceOf.owner)" :href="'https://sepolia.etherscan.io/address/' + settings.erc20.balanceOf.owner" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                       </b-input-group-append>
@@ -310,7 +310,7 @@
                 <b-card bg-variant="light">
                   <b-form-group label="owner:" label-for="erc20-allowance-owner" label-size="sm" label-cols-sm="3" label-align-sm="right" :state="!settings.erc20.allowance.owner || validAddress(settings.erc20.allowance.owner)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
                     <b-input-group size="sm" class="w-50">
-                      <b-form-input type="text" size="sm" id="erc20-allowance-owner" v-model="settings.erc20.allowance.owner" @change="saveSettings"></b-form-input>
+                      <b-form-input type="text" size="sm" id="erc20-allowance-owner" v-model="settings.erc20.allowance.owner" @change="saveSettings" placeholder="owner"></b-form-input>
                       <b-input-group-append>
                         <b-button size="sm" :disabled="!validAddress(settings.erc20.allowance.owner)" :href="'https://sepolia.etherscan.io/address/' + settings.erc20.allowance.owner" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                       </b-input-group-append>
@@ -318,7 +318,7 @@
                   </b-form-group>
                   <b-form-group label="spender:" label-for="erc20-allowance-spender" label-size="sm" label-cols-sm="3" label-align-sm="right" :state="!settings.erc20.allowance.spender || validAddress(settings.erc20.allowance.spender)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
                     <b-input-group size="sm" class="w-50">
-                      <b-form-input type="text" size="sm" id="erc20-allowance-spender" v-model="settings.erc20.allowance.spender" @change="saveSettings"></b-form-input>
+                      <b-form-input type="text" size="sm" id="erc20-allowance-spender" v-model="settings.erc20.allowance.spender" @change="saveSettings" placeholder="spender"></b-form-input>
                       <b-input-group-append>
                         <b-button size="sm" :disabled="!validAddress(settings.erc20.allowance.spender)" :href="'https://sepolia.etherscan.io/address/' + settings.erc20.allowance.spender" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                       </b-input-group-append>
@@ -351,7 +351,7 @@
                   </b-form-group>
                   <b-form-group label="to:" label-for="erc20-transfer-to" label-size="sm" label-cols-sm="3" label-align-sm="right" :state="!settings.erc20.transfer.to || validAddress(settings.erc20.transfer.to)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
                     <b-input-group size="sm" class="w-50">
-                      <b-form-input type="text" size="sm" id="erc20-transfer-to" v-model="settings.erc20.transfer.to" @change="saveSettings"></b-form-input>
+                      <b-form-input type="text" size="sm" id="erc20-transfer-to" v-model="settings.erc20.transfer.to" @change="saveSettings" placeholder="to"></b-form-input>
                       <b-input-group-append>
                         <b-button size="sm" :disabled="!validAddress(settings.erc20.transfer.to)" :href="'https://sepolia.etherscan.io/address/' + settings.erc20.transfer.to" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                       </b-input-group-append>
@@ -389,14 +389,14 @@
                   </b-form-group>
                   <b-form-group label="spender:" label-for="erc20-approve-spender" label-size="sm" label-cols-sm="3" label-align-sm="right" :state="!settings.erc20.approve.spender || validAddress(settings.erc20.approve.spender)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
                     <b-input-group size="sm" class="w-50">
-                      <b-form-input type="text" size="sm" id="erc20-approve-spender" v-model="settings.erc20.approve.spender" @change="saveSettings"></b-form-input>
+                      <b-form-input type="text" size="sm" id="erc20-approve-spender" v-model="settings.erc20.approve.spender" @change="saveSettings" placeholder="spender"></b-form-input>
                       <b-input-group-append>
                         <b-button size="sm" :disabled="!validAddress(settings.erc20.approve.spender)" :href="'https://sepolia.etherscan.io/address/' + settings.erc20.approve.spender" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
                   <b-form-group label="tokens:" label-for="erc20-approve-tokens" label-size="sm" label-cols-sm="3" label-align-sm="right" :state="!settings.erc20.approve.tokens || validNumber(settings.erc20.approve.tokens)" :invalid-feedback="'Invalid number'"class="mx-0 my-1 p-0">
-                    <b-form-input type="text" size="sm" id="erc20-approve-tokens" v-model="settings.erc20.approve.tokens" @change="saveSettings" class="w-25"></b-form-input>
+                    <b-form-input type="text" size="sm" id="erc20-approve-tokens" v-model="settings.erc20.approve.tokens" @change="saveSettings"  placeholder="e.g., 1.2345" class="w-25"></b-form-input>
                   </b-form-group>
                   <b-form-group label="" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
                     <b-button size="sm" :disabled="!validAddress(settings.erc20.contract) || !validAddress(settings.erc20.approve.spender) || !validNumber(settings.erc20.approve.tokens)" @click="approveERC20" variant="warning">Approve</b-button>
@@ -427,7 +427,7 @@
                   </b-form-group>
                   <b-form-group label="from:" label-for="erc20-transferfrom-from" label-size="sm" label-cols-sm="3" label-align-sm="right" :state="!settings.erc20.transferFrom.from || validAddress(settings.erc20.transferFrom.from)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
                     <b-input-group size="sm" class="w-50">
-                      <b-form-input type="text" size="sm" id="erc20-transferfrom-from" v-model="settings.erc20.transferFrom.from" @change="saveSettings"></b-form-input>
+                      <b-form-input type="text" size="sm" id="erc20-transferfrom-from" v-model="settings.erc20.transferFrom.from" @change="saveSettings" placeholder="from"></b-form-input>
                       <b-input-group-append>
                         <b-button size="sm" :disabled="!validAddress(settings.erc20.transferFrom.from)" :href="'https://sepolia.etherscan.io/address/' + settings.erc20.transferFrom.from" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                       </b-input-group-append>
@@ -435,14 +435,14 @@
                   </b-form-group>
                   <b-form-group label="to:" label-for="erc20-transferfrom-to" label-size="sm" label-cols-sm="3" label-align-sm="right" :state="!settings.erc20.transferFrom.to || validAddress(settings.erc20.transferFrom.to)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
                     <b-input-group size="sm" class="w-50">
-                      <b-form-input type="text" size="sm" id="erc20-transferfrom-to" v-model="settings.erc20.transferFrom.to" @change="saveSettings"></b-form-input>
+                      <b-form-input type="text" size="sm" id="erc20-transferfrom-to" v-model="settings.erc20.transferFrom.to" @change="saveSettings" placeholder="to"></b-form-input>
                       <b-input-group-append>
                         <b-button size="sm" :disabled="!validAddress(settings.erc20.transferFrom.to)" :href="'https://sepolia.etherscan.io/address/' + settings.erc20.transferFrom.to" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
                   <b-form-group label="tokens:" label-for="erc20-transferfrom-tokens" label-size="sm" label-cols-sm="3" label-align-sm="right" :state="!settings.erc20.transferFrom.tokens || validNumber(settings.erc20.transferFrom.tokens)" :invalid-feedback="'Invalid number'"class="mx-0 my-1 p-0">
-                    <b-form-input type="text" size="sm" id="erc20-transferfrom-tokens" v-model="settings.erc20.transferFrom.tokens" @change="saveSettings" class="w-25"></b-form-input>
+                    <b-form-input type="text" size="sm" id="erc20-transferfrom-tokens" v-model="settings.erc20.transferFrom.tokens" @change="saveSettings"  placeholder="e.g., 2.3456" class="w-25"></b-form-input>
                   </b-form-group>
                   <b-form-group label="" label-size="sm" label-cols-sm="3" label-align-sm="right" class="mx-0 my-1 p-0">
                     <b-button size="sm" :disabled="!validAddress(settings.erc20.contract) || !validAddress(settings.erc20.transferFrom.from) || !validAddress(settings.erc20.transferFrom.to) || !validNumber(settings.erc20.transferFrom.tokens)" @click="transferFromERC20" variant="warning">Transfer From</b-button>
@@ -637,9 +637,23 @@
             { value: 'txorderasc', text: '▲ TxOrder' },
             { value: 'txorderdsc', text: '▼ TxOrder' },
           ],
-          balancesAndAllowancesSortOptions: [
+          balancesSortOptions: [
             { value: 'txorderasc', text: '▲ Latest TxOrder' },
             { value: 'txorderdsc', text: '▼ Latest TxOrder' },
+            { value: 'ownerasc', text: '▲ Owner' },
+            { value: 'ownerdsc', text: '▼ Owner' },
+            { value: 'balanceasc', text: '▲ Balance' },
+            { value: 'balancedsc', text: '▼ Balance' },
+          ],
+          allowancesSortOptions: [
+            { value: 'txorderasc', text: '▲ Latest TxOrder' },
+            { value: 'txorderdsc', text: '▼ Latest TxOrder' },
+            { value: 'ownerasc', text: '▲ Owner' },
+            { value: 'ownerdsc', text: '▼ Owner' },
+            { value: 'spenderasc', text: '▲ Spender' },
+            { value: 'spenderdsc', text: '▼ Spender' },
+            { value: 'tokensasc', text: '▲ Tokens' },
+            { value: 'tokensdsc', text: '▼ Tokens' },
           ],
           pageSizes: [
             { value: 5, text: '5' },
@@ -669,7 +683,7 @@
           erc20AllowancesFields: [
             { key: 'number', label: '#', sortable: false, thStyle: 'width: 5%;', tdClass: 'text-truncate' },
             { key: 'latestUpdate', label: 'Latest Update', sortable: false, thStyle: 'width: 30%;', thClass: 'text-left', tdClass: 'text-left' },
-            { key: 'owner', label: 'Token Owner', sortable: false, thStyle: 'width: 20%;', thClass: 'text-left', tdClass: 'text-left' },
+            { key: 'owner', label: 'Owner', sortable: false, thStyle: 'width: 20%;', thClass: 'text-left', tdClass: 'text-left' },
             { key: 'spender', label: 'Spender', sortable: false, thStyle: 'width: 20%;', thClass: 'text-left', tdClass: 'text-left' },
             { key: 'tokens', label: 'Tokens', sortable: false, thStyle: 'width: 25%;', thClass: 'text-right', tdClass: 'text-right' },
           ],
@@ -767,6 +781,22 @@
                   return b.balance.blockNumber - a.balance.blockNumber;
                 }
               });
+            } else if (this.settings.erc20.balancesTable.sortOption == "ownerasc") {
+              results.sort((a, b) => {
+                return ('' + a.owner).localeCompare(b.owner);
+              });
+            } else if (this.settings.erc20.balancesTable.sortOption == "ownerdsc") {
+              results.sort((a, b) => {
+                return ('' + b.owner).localeCompare(a.owner);
+              });
+            } else if (this.settings.erc20.balancesTable.sortOption == "balanceasc") {
+              results.sort((a, b) => {
+                return a.balance.tokens - b.balance.tokens;
+              });
+            } else if (this.settings.erc20.balancesTable.sortOption == "balancedsc") {
+              results.sort((a, b) => {
+                return b.balance.tokens - a.balance.tokens;
+              });
             }
             return results;
           },
@@ -811,6 +841,30 @@
                 } else {
                   return b.tokens.blockNumber - a.tokens.blockNumber;
                 }
+              });
+            } else if (this.settings.erc20.allowancesTable.sortOption == "ownerasc") {
+              results.sort((a, b) => {
+                return ('' + a.owner).localeCompare(b.owner);
+              });
+            } else if (this.settings.erc20.allowancesTable.sortOption == "ownerdsc") {
+              results.sort((a, b) => {
+                return ('' + b.owner).localeCompare(a.owner);
+              });
+            } else if (this.settings.erc20.allowancesTable.sortOption == "spenderasc") {
+              results.sort((a, b) => {
+                return ('' + a.spender).localeCompare(b.spender);
+              });
+            } else if (this.settings.erc20.allowancesTable.sortOption == "spenderdsc") {
+              results.sort((a, b) => {
+                return ('' + b.spender).localeCompare(a.spender);
+              });
+            } else if (this.settings.erc20.allowancesTable.sortOption == "tokensasc") {
+              results.sort((a, b) => {
+                return a.tokens.tokens - b.tokens.tokens;
+              });
+            } else if (this.settings.erc20.allowancesTable.sortOption == "tokensdsc") {
+              results.sort((a, b) => {
+                return b.tokens.tokens - a.tokens.tokens;
               });
             }
             return results;
