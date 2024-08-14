@@ -85,6 +85,9 @@
               <font size="-1">
                 <!-- <b-table small fixed striped :fields="erc20EventsFields" :items="pagedSortedFilteredERC20Events" show-empty empty-html="Click [Retrieve] above" head-variant="light" class="mt-1"> -->
                 <b-table small fixed striped :items="nonFungibleModal.logs" show-empty head-variant="light" class="mt-1">
+                  <template #cell(log)="data">
+                    <font size="-2" style="overflow-wrap: break-word;">{{ data.item }}</font>
+                  </template>
                 </b-table>
               </font>
             </b-modal>
