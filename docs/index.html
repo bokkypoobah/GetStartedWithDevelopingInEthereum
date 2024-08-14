@@ -22,6 +22,7 @@
     <script src="globals.js"></script>
     <script src="customNames.js"></script>
     <script src="deploymentData.js"></script>
+    <script src="networks.js"></script>
 
     <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
@@ -50,7 +51,7 @@
         </b-navbar>
 
         <b-card no-body class="p-0 mt-0" style="min-height: 666px;">
-          <b-alert v-if="chainId && chainId != 11155111" size="sm" dismissible variant="warning" show class="m-1 my-0">
+          <b-alert v-if="false && chainId && chainId != 11155111" size="sm" dismissible variant="warning" show class="m-1 my-0">
             Warning: This dapp is for use on the Ethereum Sepolia testnet
           </b-alert>
           <b-card class="m-2 p-1" header-class="warningheader" header="Welcome" v-if="!coinbase">
@@ -66,7 +67,7 @@
                 <b-input-group size="sm" class="w-50">
                   <b-form-input type="text" size="sm" id="erc20-contract" v-model="settings.erc20.contract" @change="saveSettings" placeholder="ERC-20 token contract address"></b-form-input>
                   <b-input-group-append>
-                    <b-button size="sm" :disabled="!validAddress(settings.erc20.contract)" :href="'https://sepolia.etherscan.io/token/' + settings.erc20.contract + '#code'" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                    <b-button size="sm" :disabled="!validAddress(settings.erc20.contract)" :href="explorer + 'token/' + settings.erc20.contract + '#code'" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                   </b-input-group-append>
                 </b-input-group>
               </b-form-group>
@@ -117,7 +118,7 @@
                   </template>
                   <template #cell(when)="data">
                     <font size="-1">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.txHash + '#eventlog#' + data.item.logIndex" variant="link" v-b-popover.hover.ds500="(timestamps[chainId] && timestamps[chainId][data.item.blockNumber]) ? ('Block ' + formatNumber(data.item.blockNumber)) : 'blockNumber:txIndex'" target="_blank">
+                      <b-link size="sm" :href="explorer + 'tx/' + data.item.txHash + '#eventlog#' + data.item.logIndex" variant="link" v-b-popover.hover.ds500="(timestamps[chainId] && timestamps[chainId][data.item.blockNumber]) ? ('Block ' + formatNumber(data.item.blockNumber)) : 'blockNumber:txIndex'" target="_blank">
                         <span v-if="timestamps[chainId] && timestamps[chainId][data.item.blockNumber]">
                           {{ formatTimestamp(timestamps[chainId][data.item.blockNumber]) }}
                         </span>
@@ -131,24 +132,24 @@
                   </template>
                   <template #cell(fromOwner)="data">
                     <div v-if="data.item.name == 'Transfer'">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.from" variant="link" v-b-popover.hover.ds500="'Transfer from ' + data.item.from" target="_blank">
+                      <b-link size="sm" :href="explorer + 'address/' + data.item.from" variant="link" v-b-popover.hover.ds500="'Transfer from ' + data.item.from" target="_blank">
                         {{ data.item.from.substring(0, 8) + '...' + data.item.from.slice(-6) }}
                       </b-link>
                     </div>
                     <div v-else-if="data.item.name == 'Approval'">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.owner" variant="link" v-b-popover.hover.ds500="'Approval owner ' + data.item.owner" target="_blank">
+                      <b-link size="sm" :href="explorer + 'address/' + data.item.owner" variant="link" v-b-popover.hover.ds500="'Approval owner ' + data.item.owner" target="_blank">
                         {{ data.item.owner.substring(0, 8) + '...' + data.item.owner.slice(-6) }}
                       </b-link>
                     </div>
                   </template>
                   <template #cell(toSpender)="data">
                     <div v-if="data.item.name == 'Transfer'">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.to" variant="link" v-b-popover.hover.ds500="'Transfer to ' + data.item.to" target="_blank">
+                      <b-link size="sm" :href="explorer + 'address/' + data.item.to" variant="link" v-b-popover.hover.ds500="'Transfer to ' + data.item.to" target="_blank">
                         {{ data.item.to.substring(0, 8) + '...' + data.item.to.slice(-6) }}
                       </b-link>
                     </div>
                     <div v-else-if="data.item.name == 'Approval'">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.spender" variant="link" v-b-popover.hover.ds500="'Approval spender ' + data.item.spender" target="_blank">
+                      <b-link size="sm" :href="explorer + 'address/' + data.item.spender" variant="link" v-b-popover.hover.ds500="'Approval spender ' + data.item.spender" target="_blank">
                         {{ data.item.spender.substring(0, 8) + '...' + data.item.spender.slice(-6) }}
                       </b-link>
                     </div>
@@ -192,7 +193,7 @@
                       <font size="-1" class="text-muted">{{ parseInt(data.index) + ((settings.erc20.balancesTable.currentPage - 1) * settings.erc20.balancesTable.pageSize) + 1 }}</font>
                   </template>
                   <template #cell(latestUpdate)="data">
-                    <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.txHash + '#eventlog#' + data.item.logIndex" variant="link" v-b-popover.hover.ds500="(timestamps[chainId] && timestamps[chainId][data.item.blockNumber]) ? ('Block ' + formatNumber(data.item.blockNumber)) : 'blockNumber:txIndex'" target="_blank">
+                    <b-link size="sm" :href="explorer + 'tx/' + data.item.txHash + '#eventlog#' + data.item.logIndex" variant="link" v-b-popover.hover.ds500="(timestamps[chainId] && timestamps[chainId][data.item.blockNumber]) ? ('Block ' + formatNumber(data.item.blockNumber)) : 'blockNumber:txIndex'" target="_blank">
                       <font size="-1">
                         <span v-if="timestamps[chainId] && timestamps[chainId][data.item.blockNumber]">
                           {{ formatTimestamp(timestamps[chainId][data.item.blockNumber]) }}
@@ -206,7 +207,7 @@
                     <font size="-1" v-b-popover.hover.ds500="'txHash'" class="text-muted">{{ data.item.txHash.substring(0, 8) + '...' + data.item.txHash.slice(-6) }}</font>
                   </template>
                   <template #cell(owner)="data">
-                    <b-link size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc20.contract + '?a=' + data.item.owner" variant="link" v-b-popover.hover.ds500="data.item.owner" target="_blank">
+                    <b-link size="sm" :href="explorer + 'token/' + settings.erc20.contract + '?a=' + data.item.owner" variant="link" v-b-popover.hover.ds500="data.item.owner" target="_blank">
                       {{ data.item.owner.substring(0, 8) + '...' + data.item.owner.slice(-6) }}
                     </b-link>
                   </template>
@@ -250,7 +251,7 @@
                   </template>
                   <template #cell(latestUpdate)="data">
                     <font size="-1">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.txHash + '#eventlog#' + data.item.logIndex" variant="link" v-b-popover.hover.ds500="(timestamps[chainId] && timestamps[chainId][data.item.blockNumber]) ? ('Block ' + formatNumber(data.item.blockNumber)) : 'blockNumber:txIndex.logIndex'" target="_blank">
+                      <b-link size="sm" :href="explorer + 'tx/' + data.item.txHash + '#eventlog#' + data.item.logIndex" variant="link" v-b-popover.hover.ds500="(timestamps[chainId] && timestamps[chainId][data.item.blockNumber]) ? ('Block ' + formatNumber(data.item.blockNumber)) : 'blockNumber:txIndex.logIndex'" target="_blank">
                         <span v-if="timestamps[chainId] && timestamps[chainId][data.item.blockNumber]">
                           {{ formatTimestamp(timestamps[chainId][data.item.blockNumber]) }}
                         </span>
@@ -263,12 +264,12 @@
                     </font>
                   </template>
                   <template #cell(owner)="data">
-                    <b-link size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc20.contract + '?a=' + data.item.owner" variant="link" v-b-popover.hover.ds500="data.item.owner" target="_blank">
+                    <b-link size="sm" :href="explorer + 'token/' + settings.erc20.contract + '?a=' + data.item.owner" variant="link" v-b-popover.hover.ds500="data.item.owner" target="_blank">
                       {{ data.item.owner.substring(0, 8) + '...' + data.item.owner.slice(-6) }}
                     </b-link>
                   </template>
                   <template #cell(spender)="data">
-                    <b-link size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc20.contract + '?a=' + data.item.spender" variant="link" v-b-popover.hover.ds500="data.item.spender" target="_blank">
+                    <b-link size="sm" :href="explorer + 'token/' + settings.erc20.contract + '?a=' + data.item.spender" variant="link" v-b-popover.hover.ds500="data.item.spender" target="_blank">
                       {{ data.item.spender.substring(0, 8) + '...' + data.item.spender.slice(-6) }}
                     </b-link>
                   </template>
@@ -276,7 +277,7 @@
                     <font size="-2" class="text-muted">
                       {{ formatNumber(data.item.tokens) }}
                     </font>
-                    <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.txHash + '#eventlog#' + data.item.logIndex" variant="link" v-b-popover.hover.ds500="formatDecimals(data.item.tokens, data.item.decimals)" target="_blank">
+                    <b-link size="sm" :href="explorer + 'tx/' + data.item.txHash + '#eventlog#' + data.item.logIndex" variant="link" v-b-popover.hover.ds500="formatDecimals(data.item.tokens, data.item.decimals)" target="_blank">
                       <span v-if="data.item.toString().length > 30">
                         &infin;
                       </span>
@@ -294,7 +295,7 @@
                     <b-input-group size="sm" class="w-50">
                       <b-form-input type="text" size="sm" id="erc20-balanceof-owner" v-model="settings.erc20.balanceOf.owner" @change="saveSettings" placeholder="owner"></b-form-input>
                       <b-input-group-append>
-                        <b-button size="sm" :disabled="!validAddress(settings.erc20.balanceOf.owner)" :href="'https://sepolia.etherscan.io/address/' + settings.erc20.balanceOf.owner" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                        <b-button size="sm" :disabled="!validAddress(settings.erc20.balanceOf.owner)" :href="explorer + 'address/' + settings.erc20.balanceOf.owner" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
@@ -313,7 +314,7 @@
                     <b-input-group size="sm" class="w-50">
                       <b-form-input type="text" size="sm" id="erc20-allowance-owner" v-model="settings.erc20.allowance.owner" @change="saveSettings" placeholder="owner"></b-form-input>
                       <b-input-group-append>
-                        <b-button size="sm" :disabled="!validAddress(settings.erc20.allowance.owner)" :href="'https://sepolia.etherscan.io/address/' + settings.erc20.allowance.owner" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                        <b-button size="sm" :disabled="!validAddress(settings.erc20.allowance.owner)" :href="explorer + 'address/' + settings.erc20.allowance.owner" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
@@ -321,7 +322,7 @@
                     <b-input-group size="sm" class="w-50">
                       <b-form-input type="text" size="sm" id="erc20-allowance-spender" v-model="settings.erc20.allowance.spender" @change="saveSettings" placeholder="spender"></b-form-input>
                       <b-input-group-append>
-                        <b-button size="sm" :disabled="!validAddress(settings.erc20.allowance.spender)" :href="'https://sepolia.etherscan.io/address/' + settings.erc20.allowance.spender" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                        <b-button size="sm" :disabled="!validAddress(settings.erc20.allowance.spender)" :href="explorer + 'address/' + settings.erc20.allowance.spender" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
@@ -340,7 +341,7 @@
                     <b-input-group size="sm" class="w-50">
                       <b-form-input type="text" size="sm" readonly id="erc20-transfer-coinbase" v-model="coinbase"></b-form-input>
                       <b-input-group-append>
-                        <b-button size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc20.contract + '?a=' + coinbase" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                        <b-button size="sm" :href="explorer + 'token/' + settings.erc20.contract + '?a=' + coinbase" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
@@ -354,7 +355,7 @@
                     <b-input-group size="sm" class="w-50">
                       <b-form-input type="text" size="sm" id="erc20-transfer-to" v-model="settings.erc20.transfer.to" @change="saveSettings" placeholder="to"></b-form-input>
                       <b-input-group-append>
-                        <b-button size="sm" :disabled="!validAddress(settings.erc20.transfer.to)" :href="'https://sepolia.etherscan.io/address/' + settings.erc20.transfer.to" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                        <b-button size="sm" :disabled="!validAddress(settings.erc20.transfer.to)" :href="explorer + 'address/' + settings.erc20.transfer.to" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
@@ -368,7 +369,7 @@
                     <b-input-group size="sm" class="w-75">
                       <b-form-input type="text" size="sm" readonly id="erc20-transfer-txhash" v-model="erc20.transferTx.txHash"></b-form-input>
                       <b-input-group-append>
-                        <b-button size="sm" :disabled="!erc20.transferTx.txHash" :href="'https://sepolia.etherscan.io/tx/' + erc20.transferTx.txHash" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                        <b-button size="sm" :disabled="!erc20.transferTx.txHash" :href="explorer + 'tx/' + erc20.transferTx.txHash" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
@@ -384,7 +385,7 @@
                     <b-input-group size="sm" class="w-50">
                       <b-form-input type="text" size="sm" readonly id="erc20-approve-coinbase" v-model="coinbase"></b-form-input>
                       <b-input-group-append>
-                        <b-button size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc20.contract + '?a=' + coinbase" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                        <b-button size="sm" :href="explorer + 'token/' + settings.erc20.contract + '?a=' + coinbase" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
@@ -392,7 +393,7 @@
                     <b-input-group size="sm" class="w-50">
                       <b-form-input type="text" size="sm" id="erc20-approve-spender" v-model="settings.erc20.approve.spender" @change="saveSettings" placeholder="spender"></b-form-input>
                       <b-input-group-append>
-                        <b-button size="sm" :disabled="!validAddress(settings.erc20.approve.spender)" :href="'https://sepolia.etherscan.io/address/' + settings.erc20.approve.spender" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                        <b-button size="sm" :disabled="!validAddress(settings.erc20.approve.spender)" :href="explorer + 'address/' + settings.erc20.approve.spender" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
@@ -406,7 +407,7 @@
                     <b-input-group size="sm" class="w-75">
                       <b-form-input type="text" size="sm" readonly id="erc20-approve-txhash" v-model="erc20.approveTx.txHash"></b-form-input>
                       <b-input-group-append>
-                        <b-button size="sm" :disabled="!erc20.approveTx.txHash" :href="'https://sepolia.etherscan.io/tx/' + erc20.approveTx.txHash" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                        <b-button size="sm" :disabled="!erc20.approveTx.txHash" :href="explorer + 'tx/' + erc20.approveTx.txHash" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
@@ -422,7 +423,7 @@
                     <b-input-group size="sm" class="w-50">
                       <b-form-input type="text" size="sm" readonly id="erc20-transferfrom-coinbase" v-model="coinbase"></b-form-input>
                       <b-input-group-append>
-                        <b-button size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc20.contract + '?a=' + coinbase" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                        <b-button size="sm" :href="explorer + 'token/' + settings.erc20.contract + '?a=' + coinbase" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
@@ -430,7 +431,7 @@
                     <b-input-group size="sm" class="w-50">
                       <b-form-input type="text" size="sm" id="erc20-transferfrom-from" v-model="settings.erc20.transferFrom.from" @change="saveSettings" placeholder="from"></b-form-input>
                       <b-input-group-append>
-                        <b-button size="sm" :disabled="!validAddress(settings.erc20.transferFrom.from)" :href="'https://sepolia.etherscan.io/address/' + settings.erc20.transferFrom.from" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                        <b-button size="sm" :disabled="!validAddress(settings.erc20.transferFrom.from)" :href="explorer + 'address/' + settings.erc20.transferFrom.from" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
@@ -438,7 +439,7 @@
                     <b-input-group size="sm" class="w-50">
                       <b-form-input type="text" size="sm" id="erc20-transferfrom-to" v-model="settings.erc20.transferFrom.to" @change="saveSettings" placeholder="to"></b-form-input>
                       <b-input-group-append>
-                        <b-button size="sm" :disabled="!validAddress(settings.erc20.transferFrom.to)" :href="'https://sepolia.etherscan.io/address/' + settings.erc20.transferFrom.to" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                        <b-button size="sm" :disabled="!validAddress(settings.erc20.transferFrom.to)" :href="explorer + 'address/' + settings.erc20.transferFrom.to" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
@@ -452,7 +453,7 @@
                     <b-input-group size="sm" class="w-75">
                       <b-form-input type="text" size="sm" readonly id="erc20-transferfrom-txhash" v-model="erc20.transferFromTx.txHash"></b-form-input>
                       <b-input-group-append>
-                        <b-button size="sm" :disabled="!erc20.transferFromTx.txHash" :href="'https://sepolia.etherscan.io/tx/' + erc20.transferFromTx.txHash" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                        <b-button size="sm" :disabled="!erc20.transferFromTx.txHash" :href="explorer + 'tx/' + erc20.transferFromTx.txHash" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
@@ -469,7 +470,7 @@
                 <b-input-group size="sm" class="w-50">
                   <b-form-input type="text" size="sm" id="erc721-contract" v-model="settings.erc721.contract" @change="saveSettings" placeholder="ERC-721 token contract address"></b-form-input>
                   <b-input-group-append>
-                    <b-button size="sm" :disabled="!validAddress(settings.erc721.contract)" :href="'https://sepolia.etherscan.io/token/' + settings.erc721.contract + '#code'" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                    <b-button size="sm" :disabled="!validAddress(settings.erc721.contract)" :href="explorer + 'token/' + settings.erc721.contract + '#code'" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                   </b-input-group-append>
                 </b-input-group>
               </b-form-group>
@@ -511,7 +512,7 @@
                   </template>
                   <template #cell(when)="data">
                     <font size="-1">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.txHash + '#eventlog#' + data.item.logIndex" variant="link" v-b-popover.hover.ds500="(timestamps[chainId] && timestamps[chainId][data.item.blockNumber]) ? ('Block ' + formatNumber(data.item.blockNumber)) : 'blockNumber:txIndex'" target="_blank">
+                      <b-link size="sm" :href="explorer + 'tx/' + data.item.txHash + '#eventlog#' + data.item.logIndex" variant="link" v-b-popover.hover.ds500="(timestamps[chainId] && timestamps[chainId][data.item.blockNumber]) ? ('Block ' + formatNumber(data.item.blockNumber)) : 'blockNumber:txIndex'" target="_blank">
                         <span v-if="timestamps[chainId] && timestamps[chainId][data.item.blockNumber]">
                           {{ formatTimestamp(timestamps[chainId][data.item.blockNumber]) }}
                         </span>
@@ -525,41 +526,41 @@
                   </template>
                   <template #cell(fromOwner)="data">
                     <div v-if="data.item.name == 'Transfer'">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.from" variant="link" v-b-popover.hover.ds500="'Transfer from ' + data.item.from" target="_blank">
+                      <b-link size="sm" :href="explorer + 'address/' + data.item.from" variant="link" v-b-popover.hover.ds500="'Transfer from ' + data.item.from" target="_blank">
                         {{ data.item.from.substring(0, 8) + '...' + data.item.from.slice(-6) }}
                       </b-link>
                     </div>
                     <div v-else-if="data.item.name == 'Approval'">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.owner" variant="link" v-b-popover.hover.ds500="'Approval owner ' + data.item.owner" target="_blank">
+                      <b-link size="sm" :href="explorer + 'address/' + data.item.owner" variant="link" v-b-popover.hover.ds500="'Approval owner ' + data.item.owner" target="_blank">
                         {{ data.item.owner.substring(0, 8) + '...' + data.item.owner.slice(-6) }}
                       </b-link>
                     </div>
                     <div v-else-if="data.item.name == 'ApprovalForAll' ">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.owner" variant="link" v-b-popover.hover.ds500="'ApprovalForAll owner ' + data.item.owner" target="_blank">
+                      <b-link size="sm" :href="explorer + 'address/' + data.item.owner" variant="link" v-b-popover.hover.ds500="'ApprovalForAll owner ' + data.item.owner" target="_blank">
                         {{ data.item.owner.substring(0, 8) + '...' + data.item.owner.slice(-6) }}
                       </b-link>
                     </div>
                   </template>
                   <template #cell(toSpenderOperator)="data">
                     <div v-if="data.item.name == 'Transfer'">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.to" variant="link" v-b-popover.hover.ds500="'Transfer to ' + data.item.to" target="_blank">
+                      <b-link size="sm" :href="explorer + 'address/' + data.item.to" variant="link" v-b-popover.hover.ds500="'Transfer to ' + data.item.to" target="_blank">
                         {{ data.item.to.substring(0, 8) + '...' + data.item.to.slice(-6) }}
                       </b-link>
                     </div>
                     <div v-else-if="data.item.name == 'Approval'">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.spender" variant="link" v-b-popover.hover.ds500="'Approval spender ' + data.item.spender" target="_blank">
+                      <b-link size="sm" :href="explorer + 'address/' + data.item.spender" variant="link" v-b-popover.hover.ds500="'Approval spender ' + data.item.spender" target="_blank">
                         {{ data.item.spender.substring(0, 8) + '...' + data.item.spender.slice(-6) }}
                       </b-link>
                     </div>
                     <div v-else-if="data.item.name == 'ApprovalForAll'">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.operator" variant="link" v-b-popover.hover.ds500="'ApprovalForAll operator ' + data.item.operator" target="_blank">
+                      <b-link size="sm" :href="explorer + 'address/' + data.item.operator" variant="link" v-b-popover.hover.ds500="'ApprovalForAll operator ' + data.item.operator" target="_blank">
                         {{ data.item.operator.substring(0, 8) + '...' + data.item.operator.slice(-6) }}
                       </b-link>
                     </div>
                   </template>
                   <template #cell(tokenIdApproved)="data">
                     <div v-if="data.item.name == 'Transfer' || data.item.name == 'Approval'">
-                      <b-link size="sm" :href="'https://testnets.opensea.io/assets/sepolia/' + settings.erc721.contract + '/' + data.item.tokenId" variant="link" v-b-popover.hover.ds500="'Token Id ' + data.item.tokenId" target="_blank">
+                      <b-link size="sm" :href="nonFungibleViewerURL(settings.erc721.contract, data.item.tokenId)" variant="link" v-b-popover.hover.ds500="'Token Id ' + data.item.tokenId" target="_blank">
                         {{ data.item.tokenId }}
                       </b-link>
                     </div>
@@ -600,7 +601,7 @@
                       <font size="-1" class="text-muted">{{ parseInt(data.index) + ((settings.erc721.tokensTable.currentPage - 1) * settings.erc721.tokensTable.pageSize) + 1 }}</font>
                   </template>
                   <template #cell(latestUpdate)="data">
-                    <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.txHash + '#eventlog#' + data.item.logIndex" variant="link" v-b-popover.hover.ds500="(timestamps[chainId] && timestamps[chainId][data.item.blockNumber]) ? ('Block ' + formatNumber(data.item.blockNumber)) : 'blockNumber:txIndex'" target="_blank">
+                    <b-link size="sm" :href="explorer + 'tx/' + data.item.txHash + '#eventlog#' + data.item.logIndex" variant="link" v-b-popover.hover.ds500="(timestamps[chainId] && timestamps[chainId][data.item.blockNumber]) ? ('Block ' + formatNumber(data.item.blockNumber)) : 'blockNumber:txIndex'" target="_blank">
                       <font size="-1">
                         <span v-if="timestamps[chainId] && timestamps[chainId][data.item.blockNumber]">
                           {{ formatTimestamp(timestamps[chainId][data.item.blockNumber]) }}
@@ -613,8 +614,13 @@
                     <font size="-1" v-b-popover.hover.ds500="'logIndex'" class="text-muted">{{ data.item.logIndex }}</font>
                     <font size="-1" v-b-popover.hover.ds500="'txHash'" class="text-muted">{{ data.item.txHash.substring(0, 8) + '...' + data.item.txHash.slice(-6) }}</font>
                   </template>
+                  <template #cell(tokenId)="data">
+                    <b-link size="sm" :href="nonFungibleViewerURL(settings.erc721.contract, data.item.tokenId)" variant="link" v-b-popover.hover.ds500="'Token Id ' + data.item.tokenId" target="_blank">
+                      {{ data.item.tokenId }}
+                    </b-link>
+                  </template>
                   <template #cell(owner)="data">
-                    <b-link size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc721.contract + '?a=' + data.item.owner" variant="link" v-b-popover.hover.ds500="data.item.owner" target="_blank">
+                    <b-link size="sm" :href="explorer + 'token/' + settings.erc721.contract + '?a=' + data.item.owner" variant="link" v-b-popover.hover.ds500="data.item.owner" target="_blank">
                       {{ data.item.owner.substring(0, 8) + '...' + data.item.owner.slice(-6) }}
                     </b-link>
                   </template>
@@ -652,7 +658,7 @@
                   </template>
                   <template #cell(latestUpdate)="data">
                     <font size="-1">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.txHash + '#eventlog#' + data.item.logIndex" variant="link" v-b-popover.hover.ds500="(timestamps[chainId] && timestamps[chainId][data.item.blockNumber]) ? ('Block ' + formatNumber(data.item.blockNumber)) : 'blockNumber:txIndex.logIndex'" target="_blank">
+                      <b-link size="sm" :href="explorer + 'tx/' + data.item.txHash + '#eventlog#' + data.item.logIndex" variant="link" v-b-popover.hover.ds500="(timestamps[chainId] && timestamps[chainId][data.item.blockNumber]) ? ('Block ' + formatNumber(data.item.blockNumber)) : 'blockNumber:txIndex.logIndex'" target="_blank">
                         <span v-if="timestamps[chainId] && timestamps[chainId][data.item.blockNumber]">
                           {{ formatTimestamp(timestamps[chainId][data.item.blockNumber]) }}
                         </span>
@@ -665,12 +671,12 @@
                     </font>
                   </template>
                   <template #cell(owner)="data">
-                    <b-link size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc721.contract + '?a=' + data.item.owner" variant="link" v-b-popover.hover.ds500="data.item.owner" target="_blank">
+                    <b-link size="sm" :href="explorer + 'token/' + settings.erc721.contract + '?a=' + data.item.owner" variant="link" v-b-popover.hover.ds500="data.item.owner" target="_blank">
                       {{ data.item.owner.substring(0, 8) + '...' + data.item.owner.slice(-6) }}
                     </b-link>
                   </template>
                   <template #cell(operator)="data">
-                    <b-link size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc721.contract + '?a=' + data.item.operator" variant="link" v-b-popover.hover.ds500="data.item.operator" target="_blank">
+                    <b-link size="sm" :href="explorer + 'token/' + settings.erc721.contract + '?a=' + data.item.operator" variant="link" v-b-popover.hover.ds500="data.item.operator" target="_blank">
                       {{ data.item.operator.substring(0, 8) + '...' + data.item.operator.slice(-6) }}
                     </b-link>
                   </template>
@@ -678,7 +684,7 @@
                     <!-- <font size="-2" class="text-muted">
                       {{ formatNumber(data.item.tokens.tokens) }}
                     </font>
-                    <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.tokens.txHash + '#eventlog#' + data.item.tokens.logIndex" variant="link" v-b-popover.hover.ds500="formatDecimals(data.item.tokens.tokens, data.item.decimals)" target="_blank">
+                    <b-link size="sm" :href="explorer + 'tx/' + data.item.tokens.txHash + '#eventlog#' + data.item.tokens.logIndex" variant="link" v-b-popover.hover.ds500="formatDecimals(data.item.tokens.tokens, data.item.decimals)" target="_blank">
                       <span v-if="data.item.tokens.tokens.toString().length > 30">
                         &infin;
                       </span>
@@ -721,7 +727,7 @@
                   </template>
                   <template #cell(latestUpdate)="data">
                     <font size="-1">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.txHash + '#eventlog#' + data.item.logIndex" variant="link" v-b-popover.hover.ds500="(timestamps[chainId] && timestamps[chainId][data.item.blockNumber]) ? ('Block ' + formatNumber(data.item.blockNumber)) : 'blockNumber:txIndex.logIndex'" target="_blank">
+                      <b-link size="sm" :href="explorer + 'tx/' + data.item.txHash + '#eventlog#' + data.item.logIndex" variant="link" v-b-popover.hover.ds500="(timestamps[chainId] && timestamps[chainId][data.item.blockNumber]) ? ('Block ' + formatNumber(data.item.blockNumber)) : 'blockNumber:txIndex.logIndex'" target="_blank">
                         <span v-if="timestamps[chainId] && timestamps[chainId][data.item.blockNumber]">
                           {{ formatTimestamp(timestamps[chainId][data.item.blockNumber]) }}
                         </span>
@@ -734,17 +740,17 @@
                     </font>
                   </template>
                   <template #cell(owner)="data">
-                    <b-link size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc721.contract + '?a=' + data.item.owner" variant="link" v-b-popover.hover.ds500="data.item.owner" target="_blank">
+                    <b-link size="sm" :href="explorer + 'token/' + settings.erc721.contract + '?a=' + data.item.owner" variant="link" v-b-popover.hover.ds500="data.item.owner" target="_blank">
                       {{ data.item.owner.substring(0, 8) + '...' + data.item.owner.slice(-6) }}
                     </b-link>
                   </template>
                   <template #cell(spender)="data">
-                    <b-link size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc721.contract + '?a=' + data.item.spender" variant="link" v-b-popover.hover.ds500="data.item.spender" target="_blank">
+                    <b-link size="sm" :href="explorer + 'token/' + settings.erc721.contract + '?a=' + data.item.spender" variant="link" v-b-popover.hover.ds500="data.item.spender" target="_blank">
                       {{ data.item.spender.substring(0, 8) + '...' + data.item.spender.slice(-6) }}
                     </b-link>
                   </template>
                   <template #cell(tokenId)="data">
-                    <b-link size="sm" :href="'https://testnets.opensea.io/assets/sepolia/' + settings.erc721.contract + '/' + data.item.tokenId" variant="link" v-b-popover.hover.ds500="'Token Id ' + data.item.tokenId" target="_blank">
+                    <b-link size="sm" :href="nonFungibleViewerURL(settings.erc721.contract, data.item.tokenId)" variant="link" v-b-popover.hover.ds500="'Token Id ' + data.item.tokenId" target="_blank">
                       {{ data.item.tokenId }}
                     </b-link>
                   </template>
@@ -758,7 +764,7 @@
                 <b-input-group size="sm" class="w-50">
                   <b-form-input type="text" size="sm" id="erc1155-contract" v-model="settings.erc1155.contract" @change="saveSettings" placeholder="ERC-1155 token contract address"></b-form-input>
                   <b-input-group-append>
-                    <b-button size="sm" :disabled="!validAddress(settings.erc1155.contract)" :href="'https://sepolia.etherscan.io/token/' + settings.erc1155.contract + '#code'" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                    <b-button size="sm" :disabled="!validAddress(settings.erc1155.contract)" :href="explorer + 'token/' + settings.erc1155.contract + '#code'" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                   </b-input-group-append>
                 </b-input-group>
               </b-form-group>
@@ -797,7 +803,7 @@
                   </template>
                   <template #cell(when)="data">
                     <font size="-1">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.txHash + '#eventlog#' + data.item.logIndex" variant="link" v-b-popover.hover.ds500="(timestamps[chainId] && timestamps[chainId][data.item.blockNumber]) ? ('Block ' + formatNumber(data.item.blockNumber)) : 'blockNumber:txIndex'" target="_blank">
+                      <b-link size="sm" :href="explorer + 'tx/' + data.item.txHash + '#eventlog#' + data.item.logIndex" variant="link" v-b-popover.hover.ds500="(timestamps[chainId] && timestamps[chainId][data.item.blockNumber]) ? ('Block ' + formatNumber(data.item.blockNumber)) : 'blockNumber:txIndex'" target="_blank">
                         <span v-if="timestamps[chainId] && timestamps[chainId][data.item.blockNumber]">
                           {{ formatTimestamp(timestamps[chainId][data.item.blockNumber]) }}
                         </span>
@@ -811,48 +817,48 @@
                   </template>
                   <template #cell(fromOwner)="data">
                     <div v-if="data.item.name == 'TransferSingle'">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.from" variant="link" v-b-popover.hover.ds500="'TransferSingle from ' + data.item.from" target="_blank">
+                      <b-link size="sm" :href="explorer + 'address/' + data.item.from" variant="link" v-b-popover.hover.ds500="'TransferSingle from ' + data.item.from" target="_blank">
                         {{ data.item.from.substring(0, 8) + '...' + data.item.from.slice(-6) }}
                       </b-link>
                     </div>
                     <div v-else-if="data.item.name == 'TransferBatch'">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.from" variant="link" v-b-popover.hover.ds500="'TransferBatch from ' + data.item.from" target="_blank">
+                      <b-link size="sm" :href="explorer + 'address/' + data.item.from" variant="link" v-b-popover.hover.ds500="'TransferBatch from ' + data.item.from" target="_blank">
                         {{ data.item.from.substring(0, 8) + '...' + data.item.from.slice(-6) }}
                       </b-link>
                     </div>
                     <div v-else-if="data.item.name == 'ApprovalForAll' ">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.owner" variant="link" v-b-popover.hover.ds500="'ApprovalForAll owner ' + data.item.owner" target="_blank">
+                      <b-link size="sm" :href="explorer + 'address/' + data.item.owner" variant="link" v-b-popover.hover.ds500="'ApprovalForAll owner ' + data.item.owner" target="_blank">
                         {{ data.item.owner.substring(0, 8) + '...' + data.item.owner.slice(-6) }}
                       </b-link>
                     </div>
                   </template>
                   <template #cell(toOperator)="data">
                     <div v-if="data.item.name == 'TransferSingle'">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.to" variant="link" v-b-popover.hover.ds500="'TransferSingle to ' + data.item.to" target="_blank">
+                      <b-link size="sm" :href="explorer + 'address/' + data.item.to" variant="link" v-b-popover.hover.ds500="'TransferSingle to ' + data.item.to" target="_blank">
                         {{ data.item.to.substring(0, 8) + '...' + data.item.to.slice(-6) }}
                       </b-link>
                     </div>
                     <div v-else-if="data.item.name == 'TransferBatch'">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.to" variant="link" v-b-popover.hover.ds500="'TransferBatch to ' + data.item.to" target="_blank">
+                      <b-link size="sm" :href="explorer + 'address/' + data.item.to" variant="link" v-b-popover.hover.ds500="'TransferBatch to ' + data.item.to" target="_blank">
                         {{ data.item.to.substring(0, 8) + '...' + data.item.to.slice(-6) }}
                       </b-link>
                     </div>
                     <div v-else-if="data.item.name == 'ApprovalForAll'">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.operator" variant="link" v-b-popover.hover.ds500="'ApprovalForAll operator ' + data.item.operator" target="_blank">
+                      <b-link size="sm" :href="explorer + 'address/' + data.item.operator" variant="link" v-b-popover.hover.ds500="'ApprovalForAll operator ' + data.item.operator" target="_blank">
                         {{ data.item.operator.substring(0, 8) + '...' + data.item.operator.slice(-6) }}
                       </b-link>
                     </div>
                   </template>
                   <template #cell(tokenIdApproved)="data">
                     <div v-if="data.item.name == 'TransferSingle'">
-                      <b-link size="sm" :href="'https://testnets.opensea.io/assets/sepolia/' + settings.erc1155.contract + '/' + data.item.tokenId" variant="link" v-b-popover.hover.ds500="'Token Id ' + data.item.tokenId" target="_blank">
+                      <b-link size="sm" :href="nonFungibleViewerURL(settings.erc1155.contract, data.item.tokenId)" variant="link" v-b-popover.hover.ds500="'Token Id ' + data.item.tokenId" target="_blank">
                         {{ data.item.tokenId }}
                       </b-link>
                       <font size="-1" class="text-muted">{{ 'x' + data.item.value }}</font>
                     </div>
                     <div v-else-if="data.item.name == 'TransferBatch'">
                       <span v-for="(item, index) of data.item.tokenIds" v-bind:key="index">
-                        <b-link size="sm" :href="'https://testnets.opensea.io/assets/sepolia/' + settings.erc1155.contract + '/' + data.item.tokenIds[index]" variant="link" v-b-popover.hover.ds500="'Token Id ' + data.item.tokenId" target="_blank">
+                        <b-link size="sm" :href="nonFungibleViewerURL(settings.erc1155.contract, data.item.tokenIds[index])" variant="link" v-b-popover.hover.ds500="'Token Id ' + data.item.tokenId" target="_blank">
                           {{ data.item.tokenIds[index] }}
                         </b-link>
                         <font size="-1" class="text-muted">{{ 'x' + data.item.values[index] }}</font>
@@ -895,7 +901,7 @@
                       <font size="-1" class="text-muted">{{ parseInt(data.index) + ((settings.erc1155.tokensTable.currentPage - 1) * settings.erc1155.tokensTable.pageSize) + 1 }}</font>
                   </template>
                   <template #cell(latestUpdate)="data">
-                    <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.txHash + '#eventlog#' + data.item.logIndex" variant="link" v-b-popover.hover.ds500="(timestamps[chainId] && timestamps[chainId][data.item.blockNumber]) ? ('Block ' + formatNumber(data.item.blockNumber)) : 'blockNumber:txIndex'" target="_blank">
+                    <b-link size="sm" :href="explorer + 'tx/' + data.item.txHash + '#eventlog#' + data.item.logIndex" variant="link" v-b-popover.hover.ds500="(timestamps[chainId] && timestamps[chainId][data.item.blockNumber]) ? ('Block ' + formatNumber(data.item.blockNumber)) : 'blockNumber:txIndex'" target="_blank">
                       <font size="-1">
                         <span v-if="timestamps[chainId] && timestamps[chainId][data.item.blockNumber]">
                           {{ formatTimestamp(timestamps[chainId][data.item.blockNumber]) }}
@@ -908,8 +914,13 @@
                     <font size="-1" v-b-popover.hover.ds500="'logIndex'" class="text-muted">{{ data.item.logIndex }}</font>
                     <font size="-1" v-b-popover.hover.ds500="'txHash'" class="text-muted">{{ data.item.txHash.substring(0, 8) + '...' + data.item.txHash.slice(-6) }}</font>
                   </template>
+                  <template #cell(tokenId)="data">
+                    <b-link size="sm" :href="nonFungibleViewerURL(settings.erc1155.contract, data.item.tokenId)" variant="link" v-b-popover.hover.ds500="'Token Id ' + data.item.tokenId" target="_blank">
+                      {{ data.item.tokenId }}
+                    </b-link>
+                  </template>
                   <template #cell(owner)="data">
-                    <b-link size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc1155.contract + '?a=' + data.item.owner" variant="link" v-b-popover.hover.ds500="data.item.owner" target="_blank">
+                    <b-link size="sm" :href="explorer + 'token/' + settings.erc1155.contract + '?a=' + data.item.owner" variant="link" v-b-popover.hover.ds500="data.item.owner" target="_blank">
                       {{ data.item.owner.substring(0, 8) + '...' + data.item.owner.slice(-6) }}
                     </b-link>
                     <font size="-1" class="text-muted">{{ 'x' + data.item.value }}</font>
@@ -948,7 +959,7 @@
                   </template>
                   <template #cell(latestUpdate)="data">
                     <font size="-1">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.txHash + '#eventlog#' + data.item.logIndex" variant="link" v-b-popover.hover.ds500="(timestamps[chainId] && timestamps[chainId][data.item.blockNumber]) ? ('Block ' + formatNumber(data.item.blockNumber)) : 'blockNumber:txIndex.logIndex'" target="_blank">
+                      <b-link size="sm" :href="explorer + 'tx/' + data.item.txHash + '#eventlog#' + data.item.logIndex" variant="link" v-b-popover.hover.ds500="(timestamps[chainId] && timestamps[chainId][data.item.blockNumber]) ? ('Block ' + formatNumber(data.item.blockNumber)) : 'blockNumber:txIndex.logIndex'" target="_blank">
                         <span v-if="timestamps[chainId] && timestamps[chainId][data.item.blockNumber]">
                           {{ formatTimestamp(timestamps[chainId][data.item.blockNumber]) }}
                         </span>
@@ -961,12 +972,12 @@
                     </font>
                   </template>
                   <template #cell(owner)="data">
-                    <b-link size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc721.contract + '?a=' + data.item.owner" variant="link" v-b-popover.hover.ds500="data.item.owner" target="_blank">
+                    <b-link size="sm" :href="explorer + 'token/' + settings.erc721.contract + '?a=' + data.item.owner" variant="link" v-b-popover.hover.ds500="data.item.owner" target="_blank">
                       {{ data.item.owner.substring(0, 8) + '...' + data.item.owner.slice(-6) }}
                     </b-link>
                   </template>
                   <template #cell(operator)="data">
-                    <b-link size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc721.contract + '?a=' + data.item.operator" variant="link" v-b-popover.hover.ds500="data.item.operator" target="_blank">
+                    <b-link size="sm" :href="explorer + 'token/' + settings.erc721.contract + '?a=' + data.item.operator" variant="link" v-b-popover.hover.ds500="data.item.operator" target="_blank">
                       {{ data.item.operator.substring(0, 8) + '...' + data.item.operator.slice(-6) }}
                     </b-link>
                   </template>
@@ -1034,16 +1045,16 @@
           <div class="d-flex flex-wrap m-0 p-0">
             <div class="ml-0 mt-1 pl-1">
               <font v-if="connected" size="-2">
-                <b-link v-if="coinbase" :href="'https://sepolia.etherscan.io/address/' + coinbase" v-b-popover.hover.ds500="'Coinbase'" target="_blank">
+                <b-link v-if="coinbase" :href="explorer + 'address/' + coinbase" v-b-popover.hover.ds500="'Coinbase'" target="_blank">
                   {{ coinbase && (coinbase.substring(0, 8) + '...' + coinbase.slice(-6)) || 'Connect' }}
                 </b-link>
-                <b-link v-if="chainId" :href="'https://sepolia.etherscan.io/'" v-b-popover.hover.ds500="'Network'" target="_blank">
-                  {{ chainId == '11155111' ? 'Sepolia' : 'Unsupported' }}
+                <b-link v-if="chainId" :href="explorer + ''" v-b-popover.hover.ds500="'Network'" target="_blank">
+                  {{ networkName }}
                 </b-link>
-                <b-link v-if="blockNumber" :href="'https://sepolia.etherscan.io/block/' + blockNumber" v-b-popover.hover.ds500="'Latest block'" target="_blank">
+                <b-link v-if="blockNumber" :href="explorer + 'block/' + blockNumber" v-b-popover.hover.ds500="'Latest block'" target="_blank">
                   {{ '#' + formatNumber(blockNumber) }}
                 </b-link>
-                <b-link v-if="blockNumber" :href="'https://sepolia.etherscan.io/block/' + blockNumber" v-b-popover.hover.ds500="formatTimestamp(timestamp)" target="_blank">
+                <b-link v-if="blockNumber" :href="explorer + 'block/' + blockNumber" v-b-popover.hover.ds500="formatTimestamp(timestamp)" target="_blank">
                   {{ formatTimeDiff(timestamp) }}
                 </b-link>
               </font>
@@ -1336,6 +1347,18 @@
 
         // --- COMPUTED ---
         computed: {
+          network() {
+            return NETWORKS[this.chainId] || {};
+          },
+          networkName() {
+            return this.network.name || "Unknown - chainId: " + this.chainId;
+          },
+          explorer() {
+            return this.network.explorer || "https://etherscan.io/";
+          },
+          nonFungibleViewer() {
+            return this.network.nonFungibleViewer || "https://opensea.io/assets/ethereum/${contract}/${tokenId}";
+          },
           // --- ERC-20: ---
           sortedFilteredERC20Events() {
             // console.log(moment().format("HH:mm:ss") + " sortedFilteredERC20Events - this.settings.erc20.eventsTable: " + JSON.stringify(this.settings.erc20.eventsTable));
@@ -2113,6 +2136,10 @@
 
         // --- METHODS ---
         methods: {
+          nonFungibleViewerURL(contract, tokenId) {
+            return this.nonFungibleViewer.replace(/\${contract}/, contract).replace(/\${tokenId}/, tokenId);
+          },
+
           async retrieveERC20() {
             console.log(moment().format("HH:mm:ss") + " retrieveERC20 BEGIN - settings.erc20: " + JSON.stringify(this.settings.erc20, null, 2));
             const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -2837,10 +2864,10 @@
             } else {
               const t = this;
               function handleChainChanged(_chainId) {
-                t.chainId = _chainId;
+                t.chainId = parseInt(_chainId);
                 console.log(moment().format("HH:mm:ss") + " connectToWeb3 - handleChainChanged - this.chainId: " + t.chainId);
-                alert('Ethereum chain has changed - reloading this page.')
-                window.location.reload();
+                // alert('Ethereum chain has changed - reloading this page.')
+                // window.location.reload();
               }
               window.ethereum.on('chainChanged', handleChainChanged);
               const provider = new ethers.providers.Web3Provider(window.ethereum);
