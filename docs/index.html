@@ -925,7 +925,7 @@
                   <div class="mt-0 flex-grow-1">
                   </div>
                   <div class="mt-0 pr-1">
-                    <b-button size="sm" @click="retrieveTimestamps(pagedSortedFilteredERC721ApprovalForAlls.map(e => e.blockNumber))" variant="link" v-b-popover.hover.ds500="'Retrieve timestamps for allowances below'"><b-icon-clock-history shift-v="+1" font-scale="1.2"></b-icon-clock-history></b-button>
+                    <b-button size="sm" @click="retrieveTimestamps(pagedSortedFilteredERC1155ApprovalForAlls.map(e => e.blockNumber))" variant="link" v-b-popover.hover.ds500="'Retrieve timestamps for ApprovalForAlls below'"><b-icon-clock-history shift-v="+1" font-scale="1.2"></b-icon-clock-history></b-button>
                   </div>
                   <div class="mt-0 flex-grow-1">
                   </div>
@@ -933,16 +933,16 @@
                     <b-form-select size="sm" v-model="settings.erc1155.approvalForAllsTable.sortOption" @change="saveSettings" :options="erc721And1155ApprovalForAllsSortOptions" v-b-popover.hover.bottom="'Yeah. Sort'"></b-form-select>
                   </div>
                   <div class="mt-0 pl-1">
-                    <font size="-2" v-b-popover.hover.bottom="'# filtered / total events'">{{ formatNumber(sortedFilteredERC721ApprovalForAlls.length) + '/' + formatNumber(erc721.approvalForAlls.length) }}</font>
+                    <font size="-2" v-b-popover.hover.bottom="'# filtered / total events'">{{ formatNumber(sortedFilteredERC1155ApprovalForAlls.length) + '/' + formatNumber(erc1155.approvalForAlls.length) }}</font>
                   </div>
                   <div class="mt-0 pl-1">
-                    <b-pagination size="sm" v-model="settings.erc1155.approvalForAllsTable.currentPage" @input="saveSettings" :total-rows="sortedFilteredERC721ApprovalForAlls.length" :per-page="settings.erc1155.approvalForAllsTable.pageSize" style="height: 0;"></b-pagination>
+                    <b-pagination size="sm" v-model="settings.erc1155.approvalForAllsTable.currentPage" @input="saveSettings" :total-rows="sortedFilteredERC1155ApprovalForAlls.length" :per-page="settings.erc1155.approvalForAllsTable.pageSize" style="height: 0;"></b-pagination>
                   </div>
                   <div class="mt-0 pl-1">
                     <b-form-select size="sm" v-model="settings.erc1155.approvalForAllsTable.pageSize" @change="saveSettings();" :options="pageSizes" v-b-popover.hover.bottom="'Yeah. Page size'"></b-form-select>
                   </div>
                 </div>
-                <b-table small fixed striped :fields="erc721ApprovalForAllsFields" :items="pagedSortedFilteredERC721ApprovalForAlls" show-empty empty-html="Click [Retrieve] above" head-variant="light" class="mt-1">
+                <b-table small fixed striped :fields="erc721ApprovalForAllsFields" :items="pagedSortedFilteredERC1155ApprovalForAlls" show-empty empty-html="Click [Retrieve] above" head-variant="light" class="mt-1">
                   <template #cell(number)="data">
                       <font size="-1" class="text-muted">{{ parseInt(data.index) + ((settings.erc1155.approvalForAllsTable.currentPage - 1) * settings.erc1155.approvalForAllsTable.pageSize) + 1 }}</font>
                   </template>
@@ -969,19 +969,6 @@
                     <b-link size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc721.contract + '?a=' + data.item.operator" variant="link" v-b-popover.hover.ds500="data.item.operator" target="_blank">
                       {{ data.item.operator.substring(0, 8) + '...' + data.item.operator.slice(-6) }}
                     </b-link>
-                  </template>
-                  <template #cell(tokens)="data">
-                    <!-- <font size="-2" class="text-muted">
-                      {{ formatNumber(data.item.tokens.tokens) }}
-                    </font>
-                    <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.tokens.txHash + '#eventlog#' + data.item.tokens.logIndex" variant="link" v-b-popover.hover.ds500="formatDecimals(data.item.tokens.tokens, data.item.decimals)" target="_blank">
-                      <span v-if="data.item.tokens.tokens.toString().length > 30">
-                        &infin;
-                      </span>
-                      <span v-else>
-                        {{ formatDecimals(data.item.tokens.tokens, erc20.decimals) }}
-                      </span>
-                    </b-link> -->
                   </template>
                 </b-table>
               </b-form-group>
@@ -1665,7 +1652,7 @@
             for (const approvalForAll of this.erc721.approvalForAlls) {
               let include = true;
               if (regex) {
-                if (!(regex.test(approvalForAll.owner) || regex.test(approvalForAll.spender) || regex.test(approvalForAll.txHash) || regex.test(approvalForAll.blockNumber))) {
+                if (!(regex.test(approvalForAll.owner) || regex.test(approvalForAll.operator) || regex.test(approvalForAll.txHash) || regex.test(approvalForAll.blockNumber))) {
                   include = false;
                 }
               }
@@ -2002,6 +1989,124 @@
           pagedSortedFilteredERC1155Tokens() {
             // console.log(moment().format("HH:mm:ss") + " pagedSortedFilteredERC1155Tokens - this.settings.erc1155.tokensTable: " + JSON.stringify(this.settings.erc1155.tokensTable));
             return this.sortedFilteredERC1155Tokens.slice((this.settings.erc1155.tokensTable.currentPage - 1) * this.settings.erc1155.tokensTable.pageSize, this.settings.erc1155.tokensTable.currentPage * this.settings.erc1155.tokensTable.pageSize);
+          },
+
+          sortedFilteredERC1155ApprovalForAlls() {
+            console.log(moment().format("HH:mm:ss") + " sortedFilteredERC1155ApprovalForAlls - this.settings.erc1155.approvalForAllsTable: " + JSON.stringify(this.settings.erc1155.approvalForAllsTable));
+            const results = [];
+            let regex = null;
+            if (this.settings.erc1155.approvalForAllsTable.filter != null && this.settings.erc1155.approvalForAllsTable.filter.length > 0) {
+              try {
+                regex = new RegExp(this.settings.erc1155.approvalForAllsTable.filter, 'i');
+              } catch (e) {
+                console.log(moment().format("HH:mm:ss") + " sortedFilteredERC1155ApprovalForAlls - regex error: " + e.message);
+                regex = new RegExp(/thequickbrowndogjumpsoverthelazyfox/, 'i');
+              }
+            }
+            for (const approvalForAll of this.erc1155.approvalForAlls) {
+              let include = true;
+              if (regex) {
+                if (!(regex.test(approvalForAll.owner) || regex.test(approvalForAll.operator) || regex.test(approvalForAll.txHash) || regex.test(approvalForAll.blockNumber))) {
+                  include = false;
+                }
+              }
+              if (include) {
+                results.push(approvalForAll);
+              }
+            }
+            if (this.settings.erc1155.approvalForAllsTable.sortOption == "txorderasc") {
+              results.sort((a, b) => {
+                if (a.blockNumber == b.blockNumber) {
+                  return a.logIndex - b.logIndex;
+                } else {
+                  return a.blockNumber - b.blockNumber;
+                }
+              });
+            } else if (this.settings.erc1155.approvalForAllsTable.sortOption == "txorderdsc") {
+              results.sort((a, b) => {
+                if (a.blockNumber == b.blockNumber) {
+                  return b.logIndex - a.logIndex;
+                } else {
+                  return b.blockNumber - a.blockNumber;
+                }
+              });
+            } else if (this.settings.erc1155.approvalForAllsTable.sortOption == "ownerasc") {
+              results.sort((a, b) => {
+                if (('' + a.owner).localeCompare(b.owner) == 0) {
+                  if (a.blockNumber == b.blockNumber) {
+                    return a.logIndex - b.logIndex;
+                  } else {
+                    return b.blockNumber - a.blockNumber;
+                  }
+                } else {
+                  return ('' + a.owner).localeCompare(b.owner);
+                }
+              });
+            } else if (this.settings.erc1155.approvalForAllsTable.sortOption == "ownerdsc") {
+              results.sort((a, b) => {
+                if (('' + a.owner).localeCompare(b.owner) == 0) {
+                  if (a.blockNumber == b.blockNumber) {
+                    return a.logIndex - b.logIndex;
+                  } else {
+                    return b.blockNumber - a.blockNumber;
+                  }
+                } else {
+                  return ('' + b.owner).localeCompare(a.owner);
+                }
+              });
+            } else if (this.settings.erc1155.approvalForAllsTable.sortOption == "operatorasc") {
+              results.sort((a, b) => {
+                if (('' + a.operator).localeCompare(b.operator) == 0) {
+                  if (a.blockNumber == b.blockNumber) {
+                    return a.logIndex - b.logIndex;
+                  } else {
+                    return b.blockNumber - a.blockNumber;
+                  }
+                } else {
+                  return ('' + a.operator).localeCompare(b.operator);
+                }
+              });
+            } else if (this.settings.erc1155.approvalForAllsTable.sortOption == "operatordsc") {
+              results.sort((a, b) => {
+                if (('' + a.operator).localeCompare(b.operator) == 0) {
+                  if (a.blockNumber == b.blockNumber) {
+                    return a.logIndex - b.logIndex;
+                  } else {
+                    return b.blockNumber - a.blockNumber;
+                  }
+                } else {
+                  return ('' + b.operator).localeCompare(a.operator);
+                }
+              });
+            } else if (this.settings.erc1155.approvalForAllsTable.sortOption == "approvedasc") {
+              results.sort((a, b) => {
+                if (a.approved == b.approved) {
+                  if (a.blockNumber == b.blockNumber) {
+                    return a.logIndex - b.logIndex;
+                  } else {
+                    return b.blockNumber - a.blockNumber;
+                  }
+                } else {
+                  return (a.approved ? 1 : 0) - (b.approved ? 1 : 0);
+                }
+              });
+            } else if (this.settings.erc1155.approvalForAllsTable.sortOption == "approveddsc") {
+              results.sort((a, b) => {
+                if (a.approved == b.approved) {
+                  if (a.blockNumber == b.blockNumber) {
+                    return a.logIndex - b.logIndex;
+                  } else {
+                    return b.blockNumber - a.blockNumber;
+                  }
+                } else {
+                  return (b.approved ? 1 : 0) - (a.approved ? 1 : 0);
+                }
+              });
+            }
+            return results;
+          },
+          pagedSortedFilteredERC1155ApprovalForAlls() {
+            return this.sortedFilteredERC1155ApprovalForAlls.slice((this.settings.erc1155.approvalForAllsTable.currentPage - 1) * this.settings.erc1155.approvalForAllsTable.pageSize, this.settings.erc1155.approvalForAllsTable.currentPage * this.settings.erc1155.approvalForAllsTable.pageSize);
           },
 
         },
@@ -2544,7 +2649,6 @@
               }
             }
             Vue.set(this.erc1155, 'tokens', tokens);
-            // console.log(moment().format("HH:mm:ss") + " retrieveERC1155 - tokens: " + JSON.stringify(tokens, null, 2));
             const approvalForAlls = [];
             for (const [ owner, ownerData ] of Object.entries(approvalForAllsCollator)) {
               for (const [ operator, operatorData ] of Object.entries(ownerData)) {
