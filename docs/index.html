@@ -2178,38 +2178,38 @@
             let uriResult = null;
             if (type == "erc721") {
               erc721Owner = await interface.ownerOf(tokenId);
-              this.nonFungibleModal.logs.push({ log:now() + " erc721.ownerOf(" + tokenId + ") returned " + erc721Owner });
+              this.nonFungibleModal.logs.push({ log:now() + " erc721.ownerOf(" + tokenId + ") returned '" + erc721Owner + "'"});
             }
             if (type == "erc721") {
               uriResults = await interface.tokenURI(tokenId);
-              this.nonFungibleModal.logs.push({ log:now() + " erc721.tokenURI(" + tokenId + ") returned " + uriResults });
+              this.nonFungibleModal.logs.push({ log:now() + " erc721.tokenURI(" + tokenId + ") returned '" + uriResults + "'" });
             } else if (type == "erc1155") {
               uriResults = await interface.uri(tokenId);
-              this.nonFungibleModal.logs.push({ log:now() + " erc1155.uri(" + tokenId + ") returned " + uriResults });
+              this.nonFungibleModal.logs.push({ log:now() + " erc1155.uri(" + tokenId + ") returned '" + uriResults + "'" });
             }
             console.log("uriResults: " + uriResults);
             if (uriResults.substring(0, 12) == "ipfs://ipfs/") {
               uriResults = "https://ipfs.io/" + uriResults.substring(7)
-              this.nonFungibleModal.logs.push({ log:now() + " Updated URI to " + uriResults });
+              this.nonFungibleModal.logs.push({ log:now() + " Updated URI to '" + uriResults + "'" });
             } else if (uriResults.substring(0, 7) == "ipfs://") {
               uriResults = "https://ipfs.io/ipfs/" + uriResults.substring(7);
-              this.nonFungibleModal.logs.push({ log:now() + " Updated URI to " + uriResults });
+              this.nonFungibleModal.logs.push({ log:now() + " Updated URI to '" + uriResults + "'" });
             }
             if (type == "erc1155") {
               if (uriResults.indexOf("0x{id}") >= 0) {
                 uriResults = uriResults.replace(/0x{id}/, tokenId);
-                this.nonFungibleModal.logs.push({ log:now() + " Updated URI to " + uriResults });
+                this.nonFungibleModal.logs.push({ log:now() + " Updated URI to '" + uriResults + "'" });
               }
               if (uriResults.indexOf("{id}") >= 0) {
                 uriResults = uriResults.replace(/{id}/, tokenId);
-                this.nonFungibleModal.logs.push({ log:now() + " Updated URI to " + uriResults });
+                this.nonFungibleModal.logs.push({ log:now() + " Updated URI to '" + uriResults + "'" });
               }
             }
             try {
-              this.nonFungibleModal.logs.push({ log:now() + " Fetching " + uriResults });
+              this.nonFungibleModal.logs.push({ log:now() + " Fetching '" + uriResults + "'" });
               const fileContent = await fetch(uriResults, { mode: 'cors', signal: AbortSignal.timeout(10000) }).then(response => response.json());
-              this.nonFungibleModal.logs.push({ log:now() + " Fetched " + JSON.stringify(fileContent, null, 2) });
-              console.log(now() + " retrieveERC20 viewNonFungible - fileContent: " + JSON.stringify(fileContent, null, 2));
+              this.nonFungibleModal.logs.push({ log:now() + " Fetched '" + JSON.stringify(fileContent, null, 2) + "'" });
+              console.log(now() + " retrieveERC20 viewNonFungible - fileContent: '" + JSON.stringify(fileContent, null, 2) + "'");
             } catch (e) {
               console.log(now() + " viewNonFungible - ERROR: " + e.message);
             }
