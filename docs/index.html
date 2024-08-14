@@ -465,7 +465,7 @@
 
             <!-- ERC-721: -->
             <b-card v-if="settings.tabIndex == 1" header="ERC-721" class="m-0 p-0">
-              <b-form-group label="contract:" label-for="erc721-contract" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" description="e.g., '0x8b73448426797099b6b9a96c4343f528bbAfc55e' for TESTTOADZ on Sepolia" :state="!settings.erc721.contract || validAddress(settings.erc721.contract)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
+              <b-form-group label="contract:" label-for="erc721-contract" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" description="e.g., '0x8b73448426797099b6b9a96c4343f528bbAfc55e' for TESTTOADZ on Sepolia, or '0x8fa600364b93c53e0c71c7a33d2ade21f4351da3' for Larva Chads on Ethereum Mainnet" :state="!settings.erc721.contract || validAddress(settings.erc721.contract)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
                 <b-input-group size="sm" class="w-50">
                   <b-form-input type="text" size="sm" id="erc721-contract" v-model="settings.erc721.contract" @change="saveSettings" placeholder="ERC-721 token contract address"></b-form-input>
                   <b-input-group-append>
