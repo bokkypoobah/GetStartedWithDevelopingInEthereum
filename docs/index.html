@@ -565,6 +565,63 @@
                 </b-table>
               </b-form-group>
 
+              <b-form-group label="tokens:" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
+                <div class="d-flex flex-wrap m-0 p-0">
+                  <div class="mt-0 pr-1" style="width: 20.0rem;">
+                    <b-form-input type="text" size="sm" v-model.trim="settings.erc721.tokensTable.filter" @change="saveSettings" debounce="600" placeholder="🔍 address/blocknumber/txhash regex"></b-form-input>
+                  </div>
+                  <div class="mt-0 flex-grow-1">
+                  </div>
+                  <div class="mt-0 pr-1">
+                    <b-button size="sm" @click="retrieveERC20Timestamps(pagedSortedFilteredERC20Balances.map(e => e.balance.blockNumber))" variant="link" v-b-popover.hover.ds500="'Retrieve timestamps for balances below'"><b-icon-clock-history shift-v="+1" font-scale="1.2"></b-icon-clock-history></b-button>
+                  </div>
+                  <div class="mt-0 flex-grow-1">
+                  </div>
+                  <div class="mt-0 pl-1">
+                    <b-form-select size="sm" v-model="settings.erc721.tokensTable.sortOption" @change="saveSettings" :options="balancesSortOptions" v-b-popover.hover.bottom="'Yeah. Sort'"></b-form-select>
+                  </div>
+                  <div class="mt-0 pl-1">
+                    <font size="-2" v-b-popover.hover.bottom="'# filtered / total events'">{{ formatNumber(sortedFilteredERC20Balances.length) + '/' + formatNumber(erc20.balances.length) }}</font>
+                  </div>
+                  <div class="mt-0 pl-1">
+                    <b-pagination size="sm" v-model="settings.erc721.tokensTable.currentPage" @input="saveSettings" :total-rows="sortedFilteredERC20Balances.length" :per-page="settings.erc721.tokensTable.pageSize" style="height: 0;"></b-pagination>
+                  </div>
+                  <div class="mt-0 pl-1">
+                    <b-form-select size="sm" v-model="settings.erc721.tokensTable.pageSize" @change="saveSettings();" :options="pageSizes" v-b-popover.hover.bottom="'Yeah. Page size'"></b-form-select>
+                  </div>
+                </div>
+                <b-table small fixed striped :fields="erc20BalancesFields" :items="pagedSortedFilteredERC20Balances" show-empty empty-html="Click [Retrieve] above" head-variant="light" class="mt-1">
+                  <template #cell(number)="data">
+                      <font size="-1" class="text-muted">{{ parseInt(data.index) + ((settings.erc721.tokensTable.currentPage - 1) * settings.erc721.tokensTable.pageSize) + 1 }}</font>
+                  </template>
+                  <template #cell(latestUpdate)="data">
+                    <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.balance.txHash + '#eventlog#' + data.item.balance.logIndex" variant="link" v-b-popover.hover.ds500="(timestamps[chainId] && timestamps[chainId][data.item.balance.blockNumber]) ? ('Block ' + formatNumber(data.item.balance.blockNumber)) : 'blockNumber:txIndex'" target="_blank">
+                      <font size="-1">
+                        <span v-if="timestamps[chainId] && timestamps[chainId][data.item.balance.blockNumber]">
+                          {{ formatTimestamp(timestamps[chainId][data.item.balance.blockNumber]) }}
+                        </span>
+                        <span v-else>
+                          {{ data.item.balance.blockNumber + ':' + data.item.balance.txIndex }}
+                        </span>
+                      </font>
+                    </b-link>
+                    <font size="-1" v-b-popover.hover.ds500="'logIndex'" class="text-muted">{{ data.item.balance.logIndex }}</font>
+                    <font size="-1" v-b-popover.hover.ds500="'txHash'" class="text-muted">{{ data.item.balance.txHash.substring(0, 8) + '...' + data.item.balance.txHash.slice(-6) }}</font>
+                  </template>
+                  <template #cell(owner)="data">
+                    <b-link size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc20.contract + '?a=' + data.item.owner" variant="link" v-b-popover.hover.ds500="data.item.owner" target="_blank">
+                      {{ data.item.owner.substring(0, 8) + '...' + data.item.owner.slice(-6) }}
+                    </b-link>
+                  </template>
+                  <template #cell(balance)="data">
+                    <font size="-2" class="text-muted">
+                      {{ formatNumber(data.item.balance.tokens) }}
+                    </font>
+                    {{ formatDecimals(data.item.balance.tokens, erc20.decimals) }}
+                  </template>
+                </b-table>
+              </b-form-group>
+
             </b-card>
 
             <b-card-text class="m-0 p-0">
@@ -753,6 +810,9 @@
             symbol: null,
             coinbaseBalanceOf: null,
             events: [],
+            tokens: [],
+            approvals: [],
+            approvalForAlls: [],
           },
           timestamps: {},
           eventsSortOptions: [
@@ -1062,6 +1122,69 @@
           pagedSortedFilteredERC721Events() {
             return this.sortedFilteredERC721Events.slice((this.settings.erc721.eventsTable.currentPage - 1) * this.settings.erc721.eventsTable.pageSize, this.settings.erc721.eventsTable.currentPage * this.settings.erc721.eventsTable.pageSize);
           },
+
+          sortedFilteredERC721Tokens() {
+            console.log(moment().format("HH:mm:ss") + " sortedFilteredERC721Tokens - this.settings.erc721.tokensTable: " + JSON.stringify(this.settings.erc721.tokensTable));
+            const results = [];
+            let regex = null;
+            if (this.settings.erc20.balancesTable.filter != null && this.settings.erc20.balancesTable.filter.length > 0) {
+              try {
+                regex = new RegExp(this.settings.erc20.balancesTable.filter, 'i');
+              } catch (e) {
+                console.log(moment().format("HH:mm:ss") + " sortedFilteredERC721Tokens - regex error: " + e.message);
+                regex = new RegExp(/thequickbrowndogjumpsoverthelazyfox/, 'i');
+              }
+            }
+            for (const balance of this.erc20.balances) {
+              let include = true;
+              if (regex) {
+                if (!(regex.test(balance.owner) || regex.test(balance.balance.txHash) || regex.test(balance.balance.blockNumber))) {
+                  include = false;
+                }
+              }
+              if (include) {
+                results.push(balance);
+              }
+            }
+            if (this.settings.erc20.balancesTable.sortOption == "txorderasc") {
+              results.sort((a, b) => {
+                if (a.balance.blockNumber == b.balance.blockNumber) {
+                  return a.balance.logIndex - b.balance.logIndex;
+                } else {
+                  return a.balance.blockNumber - b.balance.blockNumber;
+                }
+              });
+            } else if (this.settings.erc20.balancesTable.sortOption == "txorderdsc") {
+              results.sort((a, b) => {
+                if (a.balance.blockNumber == b.balance.blockNumber) {
+                  return b.balance.logIndex - a.balance.logIndex;
+                } else {
+                  return b.balance.blockNumber - a.balance.blockNumber;
+                }
+              });
+            } else if (this.settings.erc20.balancesTable.sortOption == "ownerasc") {
+              results.sort((a, b) => {
+                return ('' + a.owner).localeCompare(b.owner);
+              });
+            } else if (this.settings.erc20.balancesTable.sortOption == "ownerdsc") {
+              results.sort((a, b) => {
+                return ('' + b.owner).localeCompare(a.owner);
+              });
+            } else if (this.settings.erc20.balancesTable.sortOption == "balanceasc") {
+              results.sort((a, b) => {
+                return a.balance.tokens - b.balance.tokens;
+              });
+            } else if (this.settings.erc20.balancesTable.sortOption == "balancedsc") {
+              results.sort((a, b) => {
+                return b.balance.tokens - a.balance.tokens;
+              });
+            }
+            return results;
+          },
+          pagedSortedFilteredERC721Tokens() {
+            return this.sortedFilteredERC721Tokens.slice((this.settings.erc20.balancesTable.currentPage - 1) * this.settings.erc20.balancesTable.pageSize, this.settings.erc20.balancesTable.currentPage * this.settings.erc20.balancesTable.pageSize);
+          },
+
         },
 
         // --- METHODS ---
@@ -1160,12 +1283,10 @@
             // const startBlock = latestBlockNumber - 10000;
             await getLogs(startBlock, latestBlockNumber);
 
-            // Compute Balances
             const balanceCollator = {};
             const allowancesCollator = {};
             for (const event of events) {
               if (event.name == "Transfer") {
-                // console.log(moment().format("HH:mm:ss") + " retrieveERC20 - Transfer event: " + JSON.stringify(event));
                 if (!(event.from in balanceCollator)) {
                   balanceCollator[event.from] = {
                     blockNumber: event.blockNumber,
@@ -1201,7 +1322,6 @@
                   balanceCollator[event.to].tokens = ethers.BigNumber.from(balanceCollator[event.to].tokens).add(event.tokens).toString();
                 }
               } else if (event.name == "Approval") {
-                // console.log(moment().format("HH:mm:ss") + " retrieveERC20 - Approval event: " + JSON.stringify(event));
                 if (!(event.owner in allowancesCollator)) {
                   allowancesCollator[event.owner] = {};
                 }
@@ -1214,31 +1334,13 @@
                 };
               }
             }
-            // console.log(moment().format("HH:mm:ss") + " retrieveERC20 - balanceCollator: " + JSON.stringify(balanceCollator, null, 2));
-            // console.log(moment().format("HH:mm:ss") + " retrieveERC20 - allowancesCollator: " + JSON.stringify(allowancesCollator, null, 2));
-
-            // events.sort((a, b) => {
-            //   if (a.blockNumber == b.blockNumber) {
-            //     return b.logIndex - a.logIndex;
-            //   } else {
-            //     return b.blockNumber - a.blockNumber;
-            //   }
-            // });
             Vue.set(this.erc20, 'events', events);
 
             const balances = [];
             for (const [ owner, balance ] of Object.entries(balanceCollator)) {
               balances.push({ owner, balance });
             }
-            // balances.sort((a, b) => {
-            //   if (a.balance.blockNumber == b.balance.blockNumber) {
-            //     return b.balance.logIndex - a.balance.logIndex;
-            //   } else {
-            //     return b.balance.blockNumber - a.balance.blockNumber;
-            //   }
-            // });
             Vue.set(this.erc20, 'balances', balances);
-            // console.log(moment().format("HH:mm:ss") + " retrieveERC20 - balances: " + JSON.stringify(balances, null, 2));
 
             const allowances = [];
             for (const [ owner, spenders ] of Object.entries(allowancesCollator)) {
@@ -1246,16 +1348,7 @@
                 allowances.push({ owner, spender, tokens });
               }
             }
-            // allowances.sort((a, b) => {
-            //   if (a.tokens.blockNumber == b.tokens.blockNumber) {
-            //     return b.tokens.logIndex - a.tokens.logIndex;
-            //   } else {
-            //     return b.tokens.blockNumber - a.tokens.blockNumber;
-            //   }
-            // });
             Vue.set(this.erc20, 'allowances', allowances);
-            // console.log(moment().format("HH:mm:ss") + " retrieveERC20 - allowances: " + JSON.stringify(allowances, null, 2));
-
             // console.log(moment().format("HH:mm:ss") + " retrieveERC20 END - erc20: " + JSON.stringify(this.erc20, null, 2));
           },
 
@@ -1314,12 +1407,10 @@
                     null,
                   ],
                 };
-                console.log(moment().format("HH:mm:ss") + " retrieveERC721.getLogs - filter: " + JSON.stringify(filter));
+                // console.log(moment().format("HH:mm:ss") + " retrieveERC721.getLogs - filter: " + JSON.stringify(filter));
                 const eventLogs = await provider.getLogs(filter);
                 for (const event of eventLogs) {
-                  // console.log(moment().format("HH:mm:ss") + " retrieveERC721.getLogs - event: " + JSON.stringify(event));
                   const log = contract.interface.parseLog(event);
-                  // console.log(moment().format("HH:mm:ss") + " retrieveERC721.getLogs - log: " + JSON.stringify(log));
                   if (log.eventFragment.name == "Transfer") {
                     // event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
                     const [ from, to, tokenId ] = log.args;
@@ -1381,7 +1472,6 @@
             // const startBlock = latestBlockNumber - 10000;
             await getLogs(startBlock, latestBlockNumber);
 
-            // Compute Tokens
             const tokensCollator = {};
             const approvalsCollator = {};
             const approvalForAllsCollator = {};
@@ -1400,6 +1490,7 @@
                   txIndex: event.txIndex,
                   txHash: event.txHash,
                   logIndex: event.logIndex,
+                  owner: event.owner,
                   spender: event.spender,
                 };
               } else if (event.name == "ApprovalForAll") {
@@ -1417,17 +1508,28 @@
                 console.log(moment().format("HH:mm:ss") + " retrieveERC721 - ELSE event: " + JSON.stringify(event));
               }
             }
-            console.log(moment().format("HH:mm:ss") + " retrieveERC721 END - tokensCollator: " + JSON.stringify(tokensCollator, null, 2));
-            console.log(moment().format("HH:mm:ss") + " retrieveERC721 END - approvalsCollator: " + JSON.stringify(approvalsCollator, null, 2));
-            console.log(moment().format("HH:mm:ss") + " retrieveERC721 END - approvalForAllsCollator: " + JSON.stringify(approvalForAllsCollator, null, 2));
 
             const tokens = [];
             for (const [ tokenId, tokenData ] of Object.entries(tokensCollator)) {
-              tokens.push({ tokenId, tokenData });
+              tokens.push({ tokenId, ...tokenData });
             }
             Vue.set(this.erc721, 'tokens', tokens);
 
-            // console.log(moment().format("HH:mm:ss") + " retrieveERC721 END - erc721: " + JSON.stringify(this.erc721, null, 2));
+            const approvals = [];
+            for (const [ tokenId, tokenData ] of Object.entries(approvalsCollator)) {
+              approvals.push({ tokenId, ...tokenData });
+            }
+            Vue.set(this.erc721, 'approvals', approvals);
+
+            const approvalForAlls = [];
+            for (const [ owner, ownerData ] of Object.entries(approvalForAllsCollator)) {
+              for (const [ spender, spenderData ] of Object.entries(ownerData)) {
+                approvalForAlls.push({ owner, spender, ...spenderData });
+              }
+            }
+            Vue.set(this.erc721, 'approvalForAlls', approvalForAlls);
+
+            console.log(moment().format("HH:mm:ss") + " retrieveERC721 END - erc721: " + JSON.stringify(this.erc721, null, 2));
           },
 
           async retrieveERC20BalanceOf() {
