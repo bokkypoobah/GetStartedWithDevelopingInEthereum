@@ -476,6 +476,9 @@
               <b-form-group label="" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
                 <b-button size="sm" :disabled="!validAddress(settings.erc721.contract)" @click="retrieveERC721" variant="primary">Retrieve</b-button>
               </b-form-group>
+              <b-form-group label="symbol:" label-for="erc721-symbol" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
+                <b-form-input type="text" size="sm" readonly id="erc721-symbol" :value="erc721.symbol" class="w-25"></b-form-input>
+              </b-form-group>
             </b-card>
 
             <b-card-text class="m-0 p-0">
