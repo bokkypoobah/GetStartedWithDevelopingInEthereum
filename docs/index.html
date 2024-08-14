@@ -849,16 +849,25 @@
                       </b-link>
                     </div>
                   </template>
-                  <!-- <template #cell(tokenIdApproved)="data">
-                    <div v-if="data.item.name == 'Transfer' || data.item.name == 'Approval'">
-                      <b-link size="sm" :href="'https://testnets.opensea.io/assets/sepolia/' + settings.erc721.contract + '/' + data.item.tokenId" variant="link" v-b-popover.hover.ds500="'Token Id ' + data.item.tokenId" target="_blank">
+                  <template #cell(tokenIdApproved)="data">
+                    <div v-if="data.item.name == 'TransferSingle'">
+                      <b-link size="sm" :href="'https://opensea.io/assets/ethereum/' + settings.erc1155.contract + '/' + data.item.tokenId" variant="link" v-b-popover.hover.ds500="'Token Id ' + data.item.tokenId" target="_blank">
                         {{ data.item.tokenId }}
                       </b-link>
+                      <font size="-1" class="text-muted">{{ 'x' + data.item.value }}</font>
+                    </div>
+                    <div v-else-if="data.item.name == 'TransferBatch'">
+                      <span v-for="(item, index) of data.item.tokenIds" v-bind:key="index">
+                        <b-link size="sm" :href="'https://opensea.io/assets/ethereum/' + settings.erc1155.contract + '/' + data.item.tokenIds[index]" variant="link" v-b-popover.hover.ds500="'Token Id ' + data.item.tokenId" target="_blank">
+                          {{ data.item.tokenIds[index] }}
+                        </b-link>
+                        <font size="-1" class="text-muted">{{ 'x' + data.item.values[index] }}</font>
+                      </span>
                     </div>
                     <div v-else-if="data.item.name == 'ApprovalForAll'">
                         {{ data.item.approved }}
                     </div>
-                  </template> -->
+                  </template>
                 </b-table>
               </b-form-group>
 
