@@ -917,6 +917,75 @@
                 </b-table>
               </b-form-group>
 
+              <b-form-group label="approvalForAlls:" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
+                <div class="d-flex flex-wrap m-0 p-0">
+                  <div class="mt-0 pr-1" style="width: 20.0rem;">
+                    <b-form-input type="text" size="sm" v-model.trim="settings.erc1155.approvalForAllsTable.filter" @change="saveSettings" debounce="600" placeholder="🔍 address/blocknumber/txhash regex"></b-form-input>
+                  </div>
+                  <div class="mt-0 flex-grow-1">
+                  </div>
+                  <div class="mt-0 pr-1">
+                    <b-button size="sm" @click="retrieveTimestamps(pagedSortedFilteredERC721ApprovalForAlls.map(e => e.blockNumber))" variant="link" v-b-popover.hover.ds500="'Retrieve timestamps for allowances below'"><b-icon-clock-history shift-v="+1" font-scale="1.2"></b-icon-clock-history></b-button>
+                  </div>
+                  <div class="mt-0 flex-grow-1">
+                  </div>
+                  <div class="mt-0 pl-1">
+                    <b-form-select size="sm" v-model="settings.erc1155.approvalForAllsTable.sortOption" @change="saveSettings" :options="erc721And1155ApprovalForAllsSortOptions" v-b-popover.hover.bottom="'Yeah. Sort'"></b-form-select>
+                  </div>
+                  <div class="mt-0 pl-1">
+                    <font size="-2" v-b-popover.hover.bottom="'# filtered / total events'">{{ formatNumber(sortedFilteredERC721ApprovalForAlls.length) + '/' + formatNumber(erc721.approvalForAlls.length) }}</font>
+                  </div>
+                  <div class="mt-0 pl-1">
+                    <b-pagination size="sm" v-model="settings.erc1155.approvalForAllsTable.currentPage" @input="saveSettings" :total-rows="sortedFilteredERC721ApprovalForAlls.length" :per-page="settings.erc1155.approvalForAllsTable.pageSize" style="height: 0;"></b-pagination>
+                  </div>
+                  <div class="mt-0 pl-1">
+                    <b-form-select size="sm" v-model="settings.erc1155.approvalForAllsTable.pageSize" @change="saveSettings();" :options="pageSizes" v-b-popover.hover.bottom="'Yeah. Page size'"></b-form-select>
+                  </div>
+                </div>
+                <b-table small fixed striped :fields="erc721ApprovalForAllsFields" :items="pagedSortedFilteredERC721ApprovalForAlls" show-empty empty-html="Click [Retrieve] above" head-variant="light" class="mt-1">
+                  <template #cell(number)="data">
+                      <font size="-1" class="text-muted">{{ parseInt(data.index) + ((settings.erc1155.approvalForAllsTable.currentPage - 1) * settings.erc1155.approvalForAllsTable.pageSize) + 1 }}</font>
+                  </template>
+                  <template #cell(latestUpdate)="data">
+                    <font size="-1">
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.txHash + '#eventlog#' + data.item.logIndex" variant="link" v-b-popover.hover.ds500="(timestamps[chainId] && timestamps[chainId][data.item.blockNumber]) ? ('Block ' + formatNumber(data.item.blockNumber)) : 'blockNumber:txIndex.logIndex'" target="_blank">
+                        <span v-if="timestamps[chainId] && timestamps[chainId][data.item.blockNumber]">
+                          {{ formatTimestamp(timestamps[chainId][data.item.blockNumber]) }}
+                        </span>
+                        <span v-else>
+                          {{ data.item.blockNumber + ':' + data.item.txIndex }}
+                        </span>
+                      </b-link>
+                      <font size="-1" v-b-popover.hover.ds500="'logIndex'" class="text-muted">{{ data.item.logIndex }}</font>
+                      <font size="-1" v-b-popover.hover.ds500="'txHash'" class="text-muted">{{ data.item.txHash.substring(0, 8) + '...' + data.item.txHash.slice(-6) }}</font>
+                    </font>
+                  </template>
+                  <template #cell(owner)="data">
+                    <b-link size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc721.contract + '?a=' + data.item.owner" variant="link" v-b-popover.hover.ds500="data.item.owner" target="_blank">
+                      {{ data.item.owner.substring(0, 8) + '...' + data.item.owner.slice(-6) }}
+                    </b-link>
+                  </template>
+                  <template #cell(operator)="data">
+                    <b-link size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc721.contract + '?a=' + data.item.operator" variant="link" v-b-popover.hover.ds500="data.item.operator" target="_blank">
+                      {{ data.item.operator.substring(0, 8) + '...' + data.item.operator.slice(-6) }}
+                    </b-link>
+                  </template>
+                  <template #cell(tokens)="data">
+                    <!-- <font size="-2" class="text-muted">
+                      {{ formatNumber(data.item.tokens.tokens) }}
+                    </font>
+                    <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.tokens.txHash + '#eventlog#' + data.item.tokens.logIndex" variant="link" v-b-popover.hover.ds500="formatDecimals(data.item.tokens.tokens, data.item.decimals)" target="_blank">
+                      <span v-if="data.item.tokens.tokens.toString().length > 30">
+                        &infin;
+                      </span>
+                      <span v-else>
+                        {{ formatDecimals(data.item.tokens.tokens, erc20.decimals) }}
+                      </span>
+                    </b-link> -->
+                  </template>
+                </b-table>
+              </b-form-group>
+
             </b-card>
 
             <b-card-text class="m-0 p-0">
