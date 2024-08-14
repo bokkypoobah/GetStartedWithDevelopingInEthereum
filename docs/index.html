@@ -94,7 +94,7 @@
                   <div class="mt-0 flex-grow-1">
                   </div>
                   <div class="mt-0 pr-1">
-                    <b-button size="sm" @click="retrieveERC20Timestamps(pagedSortedFilteredEvents.map(e => e.blockNumber))" variant="link" v-b-popover.hover.ds500="'Retrieve timestamps for events below'"><b-icon-clock-history shift-v="+1" font-scale="1.2"></b-icon-clock-history></b-button>
+                    <b-button size="sm" @click="retrieveERC20Timestamps(pagedSortedFilteredERC20Events.map(e => e.blockNumber))" variant="link" v-b-popover.hover.ds500="'Retrieve timestamps for events below'"><b-icon-clock-history shift-v="+1" font-scale="1.2"></b-icon-clock-history></b-button>
                   </div>
                   <div class="mt-0 flex-grow-1">
                   </div>
@@ -102,16 +102,16 @@
                     <b-form-select size="sm" v-model="settings.erc20.eventsTable.sortOption" @change="saveSettings" :options="eventsSortOptions" v-b-popover.hover.bottom="'Yeah. Sort'"></b-form-select>
                   </div>
                   <div class="mt-0 pl-1">
-                    <font size="-2" v-b-popover.hover.bottom="'# filtered / total events'">{{ formatNumber(sortedFilteredEvents.length) + '/' + formatNumber(erc20.events.length) }}</font>
+                    <font size="-2" v-b-popover.hover.bottom="'# filtered / total events'">{{ formatNumber(sortedFilteredERC20Events.length) + '/' + formatNumber(erc20.events.length) }}</font>
                   </div>
                   <div class="mt-0 pl-1">
-                    <b-pagination size="sm" v-model="settings.erc20.eventsTable.currentPage" @input="saveSettings" :total-rows="sortedFilteredEvents.length" :per-page="settings.erc20.eventsTable.pageSize" style="height: 0;"></b-pagination>
+                    <b-pagination size="sm" v-model="settings.erc20.eventsTable.currentPage" @input="saveSettings" :total-rows="sortedFilteredERC20Events.length" :per-page="settings.erc20.eventsTable.pageSize" style="height: 0;"></b-pagination>
                   </div>
                   <div class="mt-0 pl-1">
                     <b-form-select size="sm" v-model="settings.erc20.eventsTable.pageSize" @change="saveSettings();" :options="pageSizes" v-b-popover.hover.bottom="'Yeah. Page size'"></b-form-select>
                   </div>
                 </div>
-                <b-table small fixed striped :fields="erc20EventsFields" :items="pagedSortedFilteredEvents" show-empty empty-html="Click [Retrieve] above" head-variant="light" class="mt-1">
+                <b-table small fixed striped :fields="erc20EventsFields" :items="pagedSortedFilteredERC20Events" show-empty empty-html="Click [Retrieve] above" head-variant="light" class="mt-1">
                   <template #cell(number)="data">
                       <font size="-1" class="text-muted">{{ parseInt(data.index) + ((settings.erc20.eventsTable.currentPage - 1) * settings.erc20.eventsTable.pageSize) + 1 }}</font>
                   </template>
@@ -170,7 +170,7 @@
                   <div class="mt-0 flex-grow-1">
                   </div>
                   <div class="mt-0 pr-1">
-                    <b-button size="sm" @click="retrieveERC20Timestamps(pagedSortedFilteredBalances.map(e => e.balance.blockNumber))" variant="link" v-b-popover.hover.ds500="'Retrieve timestamps for balances below'"><b-icon-clock-history shift-v="+1" font-scale="1.2"></b-icon-clock-history></b-button>
+                    <b-button size="sm" @click="retrieveERC20Timestamps(pagedSortedFilteredERC20Balances.map(e => e.balance.blockNumber))" variant="link" v-b-popover.hover.ds500="'Retrieve timestamps for balances below'"><b-icon-clock-history shift-v="+1" font-scale="1.2"></b-icon-clock-history></b-button>
                   </div>
                   <div class="mt-0 flex-grow-1">
                   </div>
@@ -178,16 +178,16 @@
                     <b-form-select size="sm" v-model="settings.erc20.balancesTable.sortOption" @change="saveSettings" :options="balancesSortOptions" v-b-popover.hover.bottom="'Yeah. Sort'"></b-form-select>
                   </div>
                   <div class="mt-0 pl-1">
-                    <font size="-2" v-b-popover.hover.bottom="'# filtered / total events'">{{ formatNumber(sortedFilteredBalances.length) + '/' + formatNumber(erc20.balances.length) }}</font>
+                    <font size="-2" v-b-popover.hover.bottom="'# filtered / total events'">{{ formatNumber(sortedFilteredERC20Balances.length) + '/' + formatNumber(erc20.balances.length) }}</font>
                   </div>
                   <div class="mt-0 pl-1">
-                    <b-pagination size="sm" v-model="settings.erc20.balancesTable.currentPage" @input="saveSettings" :total-rows="sortedFilteredBalances.length" :per-page="settings.erc20.balancesTable.pageSize" style="height: 0;"></b-pagination>
+                    <b-pagination size="sm" v-model="settings.erc20.balancesTable.currentPage" @input="saveSettings" :total-rows="sortedFilteredERC20Balances.length" :per-page="settings.erc20.balancesTable.pageSize" style="height: 0;"></b-pagination>
                   </div>
                   <div class="mt-0 pl-1">
                     <b-form-select size="sm" v-model="settings.erc20.balancesTable.pageSize" @change="saveSettings();" :options="pageSizes" v-b-popover.hover.bottom="'Yeah. Page size'"></b-form-select>
                   </div>
                 </div>
-                <b-table small fixed striped :fields="erc20BalancesFields" :items="pagedSortedFilteredBalances" show-empty empty-html="Click [Retrieve] above" head-variant="light" class="mt-1">
+                <b-table small fixed striped :fields="erc20BalancesFields" :items="pagedSortedFilteredERC20Balances" show-empty empty-html="Click [Retrieve] above" head-variant="light" class="mt-1">
                   <template #cell(number)="data">
                       <font size="-1" class="text-muted">{{ parseInt(data.index) + ((settings.erc20.balancesTable.currentPage - 1) * settings.erc20.balancesTable.pageSize) + 1 }}</font>
                   </template>
@@ -235,10 +235,10 @@
                     <b-form-select size="sm" v-model="settings.erc20.allowancesTable.sortOption" @change="saveSettings" :options="allowancesSortOptions" v-b-popover.hover.bottom="'Yeah. Sort'"></b-form-select>
                   </div>
                   <div class="mt-0 pl-1">
-                    <font size="-2" v-b-popover.hover.bottom="'# filtered / total events'">{{ formatNumber(sortedFilteredAllowances.length) + '/' + formatNumber(erc20.allowances.length) }}</font>
+                    <font size="-2" v-b-popover.hover.bottom="'# filtered / total events'">{{ formatNumber(sortedFilteredERC20Allowances.length) + '/' + formatNumber(erc20.allowances.length) }}</font>
                   </div>
                   <div class="mt-0 pl-1">
-                    <b-pagination size="sm" v-model="settings.erc20.allowancesTable.currentPage" @input="saveSettings" :total-rows="sortedFilteredAllowances.length" :per-page="settings.erc20.allowancesTable.pageSize" style="height: 0;"></b-pagination>
+                    <b-pagination size="sm" v-model="settings.erc20.allowancesTable.currentPage" @input="saveSettings" :total-rows="sortedFilteredERC20Allowances.length" :per-page="settings.erc20.allowancesTable.pageSize" style="height: 0;"></b-pagination>
                   </div>
                   <div class="mt-0 pl-1">
                     <b-form-select size="sm" v-model="settings.erc20.allowancesTable.pageSize" @change="saveSettings();" :options="pageSizes" v-b-popover.hover.bottom="'Yeah. Page size'"></b-form-select>
@@ -715,15 +715,15 @@
 
         // --- COMPUTED ---
         computed: {
-          sortedFilteredEvents() {
-            // console.log(moment().format("HH:mm:ss") + " sortedFilteredEvents - this.settings.erc20.eventsTable: " + JSON.stringify(this.settings.erc20.eventsTable));
+          sortedFilteredERC20Events() {
+            // console.log(moment().format("HH:mm:ss") + " sortedFilteredERC20Events - this.settings.erc20.eventsTable: " + JSON.stringify(this.settings.erc20.eventsTable));
             const results = [];
             let regex = null;
             if (this.settings.erc20.eventsTable.filter != null && this.settings.erc20.eventsTable.filter.length > 0) {
               try {
                 regex = new RegExp(this.settings.erc20.eventsTable.filter, 'i');
               } catch (e) {
-                console.log(moment().format("HH:mm:ss") + " sortedFilteredEvents - regex error: " + e.message);
+                console.log(moment().format("HH:mm:ss") + " sortedFilteredERC20Events - regex error: " + e.message);
                 regex = new RegExp(/thequickbrowndogjumpsoverthelazyfox/, 'i');
               }
             }
@@ -763,18 +763,18 @@
             }
             return results;
           },
-          pagedSortedFilteredEvents() {
-            return this.sortedFilteredEvents.slice((this.settings.erc20.eventsTable.currentPage - 1) * this.settings.erc20.eventsTable.pageSize, this.settings.erc20.eventsTable.currentPage * this.settings.erc20.eventsTable.pageSize);
+          pagedSortedFilteredERC20Events() {
+            return this.sortedFilteredERC20Events.slice((this.settings.erc20.eventsTable.currentPage - 1) * this.settings.erc20.eventsTable.pageSize, this.settings.erc20.eventsTable.currentPage * this.settings.erc20.eventsTable.pageSize);
           },
-          sortedFilteredBalances() {
-            // console.log(moment().format("HH:mm:ss") + " sortedFilteredBalances - this.settings.erc20.balancesTable: " + JSON.stringify(this.settings.erc20.balancesTable));
+          sortedFilteredERC20Balances() {
+            // console.log(moment().format("HH:mm:ss") + " sortedFilteredERC20Balances - this.settings.erc20.balancesTable: " + JSON.stringify(this.settings.erc20.balancesTable));
             const results = [];
             let regex = null;
             if (this.settings.erc20.balancesTable.filter != null && this.settings.erc20.balancesTable.filter.length > 0) {
               try {
                 regex = new RegExp(this.settings.erc20.balancesTable.filter, 'i');
               } catch (e) {
-                console.log(moment().format("HH:mm:ss") + " sortedFilteredBalances - regex error: " + e.message);
+                console.log(moment().format("HH:mm:ss") + " sortedFilteredERC20Balances - regex error: " + e.message);
                 regex = new RegExp(/thequickbrowndogjumpsoverthelazyfox/, 'i');
               }
             }
@@ -824,18 +824,18 @@
             }
             return results;
           },
-          pagedSortedFilteredBalances() {
-            return this.sortedFilteredBalances.slice((this.settings.erc20.balancesTable.currentPage - 1) * this.settings.erc20.balancesTable.pageSize, this.settings.erc20.balancesTable.currentPage * this.settings.erc20.balancesTable.pageSize);
+          pagedSortedFilteredERC20Balances() {
+            return this.sortedFilteredERC20Balances.slice((this.settings.erc20.balancesTable.currentPage - 1) * this.settings.erc20.balancesTable.pageSize, this.settings.erc20.balancesTable.currentPage * this.settings.erc20.balancesTable.pageSize);
           },
-          sortedFilteredAllowances() {
-            // console.log(moment().format("HH:mm:ss") + " sortedFilteredAllowances - this.settings.erc20.allowancesTable: " + JSON.stringify(this.settings.erc20.allowancesTable));
+          sortedFilteredERC20Allowances() {
+            // console.log(moment().format("HH:mm:ss") + " sortedFilteredERC20Allowances - this.settings.erc20.allowancesTable: " + JSON.stringify(this.settings.erc20.allowancesTable));
             const results = [];
             let regex = null;
             if (this.settings.erc20.allowancesTable.filter != null && this.settings.erc20.allowancesTable.filter.length > 0) {
               try {
                 regex = new RegExp(this.settings.erc20.allowancesTable.filter, 'i');
               } catch (e) {
-                console.log(moment().format("HH:mm:ss") + " sortedFilteredAllowances - regex error: " + e.message);
+                console.log(moment().format("HH:mm:ss") + " sortedFilteredERC20Allowances - regex error: " + e.message);
                 regex = new RegExp(/thequickbrowndogjumpsoverthelazyfox/, 'i');
               }
             }
@@ -894,7 +894,7 @@
             return results;
           },
           pagedSortedFilteredAllowances() {
-            return this.sortedFilteredAllowances.slice((this.settings.erc20.allowancesTable.currentPage - 1) * this.settings.erc20.allowancesTable.pageSize, this.settings.erc20.allowancesTable.currentPage * this.settings.erc20.allowancesTable.pageSize);
+            return this.sortedFilteredERC20Allowances.slice((this.settings.erc20.allowancesTable.currentPage - 1) * this.settings.erc20.allowancesTable.pageSize, this.settings.erc20.allowancesTable.currentPage * this.settings.erc20.allowancesTable.pageSize);
           },
         },
 
@@ -1051,26 +1051,26 @@
             // console.log(moment().format("HH:mm:ss") + " retrieveERC20 - balanceCollator: " + JSON.stringify(balanceCollator, null, 2));
             // console.log(moment().format("HH:mm:ss") + " retrieveERC20 - allowancesCollator: " + JSON.stringify(allowancesCollator, null, 2));
 
-            events.sort((a, b) => {
-              if (a.blockNumber == b.blockNumber) {
-                return b.logIndex - a.logIndex;
-              } else {
-                return b.blockNumber - a.blockNumber;
-              }
-            });
+            // events.sort((a, b) => {
+            //   if (a.blockNumber == b.blockNumber) {
+            //     return b.logIndex - a.logIndex;
+            //   } else {
+            //     return b.blockNumber - a.blockNumber;
+            //   }
+            // });
             Vue.set(this.erc20, 'events', events);
 
             const balances = [];
             for (const [owner, balance] of Object.entries(balanceCollator)) {
               balances.push({ owner, balance });
             }
-            balances.sort((a, b) => {
-              if (a.balance.blockNumber == b.balance.blockNumber) {
-                return b.balance.logIndex - a.balance.logIndex;
-              } else {
-                return b.balance.blockNumber - a.balance.blockNumber;
-              }
-            });
+            // balances.sort((a, b) => {
+            //   if (a.balance.blockNumber == b.balance.blockNumber) {
+            //     return b.balance.logIndex - a.balance.logIndex;
+            //   } else {
+            //     return b.balance.blockNumber - a.balance.blockNumber;
+            //   }
+            // });
             Vue.set(this.erc20, 'balances', balances);
             // console.log(moment().format("HH:mm:ss") + " retrieveERC20 - balances: " + JSON.stringify(balances, null, 2));
 
@@ -1080,13 +1080,13 @@
                 allowances.push({ owner, spender, tokens });
               }
             }
-            allowances.sort((a, b) => {
-              if (a.tokens.blockNumber == b.tokens.blockNumber) {
-                return b.tokens.logIndex - a.tokens.logIndex;
-              } else {
-                return b.tokens.blockNumber - a.tokens.blockNumber;
-              }
-            });
+            // allowances.sort((a, b) => {
+            //   if (a.tokens.blockNumber == b.tokens.blockNumber) {
+            //     return b.tokens.logIndex - a.tokens.logIndex;
+            //   } else {
+            //     return b.tokens.blockNumber - a.tokens.blockNumber;
+            //   }
+            // });
             Vue.set(this.erc20, 'allowances', allowances);
             // console.log(moment().format("HH:mm:ss") + " retrieveERC20 - allowances: " + JSON.stringify(allowances, null, 2));
 
