@@ -530,7 +530,7 @@
                       </b-link>
                     </div>
                     <div v-else-if="data.item.name == 'Approval' || data.item.name == 'ApprovalForAll' ">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.owner" variant="link" v-b-popover.hover.ds500="'Approval owner ' + data.item.owner" target="_blank">
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.owner" variant="link" v-b-popover.hover.ds500="'Approval[ForAll] owner ' + data.item.owner" target="_blank">
                         {{ data.item.owner.substring(0, 8) + '...' + data.item.owner.slice(-6) }}
                       </b-link>
                     </div>
@@ -547,7 +547,7 @@
                       </b-link>
                     </div>
                     <div v-else-if="data.item.name == 'ApprovalForAll'">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.operator" variant="link" v-b-popover.hover.ds500="'Approval operator ' + data.item.operator" target="_blank">
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.operator" variant="link" v-b-popover.hover.ds500="'ApprovalForAll operator ' + data.item.operator" target="_blank">
                         {{ data.item.operator.substring(0, 8) + '...' + data.item.operator.slice(-6) }}
                       </b-link>
                     </div>
