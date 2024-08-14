@@ -632,10 +632,10 @@
             name: null,
             decimals: null,
             totalSupply: null,
+            coinbaseBalanceOf: null,
+            events: [],
             balances: [],
             allowances: [],
-            events: [],
-            coinbaseBalanceOf: null,
             balanceOf: null,
             allowance: null,
             transferTx: {
@@ -654,6 +654,7 @@
           erc721: {
             symbol: null,
             coinbaseBalanceOf: null,
+            events: [],
           },
           timestamps: {},
           eventsSortOptions: [
@@ -907,7 +908,6 @@
             const latestBlockNumber = parseInt(block.number);
             const timestamp = parseInt(block.timestamp);
 
-            // Token Contract Info
             const symbol = await contract.symbol();
             Vue.set(this.erc20, 'symbol', symbol);
             const name = await contract.name();
@@ -1120,15 +1120,101 @@
             const symbol = await contract.symbol();
             Vue.set(this.erc721, 'symbol', symbol);
             console.log(moment().format("HH:mm:ss") + " retrieveERC721 - symbol: " + symbol);
-            // const name = await contract.name();
-            // Vue.set(this.erc20, 'name', name);
-            // const decimals = await contract.decimals();
-            // Vue.set(this.erc20, 'decimals', decimals.toString());
-            // const totalSupply = await contract.totalSupply();
-            // Vue.set(this.erc20, 'totalSupply', totalSupply.toString());
             const coinbaseBalanceOf = await contract.balanceOf(this.coinbase);
             Vue.set(this.erc721, 'coinbaseBalanceOf', coinbaseBalanceOf.toString());
             console.log(moment().format("HH:mm:ss") + " retrieveERC721 - coinbaseBalanceOf: " + coinbaseBalanceOf);
+
+            // Retrieve Event Logs
+            const events = [];
+            const t = this; // async function has a new `this`, so use `t` to represent the original `this`
+            async function getLogs(fromBlock, toBlock) {
+              console.log(moment().format("HH:mm:ss") + " retrieveERC721.getLogs - fromBlock: " + fromBlock + ", toBlock: " + toBlock);
+              let split = false;
+              try {
+                const filter = {
+                  address: t.settings.erc721.contract,
+                  fromBlock,
+                  toBlock,
+                  topics: [
+                    [
+                      // event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
+                      ethers.utils.id("Transfer(address,address,uint256)"),
+                      // event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
+                      ethers.utils.id("Approval(address,address,uint256)"),
+                      // event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
+                      ethers.utils.id("ApprovalForAll(address,address,bool)"),
+                    ],
+                    null,
+                    null,
+                  ],
+                };
+                console.log(moment().format("HH:mm:ss") + " retrieveERC721.getLogs - filter: " + JSON.stringify(filter));
+                const eventLogs = await provider.getLogs(filter);
+                for (const event of eventLogs) {
+                  // console.log(moment().format("HH:mm:ss") + " retrieveERC721.getLogs - event: " + JSON.stringify(event));
+                  const log = contract.interface.parseLog(event);
+                  // console.log(moment().format("HH:mm:ss") + " retrieveERC721.getLogs - log: " + JSON.stringify(log));
+                  if (log.eventFragment.name == "Transfer") {
+                    // event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
+                    const [ from, to, tokenId ] = log.args;
+                    events.push({
+                      blockNumber: event.blockNumber,
+                      confirmations: latestBlockNumber - event.blockNumber,
+                      txIndex: parseInt(event.transactionIndex),
+                      txHash: event.transactionHash,
+                      logIndex: parseInt(event.logIndex),
+                      address: event.address,
+                      name: log.eventFragment.name,
+                      from,
+                      to,
+                      tokenId: tokenId.toString(),
+                    });
+                  } else if (log.eventFragment.name == "Approval") {
+                    // event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
+                    const [ owner, spender, tokenId ] = log.args;
+                    events.push({
+                      blockNumber: event.blockNumber,
+                      confirmations: latestBlockNumber - event.blockNumber,
+                      txIndex: parseInt(event.transactionIndex),
+                      txHash: event.transactionHash,
+                      logIndex: parseInt(event.logIndex),
+                      address: event.address,
+                      name: log.eventFragment.name,
+                      owner,
+                      spender,
+                      tokenId: tokenId.toString(),
+                    });
+                  } else if (log.eventFragment.name == "ApprovalForAll") {
+                    // event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
+                    const [ owner, operator, approved ] = log.args;
+                    events.push({
+                      blockNumber: event.blockNumber,
+                      confirmations: latestBlockNumber - event.blockNumber,
+                      txIndex: parseInt(event.transactionIndex),
+                      txHash: event.transactionHash,
+                      logIndex: parseInt(event.logIndex),
+                      address: event.address,
+                      name: log.eventFragment.name,
+                      owner,
+                      operator,
+                      approved: !!approved,
+                    });
+                  }
+                }
+                Vue.set(t.erc721, 'events', events);
+              } catch (e) {
+                split = true;
+              }
+              if (split) {
+                const mid = parseInt((fromBlock + toBlock) / 2);
+                await getLogs(fromBlock, mid);
+                await getLogs(parseInt(mid) + 1, toBlock);
+              }
+            }
+            const startBlock = 0;
+            // const startBlock = latestBlockNumber - 10000;
+            await getLogs(startBlock, latestBlockNumber);
+            console.log(moment().format("HH:mm:ss") + " retrieveERC721 END - erc721: " + JSON.stringify(this.erc721, null, 2));
           },
 
           async retrieveERC20BalanceOf() {
