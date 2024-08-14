@@ -60,7 +60,7 @@
           </b-card>
 
           <b-card class="m-0 p-0 border-0" body-class="m-1 p-0">
-            <!-- ERC-20 -->
+            <!-- ERC-20: -->
             <b-card v-if="settings.tabIndex == 0" header="ERC-20" class="m-0 p-0">
               <b-form-group label="contract:" label-for="erc20-contract" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" description="e.g., '0xc21d97673B9E0B3AA53a06439F71fDc1facE393B' for XEENUS and '0x1e5df6db242d07cc40a37b634022c02f73a74d59' for MYERC20TOKEN on Sepolia" :state="!settings.erc20.contract || validAddress(settings.erc20.contract)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
                 <b-input-group size="sm" class="w-50">
@@ -463,7 +463,7 @@
               </b-form-group>
             </b-card>
 
-            <!-- ERC-721 -->
+            <!-- ERC-721: -->
             <b-card v-if="settings.tabIndex == 1" header="ERC-721" class="m-0 p-0">
               <b-form-group label="contract:" label-for="erc721-contract" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" description="e.g., '0x8b73448426797099b6b9a96c4343f528bbAfc55e' for TESTTOADZ on Sepolia" :state="!settings.erc721.contract || validAddress(settings.erc721.contract)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
                 <b-input-group size="sm" class="w-50">
@@ -479,6 +479,92 @@
               <b-form-group label="symbol:" label-for="erc721-symbol" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
                 <b-form-input type="text" size="sm" readonly id="erc721-symbol" :value="erc721.symbol" class="w-25"></b-form-input>
               </b-form-group>
+
+              <b-form-group label="events:" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
+                <div class="d-flex flex-wrap m-0 p-0">
+                  <div class="mt-0 pr-1" style="width: 20.0rem;">
+                    <b-form-input type="text" size="sm" v-model.trim="settings.erc721.eventsTable.filter" @change="saveSettings" debounce="600" placeholder="🔍 address/blocknumber/txhash regex"></b-form-input>
+                  </div>
+                  <div class="mt-0 flex-grow-1">
+                  </div>
+                  <div class="mt-0 pr-1">
+                    <b-button size="sm" @click="retrieveERC20Timestamps(pagedSortedFilteredERC721Events.map(e => e.blockNumber))" variant="link" v-b-popover.hover.ds500="'Retrieve timestamps for events below'"><b-icon-clock-history shift-v="+1" font-scale="1.2"></b-icon-clock-history></b-button>
+                  </div>
+                  <div class="mt-0 flex-grow-1">
+                  </div>
+                  <div class="mt-0 pl-1">
+                    <b-form-select size="sm" v-model="settings.erc721.eventsTable.sortOption" @change="saveSettings" :options="eventsSortOptions" v-b-popover.hover.bottom="'Yeah. Sort'"></b-form-select>
+                  </div>
+                  <div class="mt-0 pl-1">
+                    <font size="-2" v-b-popover.hover.bottom="'# filtered / total events'">{{ formatNumber(sortedFilteredERC721Events.length) + '/' + formatNumber(erc721.events.length) }}</font>
+                  </div>
+                  <div class="mt-0 pl-1">
+                    <b-pagination size="sm" v-model="settings.erc721.eventsTable.currentPage" @input="saveSettings" :total-rows="sortedFilteredERC721Events.length" :per-page="settings.erc721.eventsTable.pageSize" style="height: 0;"></b-pagination>
+                  </div>
+                  <div class="mt-0 pl-1">
+                    <b-form-select size="sm" v-model="settings.erc721.eventsTable.pageSize" @change="saveSettings();" :options="pageSizes" v-b-popover.hover.bottom="'Yeah. Page size'"></b-form-select>
+                  </div>
+                </div>
+                <b-table small fixed striped :fields="erc721EventsFields" :items="pagedSortedFilteredERC721Events" show-empty empty-html="Click [Retrieve] above" head-variant="light" class="mt-1">
+                  <template #cell(number)="data">
+                      <font size="-1" class="text-muted">{{ parseInt(data.index) + ((settings.erc721.eventsTable.currentPage - 1) * settings.erc721.eventsTable.pageSize) + 1 }}</font>
+                  </template>
+                  <template #cell(when)="data">
+                    <font size="-1">
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/tx/' + data.item.txHash + '#eventlog#' + data.item.logIndex" variant="link" v-b-popover.hover.ds500="(timestamps[chainId] && timestamps[chainId][data.item.blockNumber]) ? ('Block ' + formatNumber(data.item.blockNumber)) : 'blockNumber:txIndex'" target="_blank">
+                        <span v-if="timestamps[chainId] && timestamps[chainId][data.item.blockNumber]">
+                          {{ formatTimestamp(timestamps[chainId][data.item.blockNumber]) }}
+                        </span>
+                        <span v-else>
+                          {{ data.item.blockNumber + ':' + data.item.txIndex }}
+                        </span>
+                      </b-link>
+                      <font size="-1" v-b-popover.hover.ds500="'logIndex'" class="text-muted">{{ data.item.logIndex }}</font>
+                      <font size="-1" v-b-popover.hover.ds500="'txHash'" class="text-muted">{{ data.item.txHash.substring(0, 8) + '...' + data.item.txHash.slice(-6) }}</font>
+                    </font>
+                  </template>
+                  <template #cell(fromOwner)="data">
+                    <div v-if="data.item.name == 'Transfer'">
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.from" variant="link" v-b-popover.hover.ds500="'Transfer from ' + data.item.from" target="_blank">
+                        {{ data.item.from.substring(0, 8) + '...' + data.item.from.slice(-6) }}
+                      </b-link>
+                    </div>
+                    <div v-else-if="data.item.name == 'Approval' || data.item.name == 'ApprovalForAll' ">
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.owner" variant="link" v-b-popover.hover.ds500="'Approval owner ' + data.item.owner" target="_blank">
+                        {{ data.item.owner.substring(0, 8) + '...' + data.item.owner.slice(-6) }}
+                      </b-link>
+                    </div>
+                  </template>
+                  <template #cell(toSpenderOperator)="data">
+                    <div v-if="data.item.name == 'Transfer'">
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.to" variant="link" v-b-popover.hover.ds500="'Transfer to ' + data.item.to" target="_blank">
+                        {{ data.item.to.substring(0, 8) + '...' + data.item.to.slice(-6) }}
+                      </b-link>
+                    </div>
+                    <div v-else-if="data.item.name == 'Approval'">
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.spender" variant="link" v-b-popover.hover.ds500="'Approval spender ' + data.item.spender" target="_blank">
+                        {{ data.item.spender.substring(0, 8) + '...' + data.item.spender.slice(-6) }}
+                      </b-link>
+                    </div>
+                    <div v-else-if="data.item.name == 'ApprovalForAll'">
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.operator" variant="link" v-b-popover.hover.ds500="'Approval operator ' + data.item.operator" target="_blank">
+                        {{ data.item.operator.substring(0, 8) + '...' + data.item.operator.slice(-6) }}
+                      </b-link>
+                    </div>
+                  </template>
+                  <template #cell(tokenIdApproved)="data">
+                    <div v-if="data.item.name == 'Transfer' || data.item.name == 'Approval'">
+                      <b-link size="sm" :href="'https://testnets.opensea.io/assets/sepolia/' + settings.erc721.contract + '/' + data.item.tokenId" variant="link" v-b-popover.hover.ds500="'Token Id ' + data.item.tokenId" target="_blank">
+                        {{ data.item.tokenId }}
+                      </b-link>
+                    </div>
+                    <div v-else-if="data.item.name == 'ApprovalForAll'">
+                        {{ data.item.approved }}
+                    </div>
+                  </template>
+                </b-table>
+              </b-form-group>
+
             </b-card>
 
             <b-card-text class="m-0 p-0">
@@ -621,11 +707,17 @@
             },
             erc721: {
               contract: null,
+              eventsTable: {
+                filter: null,
+                currentPage: 1,
+                pageSize: 10,
+                sortOption: 'txorderdsc',
+              },
             },
             erc1155: {
               contract: null,
             },
-            version: 7,
+            version: 8,
           },
           erc20: {
             symbol: null,
@@ -711,10 +803,19 @@
             { key: 'spender', label: 'Spender', sortable: false, thStyle: 'width: 20%;', thClass: 'text-left', tdClass: 'text-left' },
             { key: 'tokens', label: 'Tokens', sortable: false, thStyle: 'width: 25%;', thClass: 'text-right', tdClass: 'text-right' },
           ],
+          erc721EventsFields: [
+            { key: 'number', label: '#', sortable: false, thStyle: 'width: 5%;', tdClass: 'text-truncate' },
+            { key: 'when', label: 'When', sortable: false, thStyle: 'width: 30%;', thClass: 'text-left', tdClass: 'text-left' },
+            { key: 'name', label: 'Name', sortable: false, thStyle: 'width: 10%;', tdClass: 'text-truncate' },
+            { key: 'fromOwner', label: 'From / Owner', sortable: false, thStyle: 'width: 15%;', tdClass: 'text-truncate' },
+            { key: 'toSpenderOperator', label: 'To / Spender / Operator', sortable: false, thStyle: 'width: 15%;', tdClass: 'text-truncate' },
+            { key: 'tokenIdApproved', label: 'Token Id / Approved', sortable: false, thStyle: 'width: 25%;', thClass: 'text-right', tdClass: 'text-right' },
+          ],
         },
 
         // --- COMPUTED ---
         computed: {
+          // --- ERC-20: ---
           sortedFilteredERC20Events() {
             // console.log(moment().format("HH:mm:ss") + " sortedFilteredERC20Events - this.settings.erc20.eventsTable: " + JSON.stringify(this.settings.erc20.eventsTable));
             const results = [];
@@ -895,6 +996,59 @@
           },
           pagedSortedFilteredAllowances() {
             return this.sortedFilteredERC20Allowances.slice((this.settings.erc20.allowancesTable.currentPage - 1) * this.settings.erc20.allowancesTable.pageSize, this.settings.erc20.allowancesTable.currentPage * this.settings.erc20.allowancesTable.pageSize);
+          },
+
+          // --- ERC-721: ---
+          sortedFilteredERC721Events() {
+            // console.log(moment().format("HH:mm:ss") + " sortedFilteredERC721Events - this.settings.erc20.eventsTable: " + JSON.stringify(this.settings.erc20.eventsTable));
+            const results = [];
+            let regex = null;
+            if (this.settings.erc721.eventsTable.filter != null && this.settings.erc721.eventsTable.filter.length > 0) {
+              try {
+                regex = new RegExp(this.settings.erc721.eventsTable.filter, 'i');
+              } catch (e) {
+                console.log(moment().format("HH:mm:ss") + " sortedFilteredERC721Events - regex error: " + e.message);
+                regex = new RegExp(/thequickbrowndogjumpsoverthelazyfox/, 'i');
+              }
+            }
+            for (const event of this.erc721.events) {
+              let include = true;
+              if (regex) {
+                if (event.name == "Transfer") {
+                  if (!(regex.test(event.from) || regex.test(event.to) || regex.test(event.txHash) || regex.test(event.blockNumber.toString()))) {
+                    include = false;
+                  }
+                } else if (event.name == "Approval") {
+                  if (!(regex.test(event.owner) || regex.test(event.spender) || regex.test(event.txHash) || regex.test(event.blockNumber))) {
+                    include = false;
+                  }
+                }
+              }
+              if (include) {
+                results.push(event);
+              }
+            }
+            if (this.settings.erc721.eventsTable.sortOption == "txorderasc") {
+              results.sort((a, b) => {
+                if (a.blockNumber == b.blockNumber) {
+                  return a.logIndex - b.logIndex;
+                } else {
+                  return a.blockNumber - b.blockNumber;
+                }
+              });
+            } else if (this.settings.erc721.eventsTable.sortOption == "txorderdsc") {
+              results.sort((a, b) => {
+                if (a.blockNumber == b.blockNumber) {
+                  return b.logIndex - a.logIndex;
+                } else {
+                  return b.blockNumber - a.blockNumber;
+                }
+              });
+            }
+            return results;
+          },
+          pagedSortedFilteredERC721Events() {
+            return this.sortedFilteredERC721Events.slice((this.settings.erc721.eventsTable.currentPage - 1) * this.settings.erc721.eventsTable.pageSize, this.settings.erc721.eventsTable.currentPage * this.settings.erc721.eventsTable.pageSize);
           },
         },
 
@@ -1336,7 +1490,7 @@
             return n && !isNaN(n) || false;
           },
           saveSettings() {
-            // console.log(moment().format("HH:mm:ss") + " saveSettings: " + JSON.stringify(this.settings, null, 2));
+            console.log(moment().format("HH:mm:ss") + " saveSettings: " + JSON.stringify(this.settings, null, 2));
             localStorage.getStartedWithDevelopingInEthereumSettings = JSON.stringify(this.settings);
           },
           async processNewBlock(blockNumber) {
