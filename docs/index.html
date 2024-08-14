@@ -991,7 +991,9 @@
                   balanceCollator[event.from].txHash = event.txHash;
                   balanceCollator[event.from].logIndex = event.logIndex;
                   balanceCollator[event.from].blockNumber = event.blockNumber;
-                  balanceCollator[event.from].tokens = ethers.BigNumber.from(balanceCollator[event.from].tokens).sub(event.tokens).toString();
+                  if (event.from != ADDRESS0) {
+                    balanceCollator[event.from].tokens = ethers.BigNumber.from(balanceCollator[event.from].tokens).sub(event.tokens).toString();
+                  }
                 }
                 if (!(event.to in balanceCollator)) {
                   balanceCollator[event.to] = {
