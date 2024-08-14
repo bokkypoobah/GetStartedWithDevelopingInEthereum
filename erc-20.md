@@ -22,7 +22,12 @@
 
 The ERC-20 fungible token standard https://eips.ethereum.org/EIPS/eip-20, originally proposed in Nov 2015 and finalised in [Apr 2018](https://github.com/ethereum/ERCs/commit/ef9dc7ece65fcf8c9858993073086c188a71f8ed), specifies a set of functions and events a smart contract must implement to be ERC-20 compliant.
 
-Here are the events and functions mandated by the ERC-20 standard. From [contracts/FixedSupplyToken.sol](contracts/FixedSupplyToken.sol):
+##### FixedSupplyToken.sol
+
+Following are snippets from a simple ERC-20 compliant fixed supply token contract, from [contracts/FixedSupplyToken.sol](contracts/FixedSupplyToken.sol).
+
+The following interface specifies the events and functions required for a smart contract to be ERC-20 compliant.
+
 ```solidity
 // https://eips.ethereum.org/EIPS/eip-20
 interface IERC20 {
@@ -42,8 +47,10 @@ interface IERC20 {
 }
 ```
 
-Here is a simple implementation of a fixed supply ERC-20 token contact. From [contracts/FixedSupplyToken.sol](contracts/FixedSupplyToken.sol):
-```solidity
+The following `FixedSupplyToken` contract implements the ERC-20 interface above.
+Note that the Solidity compiler automatically generates the getter functions for public variables. The functions `name()`, `symbol()`, `decimals()`, `balanceOf(owner)` and `allowance(owner, spender)` have been automatically generated for the variables `name`, `symbol`, `decimals`, `balanceOf` and `allowance` respectively.
+
+```
 contract FixedSupplyToken is IERC20 {
     string constant public symbol = "HIHIHI";
     string constant public name = unicode"Hi 👋, Hi 👋, Hi 👋";
@@ -82,6 +89,9 @@ contract FixedSupplyToken is IERC20 {
     }
 }
 ```
+
+> Screenshots below can be reproduced using the contract address `0x1e5df6db242d07cc40a37b634022c02f73a74d59` on the page https://bokkypoobah.github.io/GetStartedWithDevelopingInEthereum/, in a web3 enabled web browser.
+
 
 
 <br />
