@@ -760,7 +760,7 @@
 
             <!-- ERC-1155: -->
             <b-card v-if="settings.tabIndex == 2" header="ERC-1155" class="m-0 p-0">
-              <b-form-group label="contract:" label-for="erc1155-contract" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" description="e.g., '0xFe9231f0e6753a8412a00eC1f0028A24d5220Ba9' for Zombie Babies on Ethereum Mainnet" :state="!settings.erc1155.contract || validAddress(settings.erc1155.contract)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
+              <b-form-group label="contract:" label-for="erc1155-contract" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" description="e.g., '0xFe9231f0e6753a8412a00eC1f0028A24d5220Ba9' for Zombie Babies on Ethereum Mainnet, or '0x3F15A716888EFb6871872fC4358F638DEE495f3b' Random collection on Sepolia" :state="!settings.erc1155.contract || validAddress(settings.erc1155.contract)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
                 <b-input-group size="sm" class="w-50">
                   <b-form-input type="text" size="sm" id="erc1155-contract" v-model="settings.erc1155.contract" @change="saveSettings" placeholder="ERC-1155 token contract address"></b-form-input>
                   <b-input-group-append>
@@ -851,14 +851,14 @@
                   </template>
                   <template #cell(tokenIdApproved)="data">
                     <div v-if="data.item.name == 'TransferSingle'">
-                      <b-link size="sm" :href="'https://opensea.io/assets/ethereum/' + settings.erc1155.contract + '/' + data.item.tokenId" variant="link" v-b-popover.hover.ds500="'Token Id ' + data.item.tokenId" target="_blank">
+                      <b-link size="sm" :href="'https://testnets.opensea.io/assets/sepolia/' + settings.erc1155.contract + '/' + data.item.tokenId" variant="link" v-b-popover.hover.ds500="'Token Id ' + data.item.tokenId" target="_blank">
                         {{ data.item.tokenId }}
                       </b-link>
                       <font size="-1" class="text-muted">{{ 'x' + data.item.value }}</font>
                     </div>
                     <div v-else-if="data.item.name == 'TransferBatch'">
                       <span v-for="(item, index) of data.item.tokenIds" v-bind:key="index">
-                        <b-link size="sm" :href="'https://opensea.io/assets/ethereum/' + settings.erc1155.contract + '/' + data.item.tokenIds[index]" variant="link" v-b-popover.hover.ds500="'Token Id ' + data.item.tokenId" target="_blank">
+                        <b-link size="sm" :href="'https://testnets.opensea.io/assets/sepolia/' + settings.erc1155.contract + '/' + data.item.tokenIds[index]" variant="link" v-b-popover.hover.ds500="'Token Id ' + data.item.tokenId" target="_blank">
                           {{ data.item.tokenIds[index] }}
                         </b-link>
                         <font size="-1" class="text-muted">{{ 'x' + data.item.values[index] }}</font>
@@ -1441,6 +1441,8 @@
                   if (!(regex.test(event.owner) || regex.test(event.spender) || regex.test(event.txHash) || regex.test(event.blockNumber))) {
                     include = false;
                   }
+                } else {
+                  console.log(JSON.stringify(event));
                 }
               }
               if (include) {
@@ -1769,12 +1771,12 @@
             for (const event of this.erc1155.events) {
               let include = true;
               if (regex) {
-                if (event.name == "Transfer") {
+                if (event.name == "TransferSingle" || event.name == "TransferBatch") {
                   if (!(regex.test(event.from) || regex.test(event.to) || regex.test(event.txHash) || regex.test(event.blockNumber.toString()))) {
                     include = false;
                   }
-                } else if (event.name == "Approval") {
-                  if (!(regex.test(event.owner) || regex.test(event.spender) || regex.test(event.txHash) || regex.test(event.blockNumber))) {
+                } else if (event.name == "ApprovalForAll") {
+                  if (!(regex.test(event.owner) || regex.test(event.operator) || regex.test(event.txHash) || regex.test(event.blockNumber))) {
                     include = false;
                   }
                 }
@@ -1971,7 +1973,7 @@
           async retrieveERC721() {
             console.log(moment().format("HH:mm:ss") + " retrieveERC721 BEGIN - settings.erc20: " + JSON.stringify(this.settings.erc20, null, 2));
             const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const contract = new ethers.Contract(this.settings.erc1155.contract, ERC1155ABI, provider);
+            const contract = new ethers.Contract(this.settings.erc721.contract, ERC721ABI, provider);
             const block = await provider.getBlock("latest");
             const latestBlockNumber = parseInt(block.number);
             const timestamp = parseInt(block.timestamp);
