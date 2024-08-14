@@ -713,11 +713,17 @@
                 pageSize: 10,
                 sortOption: 'txorderdsc',
               },
+              tokensTable: {
+                filter: null,
+                currentPage: 1,
+                pageSize: 10,
+                sortOption: 'txorderdsc',
+              },
             },
             erc1155: {
               contract: null,
             },
-            version: 8,
+            version: 9,
           },
           erc20: {
             symbol: null,
@@ -806,10 +812,16 @@
           erc721EventsFields: [
             { key: 'number', label: '#', sortable: false, thStyle: 'width: 5%;', tdClass: 'text-truncate' },
             { key: 'when', label: 'When', sortable: false, thStyle: 'width: 30%;', thClass: 'text-left', tdClass: 'text-left' },
-            { key: 'name', label: 'Name', sortable: false, thStyle: 'width: 10%;', tdClass: 'text-truncate' },
+            { key: 'name', label: 'Name', sortable: false, thStyle: 'width: 15%;', tdClass: 'text-truncate' },
             { key: 'fromOwner', label: 'From / Owner', sortable: false, thStyle: 'width: 15%;', tdClass: 'text-truncate' },
             { key: 'toSpenderOperator', label: 'To / Spender / Operator', sortable: false, thStyle: 'width: 15%;', tdClass: 'text-truncate' },
-            { key: 'tokenIdApproved', label: 'Token Id / Approved', sortable: false, thStyle: 'width: 25%;', thClass: 'text-right', tdClass: 'text-right' },
+            { key: 'tokenIdApproved', label: 'Token Id / Approved', sortable: false, thStyle: 'width: 20%;', thClass: 'text-right', tdClass: 'text-right' },
+          ],
+          erc721TokensFields: [
+            { key: 'number', label: '#', sortable: false, thStyle: 'width: 5%;', tdClass: 'text-truncate' },
+            { key: 'latestUpdate', label: 'Latest Update', sortable: false, thStyle: 'width: 30%;', thClass: 'text-left', tdClass: 'text-left' },
+            { key: 'tokenId', label: 'Token Id', sortable: false, thStyle: 'width: 40%;', thClass: 'text-right', tdClass: 'text-right' },
+            { key: 'owner', label: 'Owner', sortable: false, thStyle: 'width: 25%;', thClass: 'text-left', tdClass: 'text-left' },
           ],
         },
 
@@ -1215,7 +1227,7 @@
             Vue.set(this.erc20, 'events', events);
 
             const balances = [];
-            for (const [owner, balance] of Object.entries(balanceCollator)) {
+            for (const [ owner, balance ] of Object.entries(balanceCollator)) {
               balances.push({ owner, balance });
             }
             // balances.sort((a, b) => {
@@ -1229,7 +1241,7 @@
             // console.log(moment().format("HH:mm:ss") + " retrieveERC20 - balances: " + JSON.stringify(balances, null, 2));
 
             const allowances = [];
-            for (const [owner, spenders] of Object.entries(allowancesCollator)) {
+            for (const [ owner, spenders ] of Object.entries(allowancesCollator)) {
               for (const [spender, tokens] of Object.entries(spenders)) {
                 allowances.push({ owner, spender, tokens });
               }
@@ -1368,7 +1380,54 @@
             const startBlock = 0;
             // const startBlock = latestBlockNumber - 10000;
             await getLogs(startBlock, latestBlockNumber);
-            console.log(moment().format("HH:mm:ss") + " retrieveERC721 END - erc721: " + JSON.stringify(this.erc721, null, 2));
+
+            // Compute Tokens
+            const tokensCollator = {};
+            const approvalsCollator = {};
+            const approvalForAllsCollator = {};
+            for (const event of events) {
+              if (event.name == "Transfer") {
+                tokensCollator[event.tokenId] = {
+                  blockNumber: event.blockNumber,
+                  txIndex: event.txIndex,
+                  txHash: event.txHash,
+                  logIndex: event.logIndex,
+                  owner: event.to,
+                };
+              } else if (event.name == "Approval") {
+                approvalsCollator[event.tokenId] = {
+                  blockNumber: event.blockNumber,
+                  txIndex: event.txIndex,
+                  txHash: event.txHash,
+                  logIndex: event.logIndex,
+                  spender: event.spender,
+                };
+              } else if (event.name == "ApprovalForAll") {
+                if (!(event.owner in approvalForAllsCollator)) {
+                  approvalForAllsCollator[event.owner] = {};
+                }
+                approvalForAllsCollator[event.owner][event.operator] = {
+                  blockNumber: event.blockNumber,
+                  txIndex: event.txIndex,
+                  txHash: event.txHash,
+                  logIndex: event.logIndex,
+                  approved: event.approved,
+                };
+              } else {
+                console.log(moment().format("HH:mm:ss") + " retrieveERC721 - ELSE event: " + JSON.stringify(event));
+              }
+            }
+            console.log(moment().format("HH:mm:ss") + " retrieveERC721 END - tokensCollator: " + JSON.stringify(tokensCollator, null, 2));
+            console.log(moment().format("HH:mm:ss") + " retrieveERC721 END - approvalsCollator: " + JSON.stringify(approvalsCollator, null, 2));
+            console.log(moment().format("HH:mm:ss") + " retrieveERC721 END - approvalForAllsCollator: " + JSON.stringify(approvalForAllsCollator, null, 2));
+
+            const tokens = [];
+            for (const [ tokenId, tokenData ] of Object.entries(tokensCollator)) {
+              tokens.push({ tokenId, tokenData });
+            }
+            Vue.set(this.erc721, 'tokens', tokens);
+
+            // console.log(moment().format("HH:mm:ss") + " retrieveERC721 END - erc721: " + JSON.stringify(this.erc721, null, 2));
           },
 
           async retrieveERC20BalanceOf() {
