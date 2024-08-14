@@ -529,8 +529,13 @@
                         {{ data.item.from.substring(0, 8) + '...' + data.item.from.slice(-6) }}
                       </b-link>
                     </div>
-                    <div v-else-if="data.item.name == 'Approval' || data.item.name == 'ApprovalForAll' ">
-                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.owner" variant="link" v-b-popover.hover.ds500="'Approval[ForAll] owner ' + data.item.owner" target="_blank">
+                    <div v-else-if="data.item.name == 'Approval'">
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.owner" variant="link" v-b-popover.hover.ds500="'Approval owner ' + data.item.owner" target="_blank">
+                        {{ data.item.owner.substring(0, 8) + '...' + data.item.owner.slice(-6) }}
+                      </b-link>
+                    </div>
+                    <div v-else-if="data.item.name == 'ApprovalForAll' ">
+                      <b-link size="sm" :href="'https://sepolia.etherscan.io/address/' + data.item.owner" variant="link" v-b-popover.hover.ds500="'ApprovalForAll owner ' + data.item.owner" target="_blank">
                         {{ data.item.owner.substring(0, 8) + '...' + data.item.owner.slice(-6) }}
                       </b-link>
                     </div>
@@ -635,7 +640,7 @@
                   <div class="mt-0 flex-grow-1">
                   </div>
                   <div class="mt-0 pl-1">
-                    <b-form-select size="sm" v-model="settings.erc721.approvalForAllsTable.sortOption" @change="saveSettings" :options="erc20AllowancesSortOptions" v-b-popover.hover.bottom="'Yeah. Sort'"></b-form-select>
+                    <b-form-select size="sm" v-model="settings.erc721.approvalForAllsTable.sortOption" @change="saveSettings" :options="erc721ApprovalForAllsSortOptions" v-b-popover.hover.bottom="'Yeah. Sort'"></b-form-select>
                   </div>
                   <div class="mt-0 pl-1">
                     <font size="-2" v-b-popover.hover.bottom="'# filtered / total events'">{{ formatNumber(sortedFilteredERC721ApprovalForAlls.length) + '/' + formatNumber(erc721.approvalForAlls.length) }}</font>
@@ -671,8 +676,8 @@
                     </b-link>
                   </template>
                   <template #cell(operator)="data">
-                    <b-link size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc721.contract + '?a=' + data.item.spender" variant="link" v-b-popover.hover.ds500="data.item.spender" target="_blank">
-                      {{ data.item.spender.substring(0, 8) + '...' + data.item.spender.slice(-6) }}
+                    <b-link size="sm" :href="'https://sepolia.etherscan.io/token/' + settings.erc721.contract + '?a=' + data.item.operator" variant="link" v-b-popover.hover.ds500="data.item.operator" target="_blank">
+                      {{ data.item.operator.substring(0, 8) + '...' + data.item.operator.slice(-6) }}
                     </b-link>
                   </template>
                   <template #cell(tokens)="data">
@@ -704,7 +709,7 @@
                   <div class="mt-0 flex-grow-1">
                   </div>
                   <div class="mt-0 pl-1">
-                    <b-form-select size="sm" v-model="settings.erc721.approvalsTable.sortOption" @change="saveSettings" :options="erc20AllowancesSortOptions" v-b-popover.hover.bottom="'Yeah. Sort'"></b-form-select>
+                    <b-form-select size="sm" v-model="settings.erc721.approvalsTable.sortOption" @change="saveSettings" :options="erc721ApprovalsSortOptions" v-b-popover.hover.bottom="'Yeah. Sort'"></b-form-select>
                   </div>
                   <div class="mt-0 pl-1">
                     <font size="-2" v-b-popover.hover.bottom="'# filtered / total events'">{{ formatNumber(sortedFilteredERC721Approvals.length) + '/' + formatNumber(erc721.approvals.length) }}</font>
@@ -963,16 +968,16 @@
             { value: 'txorderdsc', text: '▼ TxOrder' },
           ],
           erc20BalancesSortOptions: [
-            { value: 'txorderasc', text: '▲ Latest TxOrder' },
-            { value: 'txorderdsc', text: '▼ Latest TxOrder' },
+            { value: 'txorderasc', text: '▲ Latest Update' },
+            { value: 'txorderdsc', text: '▼ Latest Update' },
             { value: 'ownerasc', text: '▲ Owner' },
             { value: 'ownerdsc', text: '▼ Owner' },
             { value: 'balanceasc', text: '▲ Balance' },
             { value: 'balancedsc', text: '▼ Balance' },
           ],
           erc20AllowancesSortOptions: [
-            { value: 'txorderasc', text: '▲ Latest TxOrder' },
-            { value: 'txorderdsc', text: '▼ Latest TxOrder' },
+            { value: 'txorderasc', text: '▲ Latest Update' },
+            { value: 'txorderdsc', text: '▼ Latest Update' },
             { value: 'ownerasc', text: '▲ Owner' },
             { value: 'ownerdsc', text: '▼ Owner' },
             { value: 'spenderasc', text: '▲ Spender' },
@@ -981,12 +986,32 @@
             { value: 'tokensdsc', text: '▼ Tokens' },
           ],
           erc721TokensSortOptions: [
-            { value: 'txorderasc', text: '▲ Latest TxOrder' },
-            { value: 'txorderdsc', text: '▼ Latest TxOrder' },
+            { value: 'txorderasc', text: '▲ Latest Update' },
+            { value: 'txorderdsc', text: '▼ Latest Update' },
             { value: 'tokenidasc', text: '▲ Token Id' },
             { value: 'tokeniddsc', text: '▼ Token Id' },
             { value: 'ownerasc', text: '▲ Owner' },
             { value: 'ownerdsc', text: '▼ Owner' },
+          ],
+          erc721ApprovalForAllsSortOptions: [
+            { value: 'txorderasc', text: '▲ Latest Update' },
+            { value: 'txorderdsc', text: '▼ Latest Update' },
+            { value: 'ownerasc', text: '▲ Owner, ▼ Latest Update' },
+            { value: 'ownerdsc', text: '▼ Owner, ▼ Latest Update' },
+            { value: 'operatorasc', text: '▲ Operator, ▼ Latest Update' },
+            { value: 'operatordsc', text: '▼ Operator, ▼ Latest Update' },
+            { value: 'approvedasc', text: '▲ Approved, ▼ Latest Update' },
+            { value: 'approveddsc', text: '▼ Approved, ▼ Latest Update' },
+          ],
+          erc721ApprovalsSortOptions: [
+            { value: 'txorderasc', text: '▲ Latest Update' },
+            { value: 'txorderdsc', text: '▼ Latest Update' },
+            { value: 'ownerasc', text: '▲ Owner, ▼ Latest Update' },
+            { value: 'ownerdsc', text: '▼ Owner, ▼ Latest Update' },
+            { value: 'spenderasc', text: '▲ Spender, ▼ Latest Update' },
+            { value: 'spenderdsc', text: '▼ Spender, ▼ Latest Update' },
+            { value: 'tokenidasc', text: '▲ Token Id' },
+            { value: 'tokeniddsc', text: '▼ Token Id' },
           ],
           pageSizes: [
             { value: 5, text: '5' },
@@ -1038,7 +1063,7 @@
             { key: 'number', label: '#', sortable: false, thStyle: 'width: 5%;', tdClass: 'text-truncate' },
             { key: 'latestUpdate', label: 'Latest Update', sortable: false, thStyle: 'width: 30%;', thClass: 'text-left', tdClass: 'text-left' },
             { key: 'owner', label: 'Owner', sortable: false, thStyle: 'width: 20%;', thClass: 'text-left', tdClass: 'text-left' },
-            { key: 'operator', label: 'Operator [Spender]', sortable: false, thStyle: 'width: 20%;', thClass: 'text-left', tdClass: 'text-left' },
+            { key: 'operator', label: 'Operator', sortable: false, thStyle: 'width: 20%;', thClass: 'text-left', tdClass: 'text-left' },
             { key: 'approved', label: 'Approved', sortable: false, thStyle: 'width: 25%;', thClass: 'text-right', tdClass: 'text-right' },
           ],
           erc721ApprovalsFields: [
@@ -1371,54 +1396,96 @@
                 }
               }
               if (include) {
-                // TODO Remove Testing
-                results.push(approvalForAll);
-                results.push(approvalForAll);
-                results.push(approvalForAll);
-                results.push(approvalForAll);
-                results.push(approvalForAll);
                 results.push(approvalForAll);
               }
             }
             if (this.settings.erc721.approvalForAllsTable.sortOption == "txorderasc") {
               results.sort((a, b) => {
-                if (a.tokens.blockNumber == b.tokens.blockNumber) {
-                  return a.tokens.logIndex - b.tokens.logIndex;
+                if (a.blockNumber == b.blockNumber) {
+                  return a.logIndex - b.logIndex;
                 } else {
-                  return a.tokens.blockNumber - b.tokens.blockNumber;
+                  return a.blockNumber - b.blockNumber;
                 }
               });
             } else if (this.settings.erc721.approvalForAllsTable.sortOption == "txorderdsc") {
               results.sort((a, b) => {
-                if (a.tokens.blockNumber == b.tokens.blockNumber) {
-                  return b.tokens.logIndex - a.tokens.logIndex;
+                if (a.blockNumber == b.blockNumber) {
+                  return b.logIndex - a.logIndex;
                 } else {
-                  return b.tokens.blockNumber - a.tokens.blockNumber;
+                  return b.blockNumber - a.blockNumber;
                 }
               });
             } else if (this.settings.erc721.approvalForAllsTable.sortOption == "ownerasc") {
               results.sort((a, b) => {
-                return ('' + a.owner).localeCompare(b.owner);
+                if (('' + a.owner).localeCompare(b.owner) == 0) {
+                  if (a.blockNumber == b.blockNumber) {
+                    return a.logIndex - b.logIndex;
+                  } else {
+                    return b.blockNumber - a.blockNumber;
+                  }
+                } else {
+                  return ('' + a.owner).localeCompare(b.owner);
+                }
               });
             } else if (this.settings.erc721.approvalForAllsTable.sortOption == "ownerdsc") {
               results.sort((a, b) => {
-                return ('' + b.owner).localeCompare(a.owner);
+                if (('' + a.owner).localeCompare(b.owner) == 0) {
+                  if (a.blockNumber == b.blockNumber) {
+                    return a.logIndex - b.logIndex;
+                  } else {
+                    return b.blockNumber - a.blockNumber;
+                  }
+                } else {
+                  return ('' + b.owner).localeCompare(a.owner);
+                }
               });
-            } else if (this.settings.erc721.approvalForAllsTable.sortOption == "spenderasc") {
+            } else if (this.settings.erc721.approvalForAllsTable.sortOption == "operatorasc") {
               results.sort((a, b) => {
-                return ('' + a.spender).localeCompare(b.spender);
+                if (('' + a.operator).localeCompare(b.operator) == 0) {
+                  if (a.blockNumber == b.blockNumber) {
+                    return a.logIndex - b.logIndex;
+                  } else {
+                    return b.blockNumber - a.blockNumber;
+                  }
+                } else {
+                  return ('' + a.operator).localeCompare(b.operator);
+                }
               });
-            } else if (this.settings.erc721.approvalForAllsTable.sortOption == "spenderdsc") {
+            } else if (this.settings.erc721.approvalForAllsTable.sortOption == "operatordsc") {
               results.sort((a, b) => {
-                return ('' + b.spender).localeCompare(a.spender);
+                if (('' + a.operator).localeCompare(b.operator) == 0) {
+                  if (a.blockNumber == b.blockNumber) {
+                    return a.logIndex - b.logIndex;
+                  } else {
+                    return b.blockNumber - a.blockNumber;
+                  }
+                } else {
+                  return ('' + b.operator).localeCompare(a.operator);
+                }
               });
-            } else if (this.settings.erc721.approvalForAllsTable.sortOption == "tokensasc") {
+            } else if (this.settings.erc721.approvalForAllsTable.sortOption == "approvedasc") {
               results.sort((a, b) => {
-                return a.tokens - b.tokens;
+                if (a.approved == b.approved) {
+                  if (a.blockNumber == b.blockNumber) {
+                    return a.logIndex - b.logIndex;
+                  } else {
+                    return b.blockNumber - a.blockNumber;
+                  }
+                } else {
+                  return (a.approved ? 1 : 0) - (b.approved ? 1 : 0);
+                }
               });
-            } else if (this.settings.erc721.approvalForAllsTable.sortOption == "tokensdsc") {
+            } else if (this.settings.erc721.approvalForAllsTable.sortOption == "approveddsc") {
               results.sort((a, b) => {
-                return b.tokens - a.tokens;
+                if (a.approved == b.approved) {
+                  if (a.blockNumber == b.blockNumber) {
+                    return a.logIndex - b.logIndex;
+                  } else {
+                    return b.blockNumber - a.blockNumber;
+                  }
+                } else {
+                  return (b.approved ? 1 : 0) - (a.approved ? 1 : 0);
+                }
               });
             }
             return results;
@@ -1468,27 +1535,59 @@
               });
             } else if (this.settings.erc721.approvalsTable.sortOption == "ownerasc") {
               results.sort((a, b) => {
-                return ('' + a.owner).localeCompare(b.owner);
+                if (('' + a.owner).localeCompare(b.owner) == 0) {
+                  if (a.blockNumber == b.blockNumber) {
+                    return a.logIndex - b.logIndex;
+                  } else {
+                    return b.blockNumber - a.blockNumber;
+                  }
+                } else {
+                  return ('' + a.owner).localeCompare(b.owner);
+                }
               });
             } else if (this.settings.erc721.approvalsTable.sortOption == "ownerdsc") {
               results.sort((a, b) => {
-                return ('' + b.owner).localeCompare(a.owner);
+                if (('' + a.owner).localeCompare(b.owner) == 0) {
+                  if (a.blockNumber == b.blockNumber) {
+                    return a.logIndex - b.logIndex;
+                  } else {
+                    return b.blockNumber - a.blockNumber;
+                  }
+                } else {
+                  return ('' + b.owner).localeCompare(a.owner);
+                }
               });
             } else if (this.settings.erc721.approvalsTable.sortOption == "spenderasc") {
               results.sort((a, b) => {
-                return ('' + a.spender).localeCompare(b.spender);
+                if (('' + a.spender).localeCompare(b.spender) == 0) {
+                  if (a.blockNumber == b.blockNumber) {
+                    return a.logIndex - b.logIndex;
+                  } else {
+                    return b.blockNumber - a.blockNumber;
+                  }
+                } else {
+                  return ('' + a.spender).localeCompare(b.spender);
+                }
               });
             } else if (this.settings.erc721.approvalsTable.sortOption == "spenderdsc") {
               results.sort((a, b) => {
-                return ('' + b.spender).localeCompare(a.spender);
+                if (('' + a.spender).localeCompare(b.spender) == 0) {
+                  if (a.blockNumber == b.blockNumber) {
+                    return a.logIndex - b.logIndex;
+                  } else {
+                    return b.blockNumber - a.blockNumber;
+                  }
+                } else {
+                  return ('' + b.spender).localeCompare(a.spender);
+                }
               });
-            } else if (this.settings.erc721.approvalsTable.sortOption == "tokensasc") {
+            } else if (this.settings.erc721.approvalsTable.sortOption == "tokenidasc") {
               results.sort((a, b) => {
-                return a.tokens - b.tokens;
+                return a.tokenId - b.tokenId;
               });
-            } else if (this.settings.erc721.approvalsTable.sortOption == "tokensdsc") {
+            } else if (this.settings.erc721.approvalsTable.sortOption == "tokeniddsc") {
               results.sort((a, b) => {
-                return b.tokens - a.tokens;
+                return b.tokenId - a.tokenId;
               });
             }
             return results;
@@ -1828,11 +1927,12 @@
             Vue.set(this.erc721, 'tokens', tokens);
             const approvalForAlls = [];
             for (const [ owner, ownerData ] of Object.entries(approvalForAllsCollator)) {
-              for (const [ spender, spenderData ] of Object.entries(ownerData)) {
-                approvalForAlls.push({ owner, spender, ...spenderData });
+              for (const [ operator, operatorData ] of Object.entries(ownerData)) {
+                approvalForAlls.push({ owner, operator, ...operatorData });
               }
             }
             Vue.set(this.erc721, 'approvalForAlls', approvalForAlls);
+            console.log(moment().format("HH:mm:ss") + " retrieveERC721 END - approvalForAlls: " + JSON.stringify(approvalForAlls, null, 2));
             const approvals = [];
             for (const [ tokenId, tokenData ] of Object.entries(approvalsCollator)) {
               approvals.push({ tokenId, ...tokenData });
