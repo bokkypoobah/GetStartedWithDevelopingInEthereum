@@ -43,7 +43,7 @@
           </b-navbar-brand>
           <b-navbar-nav class="ml-auto">
             <b-nav-item size="sm" @click="settings.tabIndex = 0; saveSettings();" :active="settings.tabIndex == 0" active-class="active" v-b-popover.hover.ds500="'ERC-20 Fungible Tokens'">ERC-20</b-nav-item>
-            <b-nav-item size="sm" disabled @click="settings.tabIndex = 1; saveSettings();" :active="settings.tabIndex == 1" active-class="active" v-b-popover.hover.ds500="'ERC-721 Non-Fungible Tokens - TODO'">ERC-721</b-nav-item>
+            <b-nav-item size="sm" @click="settings.tabIndex = 1; saveSettings();" :active="settings.tabIndex == 1" active-class="active" v-b-popover.hover.ds500="'ERC-721 Non-Fungible Tokens - WIP'">ERC-721</b-nav-item>
             <b-nav-item size="sm" disabled @click="settings.tabIndex = 2; saveSettings();" :active="settings.tabIndex == 2" active-class="active" v-b-popover.hover.ds500="'ERC-1155 Non-Fungible Tokens - TODO'">ERC-1155</b-nav-item>
             <b-button size="sm" variant="outline-primary" class="ml-1" @click="connectToWeb3(); processNewBlock(0);" v-b-popover.hover.ds500="'Click to update wallet'">{{ coinbase && (coinbase.substring(0, 8) + '...' + coinbase.slice(-6)) || 'Connect' }}</b-button>
           </b-navbar-nav>
@@ -60,6 +60,7 @@
           </b-card>
 
           <b-card class="m-0 p-0 border-0" body-class="m-1 p-0">
+            <!-- ERC-20 -->
             <b-card v-if="settings.tabIndex == 0" header="ERC-20" class="m-0 p-0">
               <b-form-group label="contract:" label-for="erc20-contract" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" description="e.g., '0xc21d97673B9E0B3AA53a06439F71fDc1facE393B' for XEENUS and '0x1e5df6db242d07cc40a37b634022c02f73a74d59' for MYERC20TOKEN on Sepolia" :state="!settings.erc20.contract || validAddress(settings.erc20.contract)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
                 <b-input-group size="sm" class="w-50">
@@ -460,8 +461,23 @@
                   </b-form-group>
                 </b-card>
               </b-form-group>
-
             </b-card>
+
+            <!-- ERC-721 -->
+            <b-card v-if="settings.tabIndex == 1" header="ERC-721" class="m-0 p-0">
+              <b-form-group label="contract:" label-for="erc721-contract" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" description="e.g., '0x8b73448426797099b6b9a96c4343f528bbAfc55e' for TESTTOADZ on Sepolia" :state="!settings.erc721.contract || validAddress(settings.erc721.contract)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
+                <b-input-group size="sm" class="w-50">
+                  <b-form-input type="text" size="sm" id="erc721-contract" v-model="settings.erc721.contract" @change="saveSettings" placeholder="ERC-20 token contract address"></b-form-input>
+                  <b-input-group-append>
+                    <b-button size="sm" :disabled="!validAddress(settings.erc721.contract)" :href="'https://sepolia.etherscan.io/token/' + settings.erc721.contract + '#code'" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                  </b-input-group-append>
+                </b-input-group>
+              </b-form-group>
+              <b-form-group label="" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
+                <b-button size="sm" :disabled="!validAddress(settings.erc721.contract)" @click="retrieveERC721" variant="primary">Retrieve</b-button>
+              </b-form-group>
+            </b-card>
+
             <b-card-text class="m-0 p-0">
               <!-- :INFO -->
               <b-card v-if="settings.showInfo || coinbase == null" no-body class="my-1 p-1">
@@ -631,6 +647,10 @@
               txHash: null,
               result: null,
             },
+          },
+          erc721: {
+            symbol: null,
+            coinbaseBalanceOf: null,
           },
           timestamps: {},
           eventsSortOptions: [
@@ -1068,6 +1088,44 @@
             // console.log(moment().format("HH:mm:ss") + " retrieveERC20 - allowances: " + JSON.stringify(allowances, null, 2));
 
             // console.log(moment().format("HH:mm:ss") + " retrieveERC20 END - erc20: " + JSON.stringify(this.erc20, null, 2));
+          },
+
+          async retrieveERC721() {
+            console.log(moment().format("HH:mm:ss") + " retrieveERC721 BEGIN - settings.erc20: " + JSON.stringify(this.settings.erc20, null, 2));
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const contract = new ethers.Contract(this.settings.erc721.contract, ERC721ABI, provider);
+            const block = await provider.getBlock("latest");
+            const latestBlockNumber = parseInt(block.number);
+            const timestamp = parseInt(block.timestamp);
+
+            // ERC-721
+            // event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
+            // event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
+            // event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
+            //
+            // function balanceOf(address owner) external view returns (uint256 balance);
+            // function ownerOf(uint256 tokenId) external view returns (address owner);
+            // function getApproved(uint256 tokenId) external view returns (address operator);
+            // function isApprovedForAll(address owner, address operator) external view returns (bool);
+            //
+            // function approve(address to, uint256 tokenId) external;
+            // function setApprovalForAll(address operator, bool _approved) external;
+            // function transferFrom(address from, address to, uint256 tokenId) external;
+            // function safeTransferFrom(address from, address to, uint256 tokenId) external;
+            // function safeTransferFrom(address from, address to, uint256 tokenId, bytes calldata data) external;
+
+            const symbol = await contract.symbol();
+            Vue.set(this.erc721, 'symbol', symbol);
+            console.log(moment().format("HH:mm:ss") + " retrieveERC721 - symbol: " + symbol);
+            // const name = await contract.name();
+            // Vue.set(this.erc20, 'name', name);
+            // const decimals = await contract.decimals();
+            // Vue.set(this.erc20, 'decimals', decimals.toString());
+            // const totalSupply = await contract.totalSupply();
+            // Vue.set(this.erc20, 'totalSupply', totalSupply.toString());
+            const coinbaseBalanceOf = await contract.balanceOf(this.coinbase);
+            Vue.set(this.erc721, 'coinbaseBalanceOf', coinbaseBalanceOf.toString());
+            console.log(moment().format("HH:mm:ss") + " retrieveERC721 - coinbaseBalanceOf: " + coinbaseBalanceOf);
           },
 
           async retrieveERC20BalanceOf() {
