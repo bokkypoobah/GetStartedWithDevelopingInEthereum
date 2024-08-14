@@ -62,10 +62,10 @@
 
           <b-card class="m-0 p-0 border-0" body-class="m-1 p-0">
 
-            <b-modal ref="viewname" v-model="nonFungibleModal.show" hide-footer header-class="m-0 px-3 py-2" body-bg-variant="light" size="lg">
+            <b-modal ref="nonfungiblemodal" v-model="nonFungibleModal.show" hide-footer header-class="m-0 px-3 py-2" body-bg-variant="light" size="lg">
               <template #modal-title>{{ nonFungibleModal.type.replace(/erc/, "ERC-") + ' Non-Fungible Token' }}</template>
 
-              <b-form-group label="contract:" label-for="nonfungiblemodal-contract" label-size="sm" label-cols-sm="4" label-align-sm="right" class="mx-0 my-1 p-0">
+              <b-form-group label="contract:" label-for="nonfungiblemodal-contract" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
                 <b-input-group size="sm" class="w-100">
                   <b-form-input type="text" readonly size="sm" id="nonfungiblemodal-contract" v-model="nonFungibleModal.contract"></b-form-input>
                   <b-input-group-append>
@@ -74,7 +74,7 @@
                 </b-input-group>
               </b-form-group>
 
-              <b-form-group label="tokenId:" label-for="nonfungiblemodal-tokenid" label-size="sm" label-cols-sm="4" label-align-sm="right" class="mx-0 my-1 p-0">
+              <b-form-group label="tokenId:" label-for="nonfungiblemodal-tokenid" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
                 <b-input-group size="sm" class="w-100">
                   <b-form-input type="text" readonly size="sm" id="nonfungiblemodal-tokenid" v-model="nonFungibleModal.tokenId"></b-form-input>
                   <b-input-group-append>
@@ -82,7 +82,11 @@
                   </b-input-group-append>
                 </b-input-group>
               </b-form-group>
-
+              <font size="-1">
+                <!-- <b-table small fixed striped :fields="erc20EventsFields" :items="pagedSortedFilteredERC20Events" show-empty empty-html="Click [Retrieve] above" head-variant="light" class="mt-1"> -->
+                <b-table small fixed striped :items="nonFungibleModal.logs" show-empty head-variant="light" class="mt-1">
+                </b-table>
+              </font>
             </b-modal>
 
             <!-- ERC-20: -->
@@ -1227,6 +1231,7 @@
             type: null,
             contract: null,
             tokenId: null,
+            logs: [],
           },
           timestamps: {},
           eventsSortOptions: [
@@ -1378,14 +1383,14 @@
           },
           // --- ERC-20: ---
           sortedFilteredERC20Events() {
-            // console.log(moment().format("HH:mm:ss") + " sortedFilteredERC20Events - this.settings.erc20.eventsTable: " + JSON.stringify(this.settings.erc20.eventsTable));
+            // console.log(now() + " sortedFilteredERC20Events - this.settings.erc20.eventsTable: " + JSON.stringify(this.settings.erc20.eventsTable));
             const results = [];
             let regex = null;
             if (this.settings.erc20.eventsTable.filter != null && this.settings.erc20.eventsTable.filter.length > 0) {
               try {
                 regex = new RegExp(this.settings.erc20.eventsTable.filter, 'i');
               } catch (e) {
-                console.log(moment().format("HH:mm:ss") + " sortedFilteredERC20Events - regex error: " + e.message);
+                console.log(now() + " sortedFilteredERC20Events - regex error: " + e.message);
                 regex = new RegExp(/thequickbrowndogjumpsoverthelazyfox/, 'i');
               }
             }
@@ -1429,14 +1434,14 @@
             return this.sortedFilteredERC20Events.slice((this.settings.erc20.eventsTable.currentPage - 1) * this.settings.erc20.eventsTable.pageSize, this.settings.erc20.eventsTable.currentPage * this.settings.erc20.eventsTable.pageSize);
           },
           sortedFilteredERC20Balances() {
-            // console.log(moment().format("HH:mm:ss") + " sortedFilteredERC20Balances - this.settings.erc20.balancesTable: " + JSON.stringify(this.settings.erc20.balancesTable));
+            // console.log(now() + " sortedFilteredERC20Balances - this.settings.erc20.balancesTable: " + JSON.stringify(this.settings.erc20.balancesTable));
             const results = [];
             let regex = null;
             if (this.settings.erc20.balancesTable.filter != null && this.settings.erc20.balancesTable.filter.length > 0) {
               try {
                 regex = new RegExp(this.settings.erc20.balancesTable.filter, 'i');
               } catch (e) {
-                console.log(moment().format("HH:mm:ss") + " sortedFilteredERC20Balances - regex error: " + e.message);
+                console.log(now() + " sortedFilteredERC20Balances - regex error: " + e.message);
                 regex = new RegExp(/thequickbrowndogjumpsoverthelazyfox/, 'i');
               }
             }
@@ -1490,14 +1495,14 @@
             return this.sortedFilteredERC20Balances.slice((this.settings.erc20.balancesTable.currentPage - 1) * this.settings.erc20.balancesTable.pageSize, this.settings.erc20.balancesTable.currentPage * this.settings.erc20.balancesTable.pageSize);
           },
           sortedFilteredERC20Allowances() {
-            // console.log(moment().format("HH:mm:ss") + " sortedFilteredERC20Allowances - this.settings.erc20.allowancesTable: " + JSON.stringify(this.settings.erc20.allowancesTable));
+            // console.log(now() + " sortedFilteredERC20Allowances - this.settings.erc20.allowancesTable: " + JSON.stringify(this.settings.erc20.allowancesTable));
             const results = [];
             let regex = null;
             if (this.settings.erc20.allowancesTable.filter != null && this.settings.erc20.allowancesTable.filter.length > 0) {
               try {
                 regex = new RegExp(this.settings.erc20.allowancesTable.filter, 'i');
               } catch (e) {
-                console.log(moment().format("HH:mm:ss") + " sortedFilteredERC20Allowances - regex error: " + e.message);
+                console.log(now() + " sortedFilteredERC20Allowances - regex error: " + e.message);
                 regex = new RegExp(/thequickbrowndogjumpsoverthelazyfox/, 'i');
               }
             }
@@ -1561,14 +1566,14 @@
 
           // --- ERC-721: ---
           sortedFilteredERC721Events() {
-            // console.log(moment().format("HH:mm:ss") + " sortedFilteredERC721Events - this.settings.erc721.eventsTable: " + JSON.stringify(this.settings.erc721.eventsTable));
+            // console.log(now() + " sortedFilteredERC721Events - this.settings.erc721.eventsTable: " + JSON.stringify(this.settings.erc721.eventsTable));
             const results = [];
             let regex = null;
             if (this.settings.erc721.eventsTable.filter != null && this.settings.erc721.eventsTable.filter.length > 0) {
               try {
                 regex = new RegExp(this.settings.erc721.eventsTable.filter, 'i');
               } catch (e) {
-                console.log(moment().format("HH:mm:ss") + " sortedFilteredERC721Events - regex error: " + e.message);
+                console.log(now() + " sortedFilteredERC721Events - regex error: " + e.message);
                 regex = new RegExp(/thequickbrowndogjumpsoverthelazyfox/, 'i');
               }
             }
@@ -1615,14 +1620,14 @@
           },
 
           sortedFilteredERC721Tokens() {
-            // console.log(moment().format("HH:mm:ss") + " sortedFilteredERC721Tokens - this.settings.erc721.tokensTable: " + JSON.stringify(this.settings.erc721.tokensTable));
+            // console.log(now() + " sortedFilteredERC721Tokens - this.settings.erc721.tokensTable: " + JSON.stringify(this.settings.erc721.tokensTable));
             const results = [];
             let regex = null;
             if (this.settings.erc721.tokensTable.filter != null && this.settings.erc721.tokensTable.filter.length > 0) {
               try {
                 regex = new RegExp(this.settings.erc721.tokensTable.filter, 'i');
               } catch (e) {
-                console.log(moment().format("HH:mm:ss") + " sortedFilteredERC721Tokens - regex error: " + e.message);
+                console.log(now() + " sortedFilteredERC721Tokens - regex error: " + e.message);
                 regex = new RegExp(/thequickbrowndogjumpsoverthelazyfox/, 'i');
               }
             }
@@ -1673,19 +1678,19 @@
             return results;
           },
           pagedSortedFilteredERC721Tokens() {
-            // console.log(moment().format("HH:mm:ss") + " pagedSortedFilteredERC721Tokens - this.settings.erc721.tokensTable: " + JSON.stringify(this.settings.erc721.tokensTable));
+            // console.log(now() + " pagedSortedFilteredERC721Tokens - this.settings.erc721.tokensTable: " + JSON.stringify(this.settings.erc721.tokensTable));
             return this.sortedFilteredERC721Tokens.slice((this.settings.erc721.tokensTable.currentPage - 1) * this.settings.erc721.tokensTable.pageSize, this.settings.erc721.tokensTable.currentPage * this.settings.erc721.tokensTable.pageSize);
           },
 
           sortedFilteredERC721ApprovalForAlls() {
-            // console.log(moment().format("HH:mm:ss") + " sortedFilteredERC721ApprovalForAlls - this.settings.erc20.allowancesTable: " + JSON.stringify(this.settings.erc20.allowancesTable));
+            // console.log(now() + " sortedFilteredERC721ApprovalForAlls - this.settings.erc20.allowancesTable: " + JSON.stringify(this.settings.erc20.allowancesTable));
             const results = [];
             let regex = null;
             if (this.settings.erc721.approvalForAllsTable.filter != null && this.settings.erc721.approvalForAllsTable.filter.length > 0) {
               try {
                 regex = new RegExp(this.settings.erc721.approvalForAllsTable.filter, 'i');
               } catch (e) {
-                console.log(moment().format("HH:mm:ss") + " sortedFilteredERC721ApprovalForAlls - regex error: " + e.message);
+                console.log(now() + " sortedFilteredERC721ApprovalForAlls - regex error: " + e.message);
                 regex = new RegExp(/thequickbrowndogjumpsoverthelazyfox/, 'i');
               }
             }
@@ -1796,14 +1801,14 @@
           },
 
           sortedFilteredERC721Approvals() {
-            // console.log(moment().format("HH:mm:ss") + " sortedFilteredERC721Approvals - this.settings.erc721.approvalsTable: " + JSON.stringify(this.settings.erc721.approvalsTable));
+            // console.log(now() + " sortedFilteredERC721Approvals - this.settings.erc721.approvalsTable: " + JSON.stringify(this.settings.erc721.approvalsTable));
             const results = [];
             let regex = null;
             if (this.settings.erc721.approvalsTable.filter != null && this.settings.erc721.approvalsTable.filter.length > 0) {
               try {
                 regex = new RegExp(this.settings.erc721.approvalsTable.filter, 'i');
               } catch (e) {
-                console.log(moment().format("HH:mm:ss") + " sortedFilteredERC721Approvals - regex error: " + e.message);
+                console.log(now() + " sortedFilteredERC721Approvals - regex error: " + e.message);
                 regex = new RegExp(/thequickbrowndogjumpsoverthelazyfox/, 'i');
               }
             }
@@ -1899,14 +1904,14 @@
 
           // --- ERC-1155: ---
           sortedFilteredERC1155Events() {
-            console.log(moment().format("HH:mm:ss") + " sortedFilteredERC1155Events - this.settings.erc1155.eventsTable: " + JSON.stringify(this.settings.erc1155.eventsTable));
+            console.log(now() + " sortedFilteredERC1155Events - this.settings.erc1155.eventsTable: " + JSON.stringify(this.settings.erc1155.eventsTable));
             const results = [];
             let regex = null;
             if (this.settings.erc1155.eventsTable.filter != null && this.settings.erc1155.eventsTable.filter.length > 0) {
               try {
                 regex = new RegExp(this.settings.erc1155.eventsTable.filter, 'i');
               } catch (e) {
-                console.log(moment().format("HH:mm:ss") + " sortedFilteredERC1155Events - regex error: " + e.message);
+                console.log(now() + " sortedFilteredERC1155Events - regex error: " + e.message);
                 regex = new RegExp(/thequickbrowndogjumpsoverthelazyfox/, 'i');
               }
             }
@@ -1952,14 +1957,14 @@
           },
 
           sortedFilteredERC1155Tokens() {
-            // console.log(moment().format("HH:mm:ss") + " sortedFilteredERC1155Tokens - this.settings.erc1155.tokensTable: " + JSON.stringify(this.settings.erc1155.tokensTable));
+            // console.log(now() + " sortedFilteredERC1155Tokens - this.settings.erc1155.tokensTable: " + JSON.stringify(this.settings.erc1155.tokensTable));
             const results = [];
             let regex = null;
             if (this.settings.erc1155.tokensTable.filter != null && this.settings.erc1155.tokensTable.filter.length > 0) {
               try {
                 regex = new RegExp(this.settings.erc1155.tokensTable.filter, 'i');
               } catch (e) {
-                console.log(moment().format("HH:mm:ss") + " sortedFilteredERC1155Tokens - regex error: " + e.message);
+                console.log(now() + " sortedFilteredERC1155Tokens - regex error: " + e.message);
                 regex = new RegExp(/thequickbrowndogjumpsoverthelazyfox/, 'i');
               }
             }
@@ -2027,19 +2032,19 @@
             return results;
           },
           pagedSortedFilteredERC1155Tokens() {
-            // console.log(moment().format("HH:mm:ss") + " pagedSortedFilteredERC1155Tokens - this.settings.erc1155.tokensTable: " + JSON.stringify(this.settings.erc1155.tokensTable));
+            // console.log(now() + " pagedSortedFilteredERC1155Tokens - this.settings.erc1155.tokensTable: " + JSON.stringify(this.settings.erc1155.tokensTable));
             return this.sortedFilteredERC1155Tokens.slice((this.settings.erc1155.tokensTable.currentPage - 1) * this.settings.erc1155.tokensTable.pageSize, this.settings.erc1155.tokensTable.currentPage * this.settings.erc1155.tokensTable.pageSize);
           },
 
           sortedFilteredERC1155ApprovalForAlls() {
-            console.log(moment().format("HH:mm:ss") + " sortedFilteredERC1155ApprovalForAlls - this.settings.erc1155.approvalForAllsTable: " + JSON.stringify(this.settings.erc1155.approvalForAllsTable));
+            console.log(now() + " sortedFilteredERC1155ApprovalForAlls - this.settings.erc1155.approvalForAllsTable: " + JSON.stringify(this.settings.erc1155.approvalForAllsTable));
             const results = [];
             let regex = null;
             if (this.settings.erc1155.approvalForAllsTable.filter != null && this.settings.erc1155.approvalForAllsTable.filter.length > 0) {
               try {
                 regex = new RegExp(this.settings.erc1155.approvalForAllsTable.filter, 'i');
               } catch (e) {
-                console.log(moment().format("HH:mm:ss") + " sortedFilteredERC1155ApprovalForAlls - regex error: " + e.message);
+                console.log(now() + " sortedFilteredERC1155ApprovalForAlls - regex error: " + e.message);
                 regex = new RegExp(/thequickbrowndogjumpsoverthelazyfox/, 'i');
               }
             }
@@ -2156,16 +2161,52 @@
           nonFungibleViewerURL(contract, tokenId) {
             return this.nonFungibleViewer.replace(/\${contract}/, contract).replace(/\${tokenId}/, tokenId);
           },
-          viewNonFungible(type, contract, tokenId) {
+          async viewNonFungible(type, contract, tokenId) {
             Vue.set(this.nonFungibleModal, 'show', true);
             Vue.set(this.nonFungibleModal, 'type', type);
             Vue.set(this.nonFungibleModal, 'contract', contract);
             Vue.set(this.nonFungibleModal, 'tokenId', tokenId);
-            console.log(moment().format("HH:mm:ss") + " viewNonFungible - this.nonFungibleModal: " + JSON.stringify(this.nonFungibleModal, null, 2));
+
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const interface = new ethers.Contract(contract, type == "erc721" ? ERC721ABI : ERC1155ABI, provider);
+            Vue.set(this.nonFungibleModal, 'logs', []);
+            this.nonFungibleModal.logs.push({ log:now() + " " + type.replace(/erc/, "ERC-") + " @ " + contract });
+            let erc721Owner = null;
+            let uriResult = null;
+            if (type == "erc721") {
+              erc721Owner = await interface.ownerOf(tokenId);
+              this.nonFungibleModal.logs.push({ log:now() + " erc721.ownerOf(" + tokenId + ") returned " + erc721Owner });
+            }
+            if (type == "erc721") {
+              uriResults = await interface.tokenURI(tokenId);
+              this.nonFungibleModal.logs.push({ log:now() + " erc721.tokenURI(" + tokenId + ") returned " + uriResults });
+            } else if (type == "erc1155") {
+              uriResults = await interface.uri(tokenId);
+              this.nonFungibleModal.logs.push({ log:now() + " erc1155.uri(" + tokenId + ") returned " + uriResults });
+            }
+            console.log("uriResults: " + uriResults);
+            if (uriResults.substring(0, 12) == "ipfs://ipfs/") {
+              uriResults = "https://ipfs.io/" + uriResults.substring(7)
+              this.nonFungibleModal.logs.push({ log:now() + " Updated URI to " + uriResults });
+            } else if (uriResults.substring(0, 7) == "ipfs://") {
+              uriResults = "https://ipfs.io/ipfs/" + uriResults.substring(7);
+              this.nonFungibleModal.logs.push({ log:now() + " Updated URI to " + uriResults });
+            }
+            if (type == "erc1155") {
+              if (uriResults.indexOf("0x{id}") >= 0) {
+                uriResults = uriResults.replace(/0x{id}/, tokenId);
+                this.nonFungibleModal.logs.push({ log:now() + " Updated URI to " + uriResults });
+              }
+              if (uriResults.indexOf("{id}") >= 0) {
+                uriResults = uriResults.replace(/{id}/, tokenId);
+                this.nonFungibleModal.logs.push({ log:now() + " Updated URI to " + uriResults });
+              }
+            }
+
           },
 
           async retrieveERC20() {
-            console.log(moment().format("HH:mm:ss") + " retrieveERC20 BEGIN - settings.erc20: " + JSON.stringify(this.settings.erc20, null, 2));
+            console.log(now() + " retrieveERC20 BEGIN - settings.erc20: " + JSON.stringify(this.settings.erc20, null, 2));
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const contract = new ethers.Contract(this.settings.erc20.contract, ERC20ABI, provider);
             const block = await provider.getBlock("latest");
@@ -2182,13 +2223,13 @@
             Vue.set(this.erc20, 'totalSupply', totalSupply.toString());
             const coinbaseBalanceOf = await contract.balanceOf(this.coinbase);
             Vue.set(this.erc20, 'coinbaseBalanceOf', coinbaseBalanceOf.toString());
-            console.log(moment().format("HH:mm:ss") + " retrieveERC20 - coinbaseBalanceOf: " + coinbaseBalanceOf);
+            console.log(now() + " retrieveERC20 - coinbaseBalanceOf: " + coinbaseBalanceOf);
 
             // Retrieve Event Logs
             const events = [];
             const t = this; // async function has a new `this`, so use `t` to represent the original `this`
             async function getLogs(fromBlock, toBlock) {
-              console.log(moment().format("HH:mm:ss") + " retrieveERC20.getLogs - fromBlock: " + fromBlock + ", toBlock: " + toBlock);
+              console.log(now() + " retrieveERC20.getLogs - fromBlock: " + fromBlock + ", toBlock: " + toBlock);
               let split = false;
               try {
                 const filter = {
@@ -2318,11 +2359,11 @@
               }
             }
             Vue.set(this.erc20, 'allowances', allowances);
-            // console.log(moment().format("HH:mm:ss") + " retrieveERC20 END - erc20: " + JSON.stringify(this.erc20, null, 2));
+            // console.log(now() + " retrieveERC20 END - erc20: " + JSON.stringify(this.erc20, null, 2));
           },
 
           async retrieveERC721() {
-            console.log(moment().format("HH:mm:ss") + " retrieveERC721 BEGIN - settings.erc20: " + JSON.stringify(this.settings.erc20, null, 2));
+            console.log(now() + " retrieveERC721 BEGIN - settings.erc20: " + JSON.stringify(this.settings.erc20, null, 2));
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const contract = new ethers.Contract(this.settings.erc721.contract, ERC721ABI, provider);
             const block = await provider.getBlock("latest");
@@ -2347,16 +2388,16 @@
 
             const symbol = await contract.symbol();
             Vue.set(this.erc721, 'symbol', symbol);
-            console.log(moment().format("HH:mm:ss") + " retrieveERC721 - symbol: " + symbol);
+            console.log(now() + " retrieveERC721 - symbol: " + symbol);
             const coinbaseBalanceOf = await contract.balanceOf(this.coinbase);
             Vue.set(this.erc721, 'coinbaseBalanceOf', coinbaseBalanceOf.toString());
-            console.log(moment().format("HH:mm:ss") + " retrieveERC721 - coinbaseBalanceOf: " + coinbaseBalanceOf);
+            console.log(now() + " retrieveERC721 - coinbaseBalanceOf: " + coinbaseBalanceOf);
 
             // Retrieve Event Logs
             const events = [];
             const t = this; // async function has a new `this`, so use `t` to represent the original `this`
             async function getLogs(fromBlock, toBlock) {
-              console.log(moment().format("HH:mm:ss") + " retrieveERC721.getLogs - fromBlock: " + fromBlock + ", toBlock: " + toBlock);
+              console.log(now() + " retrieveERC721.getLogs - fromBlock: " + fromBlock + ", toBlock: " + toBlock);
               let split = false;
               try {
                 const filter = {
@@ -2376,7 +2417,7 @@
                     null,
                   ],
                 };
-                // console.log(moment().format("HH:mm:ss") + " retrieveERC721.getLogs - filter: " + JSON.stringify(filter));
+                // console.log(now() + " retrieveERC721.getLogs - filter: " + JSON.stringify(filter));
                 const eventLogs = await provider.getLogs(filter);
                 for (const event of eventLogs) {
                   const log = contract.interface.parseLog(event);
@@ -2474,7 +2515,7 @@
                   approved: event.approved,
                 };
               } else {
-                console.log(moment().format("HH:mm:ss") + " retrieveERC721 - ELSE event: " + JSON.stringify(event));
+                console.log(now() + " retrieveERC721 - ELSE event: " + JSON.stringify(event));
               }
             }
 
@@ -2495,11 +2536,11 @@
               approvals.push({ tokenId, ...tokenData });
             }
             Vue.set(this.erc721, 'approvals', approvals);
-            // console.log(moment().format("HH:mm:ss") + " retrieveERC721 END - erc721: " + JSON.stringify(this.erc721, null, 2));
+            // console.log(now() + " retrieveERC721 END - erc721: " + JSON.stringify(this.erc721, null, 2));
           },
 
           async retrieveERC1155() {
-            // console.log(moment().format("HH:mm:ss") + " retrieveERC1155 BEGIN - settings.erc20: " + JSON.stringify(this.settings.erc20, null, 2));
+            // console.log(now() + " retrieveERC1155 BEGIN - settings.erc20: " + JSON.stringify(this.settings.erc20, null, 2));
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const contract = new ethers.Contract(this.settings.erc1155.contract, ERC1155ABI, provider);
             const block = await provider.getBlock("latest");
@@ -2524,7 +2565,7 @@
             const events = [];
             const t = this; // async function has a new `this`, so use `t` to represent the original `this`
             async function getLogs(fromBlock, toBlock) {
-              console.log(moment().format("HH:mm:ss") + " retrieveERC1155.getLogs - fromBlock: " + fromBlock + ", toBlock: " + toBlock);
+              console.log(now() + " retrieveERC1155.getLogs - fromBlock: " + fromBlock + ", toBlock: " + toBlock);
               let split = false;
               try {
                 const filter = {
@@ -2689,7 +2730,7 @@
                   approved: event.approved,
                 };
               } else {
-                console.log(moment().format("HH:mm:ss") + " retrieveERC1155 - ELSE event: " + JSON.stringify(event));
+                console.log(now() + " retrieveERC1155 - ELSE event: " + JSON.stringify(event));
               }
             }
             Vue.set(this.erc1155, 'events', events);
@@ -2707,11 +2748,11 @@
               }
             }
             Vue.set(this.erc1155, 'approvalForAlls', approvalForAlls);
-            // console.log(moment().format("HH:mm:ss") + " retrieveERC1155 END - erc1155: " + JSON.stringify(this.erc1155, null, 2));
+            // console.log(now() + " retrieveERC1155 END - erc1155: " + JSON.stringify(this.erc1155, null, 2));
           },
 
           async retrieveERC20BalanceOf() {
-            console.log(moment().format("HH:mm:ss") + " retrieveERC20BalanceOf BEGIN - settings.erc20: " + JSON.stringify(this.settings.erc20, null, 2));
+            console.log(now() + " retrieveERC20BalanceOf BEGIN - settings.erc20: " + JSON.stringify(this.settings.erc20, null, 2));
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const contract = new ethers.Contract(this.settings.erc20.contract, ERC20ABI, provider);
             const block = await provider.getBlock("latest");
@@ -2719,11 +2760,11 @@
             Vue.set(this.erc20, 'decimals', decimals.toString());
             const balanceOf = await contract.balanceOf(this.settings.erc20.balanceOf.owner);
             Vue.set(this.erc20, 'balanceOf', balanceOf);
-            // console.log(moment().format("HH:mm:ss") + " retrieveERC20BalanceOf - erc20.balanceOf: " + balanceOf);
+            // console.log(now() + " retrieveERC20BalanceOf - erc20.balanceOf: " + balanceOf);
           },
 
           async retrieveERC20Allowance() {
-            console.log(moment().format("HH:mm:ss") + " retrieveERC20Allowance BEGIN - settings.erc20: " + JSON.stringify(this.settings.erc20, null, 2));
+            console.log(now() + " retrieveERC20Allowance BEGIN - settings.erc20: " + JSON.stringify(this.settings.erc20, null, 2));
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const contract = new ethers.Contract(this.settings.erc20.contract, ERC20ABI, provider);
             const block = await provider.getBlock("latest");
@@ -2731,11 +2772,11 @@
             Vue.set(this.erc20, 'decimals', decimals.toString());
             const allowance = await contract.allowance(this.settings.erc20.allowance.owner, this.settings.erc20.allowance.spender);
             Vue.set(this.erc20, 'allowance', allowance);
-            // console.log(moment().format("HH:mm:ss") + " retrieveERC20Allowance - erc20.allowance: " + allowance);
+            // console.log(now() + " retrieveERC20Allowance - erc20.allowance: " + allowance);
           },
 
           async retrieveTimestamps(blockNumbers) {
-            console.log(moment().format("HH:mm:ss") + " retrieveTimestamps BEGIN - blockNumbers: " + JSON.stringify(blockNumbers, null, 2));
+            console.log(now() + " retrieveTimestamps BEGIN - blockNumbers: " + JSON.stringify(blockNumbers, null, 2));
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             if (!(this.chainId in this.timestamps)) {
               Vue.set(this.timestamps, this.chainId, {});
@@ -2746,16 +2787,16 @@
                   const block = await provider.getBlock(blockNumber);
                   Vue.set(this.timestamps[this.chainId], blockNumber, parseInt(block.timestamp));
                 } catch (e) {
-                  console.log(moment().format("HH:mm:ss") + " retrieveTimestamps ERROR: " + e.message);
+                  console.log(now() + " retrieveTimestamps ERROR: " + e.message);
                 }
               }
             }
             localStorage.getStartedWithDevelopingInEthereumTimestamps = JSON.stringify(this.timestamps);
-            // console.log(moment().format("HH:mm:ss") + " retrieveTimestamps END - timestamps: " + JSON.stringify(this.timestamps, null, 2));
+            // console.log(now() + " retrieveTimestamps END - timestamps: " + JSON.stringify(this.timestamps, null, 2));
           },
 
           async transferERC20() {
-            console.log(moment().format("HH:mm:ss") + " transferERC20 - settings.erc20: " + JSON.stringify(this.settings.erc20));
+            console.log(now() + " transferERC20 - settings.erc20: " + JSON.stringify(this.settings.erc20));
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
             const contract = new ethers.Contract(this.settings.erc20.contract, ERC20ABI, provider);
@@ -2763,19 +2804,19 @@
             const decimals = await contract.decimals();
             try {
               const tx = await contractWithSigner.transfer(this.settings.erc20.transfer.to, ethers.utils.parseUnits(this.settings.erc20.transfer.tokens, decimals));
-              console.log(moment().format("HH:mm:ss") + " transferERC20 - tx: " + JSON.stringify(tx));
+              console.log(now() + " transferERC20 - tx: " + JSON.stringify(tx));
               Vue.set(this.erc20.transferTx, 'txHash', tx && tx.hash || null);
               Vue.set(this.erc20.transferTx, 'result', JSON.stringify(tx, null, 2));
             } catch (e) {
-              console.log(moment().format("HH:mm:ss") + " transferERC20 - ERROR: " + JSON.stringify(e));
+              console.log(now() + " transferERC20 - ERROR: " + JSON.stringify(e));
               Vue.set(this.erc20.transferTx, 'txHash', null);
               Vue.set(this.erc20.transferTx, 'result', JSON.stringify(e, null, 2));
             }
-            console.log(moment().format("HH:mm:ss") + " transferERC20 END - erc20.transferTx: " + JSON.stringify(this.erc20.transferTx));
+            console.log(now() + " transferERC20 END - erc20.transferTx: " + JSON.stringify(this.erc20.transferTx));
           },
 
           async approveERC20() {
-            console.log(moment().format("HH:mm:ss") + " approveERC20 - settings.erc20: " + JSON.stringify(this.settings.erc20));
+            console.log(now() + " approveERC20 - settings.erc20: " + JSON.stringify(this.settings.erc20));
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
             const contract = new ethers.Contract(this.settings.erc20.contract, ERC20ABI, provider);
@@ -2783,19 +2824,19 @@
             const decimals = await contract.decimals();
             try {
               const tx = await contractWithSigner.approve(this.settings.erc20.approve.spender, ethers.utils.parseUnits(this.settings.erc20.approve.tokens, decimals));
-              console.log(moment().format("HH:mm:ss") + " approveERC20 - tx: " + JSON.stringify(tx));
+              console.log(now() + " approveERC20 - tx: " + JSON.stringify(tx));
               Vue.set(this.erc20.approveTx, 'txHash', tx && tx.hash || null);
               Vue.set(this.erc20.approveTx, 'result', JSON.stringify(tx, null, 2));
             } catch (e) {
-              console.log(moment().format("HH:mm:ss") + " approveERC20 - ERROR: " + JSON.stringify(e));
+              console.log(now() + " approveERC20 - ERROR: " + JSON.stringify(e));
               Vue.set(this.erc20.approveTx, 'txHash', null);
               Vue.set(this.erc20.approveTx, 'result', JSON.stringify(e, null, 2));
             }
-            console.log(moment().format("HH:mm:ss") + " approveERC20 END - erc20.approveTx: " + JSON.stringify(this.erc20.approveTxHash));
+            console.log(now() + " approveERC20 END - erc20.approveTx: " + JSON.stringify(this.erc20.approveTxHash));
           },
 
           async transferFromERC20() {
-            console.log(moment().format("HH:mm:ss") + " transferFromERC20 - settings.erc20: " + JSON.stringify(this.settings.erc20));
+            console.log(now() + " transferFromERC20 - settings.erc20: " + JSON.stringify(this.settings.erc20));
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
             const contract = new ethers.Contract(this.settings.erc20.contract, ERC20ABI, provider);
@@ -2803,15 +2844,15 @@
             const decimals = await contract.decimals();
             try {
               const tx = await contractWithSigner.transferFrom(this.settings.erc20.transferFrom.from, this.settings.erc20.transferFrom.to, ethers.utils.parseUnits(this.settings.erc20.transferFrom.tokens, decimals));
-              console.log(moment().format("HH:mm:ss") + " transferFromERC20 - tx: " + JSON.stringify(tx));
+              console.log(now() + " transferFromERC20 - tx: " + JSON.stringify(tx));
               Vue.set(this.erc20.transferFromTx, 'txHash', tx && tx.hash || null);
               Vue.set(this.erc20.transferFromTx, 'result', JSON.stringify(tx, null, 2));
             } catch (e) {
-              console.log(moment().format("HH:mm:ss") + " transferFromERC20 - ERROR: " + JSON.stringify(e));
+              console.log(now() + " transferFromERC20 - ERROR: " + JSON.stringify(e));
               Vue.set(this.erc20.transferFromTx, 'txHash', null);
               Vue.set(this.erc20.transferFromTx, 'result', JSON.stringify(e, null, 2));
             }
-            console.log(moment().format("HH:mm:ss") + " transferFromERC20 END - erc20.transferFromTx: " + JSON.stringify(this.erc20.transferFromTx));
+            console.log(now() + " transferFromERC20 END - erc20.transferFromTx: " + JSON.stringify(this.erc20.transferFromTx));
           },
 
           validAddress(a) {
@@ -2828,11 +2869,11 @@
             return n && !isNaN(n) || false;
           },
           saveSettings() {
-            console.log(moment().format("HH:mm:ss") + " saveSettings: " + JSON.stringify(this.settings, null, 2));
+            console.log(now() + " saveSettings: " + JSON.stringify(this.settings, null, 2));
             localStorage.getStartedWithDevelopingInEthereumSettings = JSON.stringify(this.settings);
           },
           async processNewBlock(blockNumber) {
-            console.log(moment().format("HH:mm:ss") + " processNewBlock[" + this.chainId + "] #" + this.formatNumber(blockNumber) + ", latest #" + this.formatNumber(this.blockNumber) + " @ " + moment.unix(this.timestamp).format("YYYY-MM-DD HH:mm:ss") + " " + moment.unix(this.timestamp).fromNow());
+            console.log(now() + " processNewBlock[" + this.chainId + "] #" + this.formatNumber(blockNumber) + ", latest #" + this.formatNumber(this.blockNumber) + " @ " + moment.unix(this.timestamp).format("YYYY-MM-DD HH:mm:ss") + " " + moment.unix(this.timestamp).fromNow());
           },
           formatETH(e, precision = 9) {
             try {
@@ -2889,7 +2930,7 @@
               const t = this;
               function handleChainChanged(_chainId) {
                 t.chainId = parseInt(_chainId);
-                console.log(moment().format("HH:mm:ss") + " connectToWeb3 - handleChainChanged - this.chainId: " + t.chainId);
+                console.log(now() + " connectToWeb3 - handleChainChanged - this.chainId: " + t.chainId);
                 // alert('Ethereum chain has changed - reloading this page.')
                 // window.location.reload();
               }
@@ -2898,7 +2939,7 @@
               async function handleAccountsChanged(accounts) {
                 const signer = provider.getSigner();
                 t.coinbase = await signer.getAddress();
-                console.log(moment().format("HH:mm:ss") + " connectToWeb3 - handleAccountsChanged: " + t.coinbase);
+                console.log(now() + " connectToWeb3 - handleAccountsChanged: " + t.coinbase);
               }
               window.ethereum.on('accountsChanged', handleAccountsChanged);
               async function handleNewBlock(blockNumber) {
@@ -2914,7 +2955,7 @@
               this.coinbase = await signer.getAddress();
               const network = await provider.getNetwork();
               this.chainId = network.chainId;
-              console.log(moment().format("HH:mm:ss") + " connectToWeb3[" + this.chainId + "]");
+              console.log(now() + " connectToWeb3[" + this.chainId + "]");
             }
           },
         },
