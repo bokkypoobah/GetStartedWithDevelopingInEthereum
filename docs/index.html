@@ -63,29 +63,29 @@
 
           <b-card class="m-0 p-0 border-0" body-class="m-1 p-0">
 
-            <b-modal ref="nonfungiblemodal" v-model="nonFungibleModal.show" hide-footer header-class="m-0 px-3 py-2" body-bg-variant="light" size="lg">
-              <template #modal-title>{{ nonFungibleModal.type.replace(/erc/, "ERC-") + ' Non-Fungible Token' }}</template>
+            <b-modal ref="nonfungiblemodal" v-model="modalNonFungible.show" hide-footer header-class="m-0 px-3 py-2" body-bg-variant="light" size="lg">
+              <template #modal-title>{{ modalNonFungible.type.replace(/erc/, "ERC-") + ' Non-Fungible Token' }}</template>
 
               <b-form-group label="contract:" label-for="nonfungiblemodal-contract" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
                 <b-input-group size="sm" class="w-100">
-                  <b-form-input type="text" readonly size="sm" id="nonfungiblemodal-contract" v-model="nonFungibleModal.contract"></b-form-input>
+                  <b-form-input type="text" readonly size="sm" id="nonfungiblemodal-contract" v-model="modalNonFungible.contract"></b-form-input>
                   <b-input-group-append>
-                    <b-button size="sm" :href="explorer + 'token/' + nonFungibleModal.contract + '#code'" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                    <b-button size="sm" :href="explorer + 'token/' + modalNonFungible.contract + '#code'" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                   </b-input-group-append>
                 </b-input-group>
               </b-form-group>
 
               <b-form-group label="tokenId:" label-for="nonfungiblemodal-tokenid" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
                 <b-input-group size="sm" class="w-100">
-                  <b-form-input type="text" readonly size="sm" id="nonfungiblemodal-tokenid" v-model="nonFungibleModal.tokenId"></b-form-input>
+                  <b-form-input type="text" readonly size="sm" id="nonfungiblemodal-tokenid" v-model="modalNonFungible.tokenId"></b-form-input>
                   <b-input-group-append>
-                    <b-button size="sm" :href="nonFungibleViewerURL(nonFungibleModal.contract, nonFungibleModal.tokenId)" variant="link" v-b-popover.hover.ds500="'View in NFT viewer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                    <b-button size="sm" :href="nonFungibleViewerURL(modalNonFungible.contract, modalNonFungible.tokenId)" variant="link" v-b-popover.hover.ds500="'View in NFT viewer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
                   </b-input-group-append>
                 </b-input-group>
               </b-form-group>
               <font size="-1">
                 <!-- <b-table small fixed striped :fields="erc20EventsFields" :items="pagedSortedFilteredERC20Events" show-empty empty-html="Click [Retrieve] above" head-variant="light" class="mt-1"> -->
-                <b-table small fixed striped :items="nonFungibleModal.logs" show-empty head-variant="light" class="mt-1">
+                <b-table small fixed striped :items="modalNonFungible.logs" show-empty head-variant="light" class="mt-1">
                   <template #cell(log)="data">
                     <font size="-2" style="overflow-wrap: break-word;">{{ data.item.log }}</font>
                   </template>
@@ -1233,7 +1233,7 @@
             tokens: [],
             approvalForAlls: [],
           },
-          nonFungibleModal: {
+          modalNonFungible: {
             show: false,
             type: null,
             contract: null,
@@ -2181,68 +2181,68 @@
           },
           async viewNonFungible(type, contract, tokenId) {
             console.log(now() + " retrieveERC20 viewNonFungible - type: " + type + ", contract: " + contract + ", tokenId: " + tokenId);
-            Vue.set(this.nonFungibleModal, 'show', true);
-            Vue.set(this.nonFungibleModal, 'type', type);
-            Vue.set(this.nonFungibleModal, 'contract', contract);
-            Vue.set(this.nonFungibleModal, 'tokenId', tokenId);
+            Vue.set(this.modalNonFungible, 'show', true);
+            Vue.set(this.modalNonFungible, 'type', type);
+            Vue.set(this.modalNonFungible, 'contract', contract);
+            Vue.set(this.modalNonFungible, 'tokenId', tokenId);
 
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const interface = new ethers.Contract(contract, type == "erc721" ? ERC721ABI : ERC1155ABI, provider);
-            Vue.set(this.nonFungibleModal, 'logs', []);
-            this.nonFungibleModal.logs.push({ log:now() + " " + type.replace(/erc/, "ERC-") + " @ " + contract });
+            Vue.set(this.modalNonFungible, 'logs', []);
+            this.modalNonFungible.logs.push({ log:now() + " " + type.replace(/erc/, "ERC-") + " @ " + contract });
             let erc721Owner = null;
             let uriResult = null;
             if (type == "erc721") {
               erc721Owner = await interface.ownerOf(tokenId);
-              this.nonFungibleModal.logs.push({ log:now() + " erc721.ownerOf(" + tokenId + ") returned '" + erc721Owner + "'"});
+              this.modalNonFungible.logs.push({ log:now() + " erc721.ownerOf(" + tokenId + ") returned '" + erc721Owner + "'"});
             }
             if (type == "erc721") {
               uriResults = await interface.tokenURI(tokenId);
-              this.nonFungibleModal.logs.push({ log:now() + " erc721.tokenURI(" + tokenId + ") returned '" + uriResults + "'" });
+              this.modalNonFungible.logs.push({ log:now() + " erc721.tokenURI(" + tokenId + ") returned '" + uriResults + "'" });
             } else if (type == "erc1155") {
               uriResults = await interface.uri(tokenId);
-              this.nonFungibleModal.logs.push({ log:now() + " erc1155.uri(" + tokenId + ") returned '" + uriResults + "'" });
+              this.modalNonFungible.logs.push({ log:now() + " erc1155.uri(" + tokenId + ") returned '" + uriResults + "'" });
             }
             console.log("uriResults: " + uriResults);
             if (uriResults.substring(0, 12) == "ipfs://ipfs/") {
               uriResults = "https://ipfs.io/" + uriResults.substring(7)
-              this.nonFungibleModal.logs.push({ log:now() + " Updated URI to '" + uriResults + "'" });
+              this.modalNonFungible.logs.push({ log:now() + " Updated URI to '" + uriResults + "'" });
             } else if (uriResults.substring(0, 7) == "ipfs://") {
               uriResults = "https://ipfs.io/ipfs/" + uriResults.substring(7);
-              this.nonFungibleModal.logs.push({ log:now() + " Updated URI to '" + uriResults + "'" });
+              this.modalNonFungible.logs.push({ log:now() + " Updated URI to '" + uriResults + "'" });
             }
             if (type == "erc1155") {
               if (uriResults.indexOf("0x{id}") >= 0) {
                 uriResults = uriResults.replace(/0x{id}/, tokenId);
-                this.nonFungibleModal.logs.push({ log:now() + " Updated URI to '" + uriResults + "'" });
+                this.modalNonFungible.logs.push({ log:now() + " Updated URI to '" + uriResults + "'" });
               }
               if (uriResults.indexOf("{id}") >= 0) {
                 uriResults = uriResults.replace(/{id}/, tokenId);
-                this.nonFungibleModal.logs.push({ log:now() + " Updated URI to '" + uriResults + "'" });
+                this.modalNonFungible.logs.push({ log:now() + " Updated URI to '" + uriResults + "'" });
               }
             }
             try {
-              this.nonFungibleModal.logs.push({ log:now() + " Fetching '" + uriResults + "'" });
+              this.modalNonFungible.logs.push({ log:now() + " Fetching '" + uriResults + "'" });
               try {
                 const fileContent = await fetch(uriResults, { mode: 'cors', signal: AbortSignal.timeout(10000) }).then(response => response.json());
-                this.nonFungibleModal.logs.push({ log:now() + " Fetched '" + JSON.stringify(fileContent, null, 2) + "'" });
+                this.modalNonFungible.logs.push({ log:now() + " Fetched '" + JSON.stringify(fileContent, null, 2) + "'" });
                 console.log(now() + " retrieveERC20 viewNonFungible - fileContent: '" + JSON.stringify(fileContent, null, 2) + "'");
                 const name = fileContent && fileContent.name || null;
-                this.nonFungibleModal.logs.push({ log:now() + " name '" + name + "'" });
+                this.modalNonFungible.logs.push({ log:now() + " name '" + name + "'" });
                 const description = fileContent && fileContent.description || null;
-                this.nonFungibleModal.logs.push({ log:now() + " description '" + description + "'" });
+                this.modalNonFungible.logs.push({ log:now() + " description '" + description + "'" });
                 let image = fileContent && fileContent.image || null;
-                this.nonFungibleModal.logs.push({ log:now() + " image '" + image + "'" });
+                this.modalNonFungible.logs.push({ log:now() + " image '" + image + "'" });
                 if (image.substring(0, 12) == "ipfs://ipfs/") {
                   image = "https://ipfs.io/" + image.substring(7)
-                  this.nonFungibleModal.logs.push({ log:now() + " Updated image to '" + image + "'" });
+                  this.modalNonFungible.logs.push({ log:now() + " Updated image to '" + image + "'" });
                 } else if (image.substring(0, 7) == "ipfs://") {
                   image = "https://ipfs.io/ipfs/" + image.substring(7);
-                  this.nonFungibleModal.logs.push({ log:now() + " Updated image to '" + image + "'" });
+                  this.modalNonFungible.logs.push({ log:now() + " Updated image to '" + image + "'" });
                 }
 
               } catch (e) {
-                this.nonFungibleModal.logs.push({ log:now() + " ERROR Fetched failed" });
+                this.modalNonFungible.logs.push({ log:now() + " ERROR Fetched failed" });
                 console.log(now() + " ERROR - fetch: '" + e.message);
               }
             } catch (e) {
