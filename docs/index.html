@@ -136,10 +136,11 @@
 
             <!-- ERC-20: -->
             <b-card v-if="settings.tabIndex == 1" header="ERC-20" class="m-0 p-0">
-              <b-form-group label="contract:" label-for="erc20-contract" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" :state="!settings.erc20.contract || validAddress(settings.erc20.contract)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
+              <b-form-group label="contract:" label-for="erc20-contract" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" :state="!settings.erc20.contract || validAddress(settings.erc20.contract)" :invalid-feedback="'Invalid address'" :description="erc20Description" class="mx-0 my-1 p-0">
                 <b-input-group size="sm" class="w-50">
-                  <b-form-input type="text" size="sm" id="erc20-contract" v-model="settings.erc20.contract" @change="saveSettings" placeholder="Enter ERC-20 token contract address, or select from dropdown"></b-form-input>
+                  <b-form-input type="text" size="sm" id="erc20-contract" v-model="settings.erc20.contract" @change="saveSettings" placeholder="Enter token contract address, or select from dropdown"></b-form-input>
                   <b-input-group-append>
+                    <b-button size="sm" :disabled="!validAddress(settings.erc20.contract)" @click="retrieveERC20" variant="primary">Retrieve</b-button>
                     <b-dropdown size="sm" id="dropdown-left" text="" variant="link" v-b-popover.hover.ds500="'Some sample token contracts'" class="m-0 ml-1 p-0">
                       <b-dropdown-item v-if="sampleContracts('erc20').length == 0" disabled>No sample contracts on this network</b-dropdown-item>
                       <div v-for="(item, index) of sampleContracts('erc20')" v-bind:key="index">
@@ -151,21 +152,21 @@
                   </b-input-group-append>
                 </b-input-group>
               </b-form-group>
-              <b-form-group label="" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
+              <!-- <b-form-group label="" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
                 <b-button size="sm" :disabled="!validAddress(settings.erc20.contract)" @click="retrieveERC20" variant="primary">Retrieve</b-button>
-              </b-form-group>
-              <b-form-group label="symbol:" label-for="erc20-symbol" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
+              </b-form-group> -->
+              <!-- <b-form-group label="symbol:" label-for="erc20-symbol" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
                 <b-form-input type="text" size="sm" readonly id="erc20-symbol" :value="erc20.symbol" class="w-25"></b-form-input>
-              </b-form-group>
-              <b-form-group label="name:" label-for="erc20-name" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
+              </b-form-group> -->
+              <!-- <b-form-group label="name:" label-for="erc20-name" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
                 <b-form-input type="text" size="sm" readonly id="erc20-name" :value="erc20.name" class="w-25"></b-form-input>
-              </b-form-group>
-              <b-form-group label="decimals:" label-for="erc20-decimals" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
+              </b-form-group> -->
+              <!-- <b-form-group label="decimals:" label-for="erc20-decimals" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
                 <b-form-input type="text" size="sm" readonly id="erc20-decimals" :value="erc20.decimals" class="w-25"></b-form-input>
-              </b-form-group>
-              <b-form-group label="totalSupply:" label-for="erc20-totalsupply" label-size="sm" label-cols-sm="2" label-align-sm="right" :description="erc20.totalSupply ? 'Raw value: ' + formatNumber(erc20.totalSupply) : null" class="mx-0 my-1 p-0">
+              </b-form-group> -->
+              <!-- <b-form-group label="totalSupply:" label-for="erc20-totalsupply" label-size="sm" label-cols-sm="2" label-align-sm="right" :description="erc20.totalSupply ? 'Raw value: ' + formatNumber(erc20.totalSupply) : null" class="mx-0 my-1 p-0">
                 <b-form-input type="text" size="sm" readonly id="erc20-totalsupplydecimals" :value="formatDecimals(erc20.totalSupply, erc20.decimals)" class="w-25"></b-form-input>
-              </b-form-group>
+              </b-form-group> -->
 
               <b-form-group label="events:" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
                 <div class="d-flex flex-wrap m-0 p-0">
@@ -546,10 +547,11 @@
 
             <!-- ERC-721: -->
             <b-card v-if="settings.tabIndex == 2" header="ERC-721" class="m-0 p-0">
-              <b-form-group label="contract:" label-for="erc721-contract" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" :state="!settings.erc721.contract || validAddress(settings.erc721.contract)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
+              <b-form-group label="contract:" label-for="erc721-contract" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" :state="!settings.erc721.contract || validAddress(settings.erc721.contract)" :invalid-feedback="'Invalid address'" :description="erc721Description" class="mx-0 my-1 p-0">
                 <b-input-group size="sm" class="w-50">
-                  <b-form-input type="text" size="sm" id="erc721-contract" v-model="settings.erc721.contract" @change="saveSettings" placeholder="Enter ERC-721 token contract address, or select from dropdown"></b-form-input>
+                  <b-form-input type="text" size="sm" id="erc721-contract" v-model="settings.erc721.contract" @change="saveSettings" placeholder="Enter token contract address, or select from dropdown"></b-form-input>
                   <b-input-group-append>
+                    <b-button size="sm" :disabled="!validAddress(settings.erc721.contract)" @click="retrieveERC721" variant="primary">Retrieve</b-button>
                     <b-dropdown size="sm" id="dropdown-left" text="" variant="link" v-b-popover.hover.ds500="'Some sample token contracts'" class="m-0 ml-1 p-0">
                       <b-dropdown-item v-if="sampleContracts('erc721').length == 0" disabled>No sample contracts on this network</b-dropdown-item>
                       <div v-for="(item, index) of sampleContracts('erc721')" v-bind:key="index">
@@ -561,12 +563,12 @@
                   </b-input-group-append>
                 </b-input-group>
               </b-form-group>
-              <b-form-group label="" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
+              <!-- <b-form-group label="" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
                 <b-button size="sm" :disabled="!validAddress(settings.erc721.contract)" @click="retrieveERC721" variant="primary">Retrieve</b-button>
-              </b-form-group>
-              <b-form-group label="symbol:" label-for="erc721-symbol" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
+              </b-form-group> -->
+              <!-- <b-form-group label="symbol:" label-for="erc721-symbol" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
                 <b-form-input type="text" size="sm" readonly id="erc721-symbol" :value="erc721.symbol" class="w-25"></b-form-input>
-              </b-form-group>
+              </b-form-group> -->
 
               <b-form-group label="events:" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
                 <div class="d-flex flex-wrap m-0 p-0">
@@ -836,8 +838,9 @@
             <b-card v-if="settings.tabIndex == 3" header="ERC-1155" class="m-0 p-0">
               <b-form-group label="contract:" label-for="erc1155-contract" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" :state="!settings.erc1155.contract || validAddress(settings.erc1155.contract)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
                 <b-input-group size="sm" class="w-50">
-                  <b-form-input type="text" size="sm" id="erc1155-contract" v-model="settings.erc1155.contract" @change="saveSettings" placeholder="Enter ERC-1155 token contract address, or select from dropdown"></b-form-input>
+                  <b-form-input type="text" size="sm" id="erc1155-contract" v-model="settings.erc1155.contract" @change="saveSettings" placeholder="Enter token contract address, or select from dropdown"></b-form-input>
                   <b-input-group-append>
+                    <b-button size="sm" :disabled="!validAddress(settings.erc1155.contract)" @click="retrieveERC1155" variant="primary">Retrieve</b-button>
                     <b-dropdown size="sm" id="dropdown-left" text="" variant="link" v-b-popover.hover.ds500="'Some sample token contracts'" class="m-0 ml-1 p-0">
                       <b-dropdown-item v-if="sampleContracts('erc1155').length == 0" disabled>No sample contracts on this network</b-dropdown-item>
                       <div v-for="(item, index) of sampleContracts('erc1155')" v-bind:key="index">
@@ -849,9 +852,9 @@
                   </b-input-group-append>
                 </b-input-group>
               </b-form-group>
-              <b-form-group label="" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
+              <!-- <b-form-group label="" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
                 <b-button size="sm" :disabled="!validAddress(settings.erc1155.contract)" @click="retrieveERC1155" variant="primary">Retrieve</b-button>
-              </b-form-group>
+              </b-form-group> -->
 
               <b-form-group label="events:" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" class="mx-0 mt-3 mb-1 p-0">
                 <div class="d-flex flex-wrap m-0 p-0">
@@ -1396,6 +1399,18 @@
           },
           nonFungibleViewer() {
             return this.network.nonFungibleViewer || "https://opensea.io/assets/ethereum/${contract}/${tokenId}";
+          },
+          erc20Description() {
+            if (this.erc20.symbol || this.erc20.name || this.erc20.decimals || this.erc20.totalSupply) {
+              return "symbol: '" + (this.erc20.symbol || '') + "', name: '" + (this.erc20.name || '') + "', decimals: " + (this.erc20.decimals || '') + ", totalSupply: " + (this.erc20.totalSupply && this.formatDecimals(this.erc20.totalSupply, this.erc20.decimals || 0) || '');
+            }
+            return null;
+          },
+          erc721Description() {
+            if (this.erc721.symbol) {
+              return "symbol: '" + (this.erc721.symbol || '') + "'";
+            }
+            return null;
           },
           // --- ERC-20: ---
           sortedFilteredERC20Events() {
