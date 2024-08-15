@@ -94,10 +94,15 @@
 
             <!-- ERC-20: -->
             <b-card v-if="settings.tabIndex == 0" header="ERC-20" class="m-0 p-0">
-              <b-form-group label="contract:" label-for="erc20-contract" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" description="e.g., '0xc21d97673B9E0B3AA53a06439F71fDc1facE393B' for XEENUS and '0x1e5df6db242d07cc40a37b634022c02f73a74d59' for MYERC20TOKEN on Sepolia" :state="!settings.erc20.contract || validAddress(settings.erc20.contract)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
+              <b-form-group label="contract:" label-for="erc20-contract" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" :state="!settings.erc20.contract || validAddress(settings.erc20.contract)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
                 <b-input-group size="sm" class="w-50">
-                  <b-form-input type="text" size="sm" id="erc20-contract" v-model="settings.erc20.contract" @change="saveSettings" placeholder="ERC-20 token contract address"></b-form-input>
+                  <b-form-input type="text" size="sm" id="erc20-contract" v-model="settings.erc20.contract" @change="saveSettings" placeholder="Enter ERC-20 token contract address, or select from dropdown"></b-form-input>
                   <b-input-group-append>
+                    <b-dropdown size="sm" id="dropdown-left" text="" variant="link" class="m-0 ml-1 p-0">
+                      <div v-for="(item, index) of sampleContracts('erc20')" v-bind:key="index">
+                        <b-dropdown-item @click="settings.erc20.contract = item.contract; saveSettings();">{{ index }}. {{ item.contract.substring(0, 8) + '...' + item.contract.slice(-6) + ' ' + item.name }}</b-dropdown-item>
+                      </div>
+                    </b-dropdown>
                     <b-button @click="copyToClipboard(settings.erc20.contract);" variant="link" v-b-popover.hover.ds500="'Copy ERC-20 contract address to clipboard'" class="m-0 ml-3 p-0"><b-icon-clipboard shift-v="+1" font-scale="1.1"></b-icon-clipboard></b-button>
                     <b-button size="sm" :disabled="!validAddress(settings.erc20.contract)" :href="explorer + 'token/' + settings.erc20.contract + '#code'" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-2 p-0"><b-icon-link45deg shift-v="-4" font-scale="1.1"></b-icon-link45deg></b-button>
                   </b-input-group-append>
@@ -498,10 +503,15 @@
 
             <!-- ERC-721: -->
             <b-card v-if="settings.tabIndex == 1" header="ERC-721" class="m-0 p-0">
-              <b-form-group label="contract:" label-for="erc721-contract" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" description="e.g., '0x8b73448426797099b6b9a96c4343f528bbAfc55e' for TESTTOADZ on Sepolia, or '0x8fa600364b93c53e0c71c7a33d2ade21f4351da3' for Larva Chads on Ethereum Mainnet" :state="!settings.erc721.contract || validAddress(settings.erc721.contract)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
+              <b-form-group label="contract:" label-for="erc721-contract" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" :state="!settings.erc721.contract || validAddress(settings.erc721.contract)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
                 <b-input-group size="sm" class="w-50">
-                  <b-form-input type="text" size="sm" id="erc721-contract" v-model="settings.erc721.contract" @change="saveSettings" placeholder="ERC-721 token contract address"></b-form-input>
+                  <b-form-input type="text" size="sm" id="erc721-contract" v-model="settings.erc721.contract" @change="saveSettings" placeholder="Enter ERC-721 token contract address, or select from dropdown"></b-form-input>
                   <b-input-group-append>
+                    <b-dropdown size="sm" id="dropdown-left" text="" variant="link" class="m-0 ml-1 p-0">
+                      <div v-for="(item, index) of sampleContracts('erc721')" v-bind:key="index">
+                        <b-dropdown-item @click="settings.erc721.contract = item.contract; saveSettings();">{{ index }}. {{ item.contract.substring(0, 8) + '...' + item.contract.slice(-6) + ' ' + item.name }}</b-dropdown-item>
+                      </div>
+                    </b-dropdown>
                     <b-button @click="copyToClipboard(settings.erc721.contract);" variant="link" v-b-popover.hover.ds500="'Copy ERC-721 contract address to clipboard'" class="m-0 ml-3 p-0"><b-icon-clipboard shift-v="+1" font-scale="1.1"></b-icon-clipboard></b-button>
                     <b-button size="sm" :disabled="!validAddress(settings.erc721.contract)" :href="explorer + 'token/' + settings.erc721.contract + '#code'" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-2 p-0"><b-icon-link45deg shift-v="-4" font-scale="1.1"></b-icon-link45deg></b-button>
                   </b-input-group-append>
@@ -780,10 +790,15 @@
 
             <!-- ERC-1155: -->
             <b-card v-if="settings.tabIndex == 2" header="ERC-1155" class="m-0 p-0">
-              <b-form-group label="contract:" label-for="erc1155-contract" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" description="e.g., '0xFe9231f0e6753a8412a00eC1f0028A24d5220Ba9' for Zombie Babies on Ethereum Mainnet, or '0x3F15A716888EFb6871872fC4358F638DEE495f3b' Random collection on Sepolia" :state="!settings.erc1155.contract || validAddress(settings.erc1155.contract)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
+              <b-form-group label="contract:" label-for="erc1155-contract" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" :state="!settings.erc1155.contract || validAddress(settings.erc1155.contract)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
                 <b-input-group size="sm" class="w-50">
-                  <b-form-input type="text" size="sm" id="erc1155-contract" v-model="settings.erc1155.contract" @change="saveSettings" placeholder="ERC-1155 token contract address"></b-form-input>
+                  <b-form-input type="text" size="sm" id="erc1155-contract" v-model="settings.erc1155.contract" @change="saveSettings" placeholder="Enter ERC-1155 token contract address, or select from dropdown"></b-form-input>
                   <b-input-group-append>
+                    <b-dropdown size="sm" id="dropdown-left" text="" variant="link" class="m-0 ml-1 p-0">
+                      <div v-for="(item, index) of sampleContracts('erc1155')" v-bind:key="index">
+                        <b-dropdown-item @click="settings.erc1155.contract = item.contract; saveSettings();">{{ index }}. {{ item.contract.substring(0, 8) + '...' + item.contract.slice(-6) + ' ' + item.name }}</b-dropdown-item>
+                      </div>
+                    </b-dropdown>
                     <b-button @click="copyToClipboard(settings.erc1155.contract);" variant="link" v-b-popover.hover.ds500="'Copy ERC-1155 contract address to clipboard'" class="m-0 ml-3 p-0"><b-icon-clipboard shift-v="+1" font-scale="1.1"></b-icon-clipboard></b-button>
                     <b-button size="sm" :disabled="!validAddress(settings.erc1155.contract)" :href="explorer + 'token/' + settings.erc1155.contract + '#code'" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-2 p-0"><b-icon-link45deg shift-v="-4" font-scale="1.1"></b-icon-link45deg></b-button>
                   </b-input-group-append>
@@ -2166,6 +2181,15 @@
 
         // --- METHODS ---
         methods: {
+          sampleContracts(type) {
+            const results = [];
+            for (const [ contract, contractData ] of Object.entries(this.network && this.network.contracts || {})) {
+              if (contractData.type == type) {
+                results.push({ contract, name: contractData.name });
+              }
+            }
+            return results;
+          },
           nonFungibleViewerURL(contract, tokenId) {
             return this.nonFungibleViewer.replace(/\${contract}/, contract).replace(/\${tokenId}/, tokenId);
           },
