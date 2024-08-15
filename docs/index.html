@@ -98,7 +98,8 @@
                 <b-input-group size="sm" class="w-50">
                   <b-form-input type="text" size="sm" id="erc20-contract" v-model="settings.erc20.contract" @change="saveSettings" placeholder="ERC-20 token contract address"></b-form-input>
                   <b-input-group-append>
-                    <b-button size="sm" :disabled="!validAddress(settings.erc20.contract)" :href="explorer + 'token/' + settings.erc20.contract + '#code'" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                    <b-button @click="copyToClipboard(settings.erc20.contract);" variant="link" v-b-popover.hover.ds500="'Copy ERC-20 contract address to clipboard'" class="m-0 ml-3 p-0"><b-icon-clipboard shift-v="+1" font-scale="1.1"></b-icon-clipboard></b-button>
+                    <b-button size="sm" :disabled="!validAddress(settings.erc20.contract)" :href="explorer + 'token/' + settings.erc20.contract + '#code'" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-2 p-0"><b-icon-link45deg shift-v="-4" font-scale="1.1"></b-icon-link45deg></b-button>
                   </b-input-group-append>
                 </b-input-group>
               </b-form-group>
@@ -501,7 +502,8 @@
                 <b-input-group size="sm" class="w-50">
                   <b-form-input type="text" size="sm" id="erc721-contract" v-model="settings.erc721.contract" @change="saveSettings" placeholder="ERC-721 token contract address"></b-form-input>
                   <b-input-group-append>
-                    <b-button size="sm" :disabled="!validAddress(settings.erc721.contract)" :href="explorer + 'token/' + settings.erc721.contract + '#code'" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                    <b-button @click="copyToClipboard(settings.erc721.contract);" variant="link" v-b-popover.hover.ds500="'Copy ERC-721 contract address to clipboard'" class="m-0 ml-3 p-0"><b-icon-clipboard shift-v="+1" font-scale="1.1"></b-icon-clipboard></b-button>
+                    <b-button size="sm" :disabled="!validAddress(settings.erc721.contract)" :href="explorer + 'token/' + settings.erc721.contract + '#code'" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-2 p-0"><b-icon-link45deg shift-v="-4" font-scale="1.1"></b-icon-link45deg></b-button>
                   </b-input-group-append>
                 </b-input-group>
               </b-form-group>
@@ -782,7 +784,8 @@
                 <b-input-group size="sm" class="w-50">
                   <b-form-input type="text" size="sm" id="erc1155-contract" v-model="settings.erc1155.contract" @change="saveSettings" placeholder="ERC-1155 token contract address"></b-form-input>
                   <b-input-group-append>
-                    <b-button size="sm" :disabled="!validAddress(settings.erc1155.contract)" :href="explorer + 'token/' + settings.erc1155.contract + '#code'" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-1 p-0"><b-icon-link45deg shift-v="+1" font-scale="0.95"></b-icon-link45deg></b-button>
+                    <b-button @click="copyToClipboard(settings.erc1155.contract);" variant="link" v-b-popover.hover.ds500="'Copy ERC-1155 contract address to clipboard'" class="m-0 ml-3 p-0"><b-icon-clipboard shift-v="+1" font-scale="1.1"></b-icon-clipboard></b-button>
+                    <b-button size="sm" :disabled="!validAddress(settings.erc1155.contract)" :href="explorer + 'token/' + settings.erc1155.contract + '#code'" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-2 p-0"><b-icon-link45deg shift-v="-4" font-scale="1.1"></b-icon-link45deg></b-button>
                   </b-input-group-append>
                 </b-input-group>
               </b-form-group>
@@ -2214,6 +2217,20 @@
                 const fileContent = await fetch(uriResults, { mode: 'cors', signal: AbortSignal.timeout(10000) }).then(response => response.json());
                 this.nonFungibleModal.logs.push({ log:now() + " Fetched '" + JSON.stringify(fileContent, null, 2) + "'" });
                 console.log(now() + " retrieveERC20 viewNonFungible - fileContent: '" + JSON.stringify(fileContent, null, 2) + "'");
+                const name = fileContent && fileContent.name || null;
+                this.nonFungibleModal.logs.push({ log:now() + " name '" + name + "'" });
+                const description = fileContent && fileContent.description || null;
+                this.nonFungibleModal.logs.push({ log:now() + " description '" + description + "'" });
+                let image = fileContent && fileContent.image || null;
+                this.nonFungibleModal.logs.push({ log:now() + " image '" + image + "'" });
+                if (image.substring(0, 12) == "ipfs://ipfs/") {
+                  image = "https://ipfs.io/" + image.substring(7)
+                  this.nonFungibleModal.logs.push({ log:now() + " Updated image to '" + image + "'" });
+                } else if (image.substring(0, 7) == "ipfs://") {
+                  image = "https://ipfs.io/ipfs/" + image.substring(7);
+                  this.nonFungibleModal.logs.push({ log:now() + " Updated image to '" + image + "'" });
+                }
+
               } catch (e) {
                 this.nonFungibleModal.logs.push({ log:now() + " ERROR Fetched failed" });
                 console.log(now() + " ERROR - fetch: '" + e.message);
