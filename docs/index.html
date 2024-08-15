@@ -827,7 +827,7 @@
                     <b-form-select size="sm" v-model="settings.erc1155.eventsTable.sortOption" @change="saveSettings" :options="eventsSortOptions" v-b-popover.hover.bottom="'Yeah. Sort'"></b-form-select>
                   </div>
                   <div class="mt-0 pl-1">
-                    <font size="-2" v-b-popover.hover.bottom="'# filtered / total events'">{{ formatNumber(sortedFilteredERC721Events.length) + '/' + formatNumber(erc1155.events.length) }}</font>
+                    <font size="-2" v-b-popover.hover.bottom="'# filtered / total events'">{{ formatNumber(sortedFilteredERC1155Events.length) + '/' + formatNumber(erc1155.events.length) }}</font>
                   </div>
                   <div class="mt-0 pl-1">
                     <b-pagination size="sm" v-model="settings.erc1155.eventsTable.currentPage" @input="saveSettings" :total-rows="sortedFilteredERC1155Events.length" :per-page="settings.erc1155.eventsTable.pageSize" style="height: 0;"></b-pagination>
