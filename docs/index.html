@@ -91,6 +91,11 @@
                   </template>
                 </b-table>
               </font>
+
+              name: {{ modalNonFungible.name }}
+              description: {{ modalNonFungible.description }}
+              image: {{ modalNonFungible.image }}
+              attributes: {{ modalNonFungible.attributes }}
             </b-modal>
 
             <!-- HOME: -->
@@ -1238,6 +1243,10 @@
             type: null,
             contract: null,
             tokenId: null,
+            name: null,
+            description: null,
+            image: null,
+            attributes: [],
             logs: [],
           },
           timestamps: {},
@@ -2227,19 +2236,28 @@
                 const fileContent = await fetch(uriResults, { mode: 'cors', signal: AbortSignal.timeout(10000) }).then(response => response.json());
                 this.modalNonFungible.logs.push({ log:now() + " Fetched '" + JSON.stringify(fileContent, null, 2) + "'" });
                 console.log(now() + " retrieveERC20 viewNonFungible - fileContent: '" + JSON.stringify(fileContent, null, 2) + "'");
-                const name = fileContent && fileContent.name || null;
-                this.modalNonFungible.logs.push({ log:now() + " name '" + name + "'" });
-                const description = fileContent && fileContent.description || null;
-                this.modalNonFungible.logs.push({ log:now() + " description '" + description + "'" });
-                let image = fileContent && fileContent.image || null;
-                this.modalNonFungible.logs.push({ log:now() + " image '" + image + "'" });
-                if (image.substring(0, 12) == "ipfs://ipfs/") {
-                  image = "https://ipfs.io/" + image.substring(7)
-                  this.modalNonFungible.logs.push({ log:now() + " Updated image to '" + image + "'" });
-                } else if (image.substring(0, 7) == "ipfs://") {
-                  image = "https://ipfs.io/ipfs/" + image.substring(7);
-                  this.modalNonFungible.logs.push({ log:now() + " Updated image to '" + image + "'" });
+
+                // name: null,
+                // description: null,
+                // attributes: [],
+                // image: null,
+
+
+                this.modalNonFungible.name = fileContent && fileContent.name || null;
+                this.modalNonFungible.logs.push({ log:now() + " name '" + this.modalNonFungible.name + "'" });
+                this.modalNonFungible.description = fileContent && fileContent.description || null;
+                this.modalNonFungible.logs.push({ log:now() + " description '" + this.modalNonFungible.description + "'" });
+                this.modalNonFungible.image = fileContent && fileContent.image || null;
+                this.modalNonFungible.logs.push({ log:now() + " image '" + this.modalNonFungible.image + "'" });
+                if (this.modalNonFungible.image.substring(0, 12) == "ipfs://ipfs/") {
+                  this.modalNonFungible.image = "https://ipfs.io/" + this.modalNonFungible.image.substring(7)
+                  this.modalNonFungible.logs.push({ log:now() + " Updated image to '" + this.modalNonFungible.image + "'" });
+                } else if (this.modalNonFungible.image.substring(0, 7) == "ipfs://") {
+                  this.modalNonFungible.image = "https://ipfs.io/ipfs/" + this.modalNonFungible.image.substring(7);
+                  this.modalNonFungible.logs.push({ log:now() + " Updated image to '" + this.modalNonFungible.image + "'" });
                 }
+                this.modalNonFungible.attributes = fileContent && fileContent.attributes || null;
+                this.modalNonFungible.logs.push({ log:now() + " attributes '" + this.modalNonFungible.attributes + "'" });
 
               } catch (e) {
                 this.modalNonFungible.logs.push({ log:now() + " ERROR Fetched failed" });
