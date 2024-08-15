@@ -43,9 +43,10 @@
             <em v-b-popover.hover.ds500="'gm gm gm'">Get Started With Developing In Ethereum</em>
           </b-navbar-brand>
           <b-navbar-nav class="ml-auto">
-            <b-nav-item size="sm" @click="settings.tabIndex = 0; saveSettings();" :active="settings.tabIndex == 0" active-class="active" v-b-popover.hover.ds500="'ERC-20 Fungible Tokens'">ERC-20</b-nav-item>
-            <b-nav-item size="sm" @click="settings.tabIndex = 1; saveSettings();" :active="settings.tabIndex == 1" active-class="active" v-b-popover.hover.ds500="'ERC-721 Non-Fungible Tokens'">ERC-721</b-nav-item>
-            <b-nav-item size="sm" @click="settings.tabIndex = 2; saveSettings();" :active="settings.tabIndex == 2" active-class="active" v-b-popover.hover.ds500="'ERC-1155 Non-Fungible Tokens - WIP'">ERC-1155</b-nav-item>
+            <b-nav-item size="sm" @click="settings.tabIndex = 0; saveSettings();" :active="settings.tabIndex == 0" active-class="active" v-b-popover.hover.ds500="'Home, and information on this tool'">Home</b-nav-item>
+            <b-nav-item size="sm" @click="settings.tabIndex = 1; saveSettings();" :active="settings.tabIndex == 1" active-class="active" v-b-popover.hover.ds500="'ERC-20 Fungible Tokens'">ERC-20</b-nav-item>
+            <b-nav-item size="sm" @click="settings.tabIndex = 2; saveSettings();" :active="settings.tabIndex == 2" active-class="active" v-b-popover.hover.ds500="'ERC-721 Non-Fungible Tokens'">ERC-721</b-nav-item>
+            <b-nav-item size="sm" @click="settings.tabIndex = 3; saveSettings();" :active="settings.tabIndex == 3" active-class="active" v-b-popover.hover.ds500="'ERC-1155 Non-Fungible Tokens - WIP'">ERC-1155</b-nav-item>
             <b-button size="sm" variant="outline-primary" class="ml-1" @click="connectToWeb3(); processNewBlock(0);" v-b-popover.hover.ds500="'Click to update wallet'">{{ coinbase && (coinbase.substring(0, 8) + '...' + coinbase.slice(-6)) || 'Connect' }}</b-button>
           </b-navbar-nav>
         </b-navbar>
@@ -93,7 +94,22 @@
             </b-modal>
 
             <!-- ERC-20: -->
-            <b-card v-if="settings.tabIndex == 0" header="ERC-20" class="m-0 p-0">
+            <b-card v-if="settings.tabIndex == 0" header="Home" no-body class="m-0 p-0">
+              <b-card-body class="mt-1 p-1">
+                <h5>Welcome</h5>
+                TODO
+
+                <h6 class="mt-4">How This Works</h6>
+                <ul>
+                  <li>This tool scans for <b-link href="https://eips.ethereum.org/EIPS/eip-20#events" target="_blank">ERC-20</b-link>, <b-link href="https://eips.ethereum.org/EIPS/eip-721#specification" target="_blank">ERC-721</b-link> and <b-link href="https://eips.ethereum.org/EIPS/eip-1155#specification" target="_blank">ERC-1155</b-link> <b>Approval</b> and <b>ApprovalForAll</b> log events from the owner's account. This is done using the <b-link href="https://docs.ethers.org/v5/api/providers/provider/#Provider-getLogs" target="_blank">getLogs(filter)</b-link> web3 call</li>
+                  <li>These event logs are then processed to determine the approval states for the various ERC-20, ERC-721 and ERC-1155 contracts</li>
+                  <li>The latest ERC-20 approval amounts are retrieved using the ERC-20 <b>allowance(...)</b> function</li>
+                </ul>
+              </b-card-body>
+            </b-card>
+
+            <!-- ERC-20: -->
+            <b-card v-if="settings.tabIndex == 1" header="ERC-20" class="m-0 p-0">
               <b-form-group label="contract:" label-for="erc20-contract" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" :state="!settings.erc20.contract || validAddress(settings.erc20.contract)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
                 <b-input-group size="sm" class="w-50">
                   <b-form-input type="text" size="sm" id="erc20-contract" v-model="settings.erc20.contract" @change="saveSettings" placeholder="Enter ERC-20 token contract address, or select from dropdown"></b-form-input>
@@ -503,7 +519,7 @@
             </b-card>
 
             <!-- ERC-721: -->
-            <b-card v-if="settings.tabIndex == 1" header="ERC-721" class="m-0 p-0">
+            <b-card v-if="settings.tabIndex == 2" header="ERC-721" class="m-0 p-0">
               <b-form-group label="contract:" label-for="erc721-contract" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" :state="!settings.erc721.contract || validAddress(settings.erc721.contract)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
                 <b-input-group size="sm" class="w-50">
                   <b-form-input type="text" size="sm" id="erc721-contract" v-model="settings.erc721.contract" @change="saveSettings" placeholder="Enter ERC-721 token contract address, or select from dropdown"></b-form-input>
@@ -791,7 +807,7 @@
             </b-card>
 
             <!-- ERC-1155: -->
-            <b-card v-if="settings.tabIndex == 2" header="ERC-1155" class="m-0 p-0">
+            <b-card v-if="settings.tabIndex == 3" header="ERC-1155" class="m-0 p-0">
               <b-form-group label="contract:" label-for="erc1155-contract" label-size="lg" label-class="font-weight-bold pt-0" label-cols-sm="2" label-align-sm="right" :state="!settings.erc1155.contract || validAddress(settings.erc1155.contract)" :invalid-feedback="'Invalid address'" class="mx-0 my-1 p-0">
                 <b-input-group size="sm" class="w-50">
                   <b-form-input type="text" size="sm" id="erc1155-contract" v-model="settings.erc1155.contract" @change="saveSettings" placeholder="Enter ERC-1155 token contract address, or select from dropdown"></b-form-input>
