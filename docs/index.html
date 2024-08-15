@@ -93,7 +93,7 @@
               </font>
             </b-modal>
 
-            <!-- ERC-20: -->
+            <!-- HOME: -->
             <b-card v-if="settings.tabIndex == 0" header="Home" no-body class="m-0 p-0">
               <b-card-body class="mt-1 p-1">
                 <h5>Welcome</h5>
@@ -141,7 +141,7 @@
                         <b-dropdown-item @click="settings.erc20.contract = item.contract; saveSettings();">{{ index }}. {{ item.contract.substring(0, 8) + '...' + item.contract.slice(-6) + ' ' + item.name }}</b-dropdown-item>
                       </div>
                     </b-dropdown>
-                    <b-button @click="copyToClipboard(settings.erc20.contract);" variant="link" v-b-popover.hover.ds500="'Copy ERC-20 contract address to clipboard'" class="m-0 ml-3 p-0"><b-icon-clipboard shift-v="+1" font-scale="1.1"></b-icon-clipboard></b-button>
+                    <b-button :disabled="!settings.erc20.contract || !validAddress(settings.erc20.contract)" @click="copyToClipboard(settings.erc20.contract);" variant="link" v-b-popover.hover.ds500="'Copy ERC-20 contract address to clipboard'" class="m-0 ml-3 p-0"><b-icon-clipboard shift-v="+1" font-scale="1.1"></b-icon-clipboard></b-button>
                     <b-button size="sm" :disabled="!validAddress(settings.erc20.contract)" :href="explorer + 'token/' + settings.erc20.contract + '#code'" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-2 p-0"><b-icon-link45deg shift-v="-4" font-scale="1.1"></b-icon-link45deg></b-button>
                   </b-input-group-append>
                 </b-input-group>
@@ -551,7 +551,7 @@
                         <b-dropdown-item @click="settings.erc721.contract = item.contract; saveSettings();">{{ index }}. {{ item.contract.substring(0, 8) + '...' + item.contract.slice(-6) + ' ' + item.name }}</b-dropdown-item>
                       </div>
                     </b-dropdown>
-                    <b-button @click="copyToClipboard(settings.erc721.contract);" variant="link" v-b-popover.hover.ds500="'Copy ERC-721 contract address to clipboard'" class="m-0 ml-3 p-0"><b-icon-clipboard shift-v="+1" font-scale="1.1"></b-icon-clipboard></b-button>
+                    <b-button :disabled="!settings.erc721.contract || !validAddress(settings.erc721.contract)" @click="copyToClipboard(settings.erc721.contract);" variant="link" v-b-popover.hover.ds500="'Copy ERC-721 contract address to clipboard'" class="m-0 ml-3 p-0"><b-icon-clipboard shift-v="+1" font-scale="1.1"></b-icon-clipboard></b-button>
                     <b-button size="sm" :disabled="!validAddress(settings.erc721.contract)" :href="explorer + 'token/' + settings.erc721.contract + '#code'" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-2 p-0"><b-icon-link45deg shift-v="-4" font-scale="1.1"></b-icon-link45deg></b-button>
                   </b-input-group-append>
                 </b-input-group>
@@ -839,7 +839,7 @@
                         <b-dropdown-item @click="settings.erc1155.contract = item.contract; saveSettings();">{{ index }}. {{ item.contract.substring(0, 8) + '...' + item.contract.slice(-6) + ' ' + item.name }}</b-dropdown-item>
                       </div>
                     </b-dropdown>
-                    <b-button @click="copyToClipboard(settings.erc1155.contract);" variant="link" v-b-popover.hover.ds500="'Copy ERC-1155 contract address to clipboard'" class="m-0 ml-3 p-0"><b-icon-clipboard shift-v="+1" font-scale="1.1"></b-icon-clipboard></b-button>
+                    <b-button :disabled="!settings.erc1155.contract || !validAddress(settings.erc1155.contract)" @click="copyToClipboard(settings.erc1155.contract);" variant="link" v-b-popover.hover.ds500="'Copy ERC-1155 contract address to clipboard'" class="m-0 ml-3 p-0"><b-icon-clipboard shift-v="+1" font-scale="1.1"></b-icon-clipboard></b-button>
                     <b-button size="sm" :disabled="!validAddress(settings.erc1155.contract)" :href="explorer + 'token/' + settings.erc1155.contract + '#code'" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-2 p-0"><b-icon-link45deg shift-v="-4" font-scale="1.1"></b-icon-link45deg></b-button>
                   </b-input-group-append>
                 </b-input-group>
