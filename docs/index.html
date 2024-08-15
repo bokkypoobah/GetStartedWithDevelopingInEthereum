@@ -98,7 +98,7 @@
                 <b-input-group size="sm" class="w-50">
                   <b-form-input type="text" size="sm" id="erc20-contract" v-model="settings.erc20.contract" @change="saveSettings" placeholder="Enter ERC-20 token contract address, or select from dropdown"></b-form-input>
                   <b-input-group-append>
-                    <b-dropdown size="sm" id="dropdown-left" text="" variant="link" class="m-0 ml-1 p-0">
+                    <b-dropdown size="sm" id="dropdown-left" text="" variant="link" v-b-popover.hover.ds500="'Some sample token contracts'" class="m-0 ml-1 p-0">
                       <b-dropdown-item v-if="sampleContracts('erc20').length == 0" disabled>No sample contracts on this network</b-dropdown-item>
                       <div v-for="(item, index) of sampleContracts('erc20')" v-bind:key="index">
                         <b-dropdown-item @click="settings.erc20.contract = item.contract; saveSettings();">{{ index }}. {{ item.contract.substring(0, 8) + '...' + item.contract.slice(-6) + ' ' + item.name }}</b-dropdown-item>
@@ -508,7 +508,7 @@
                 <b-input-group size="sm" class="w-50">
                   <b-form-input type="text" size="sm" id="erc721-contract" v-model="settings.erc721.contract" @change="saveSettings" placeholder="Enter ERC-721 token contract address, or select from dropdown"></b-form-input>
                   <b-input-group-append>
-                    <b-dropdown size="sm" id="dropdown-left" text="" variant="link" class="m-0 ml-1 p-0">
+                    <b-dropdown size="sm" id="dropdown-left" text="" variant="link" v-b-popover.hover.ds500="'Some sample token contracts'" class="m-0 ml-1 p-0">
                       <b-dropdown-item v-if="sampleContracts('erc721').length == 0" disabled>No sample contracts on this network</b-dropdown-item>
                       <div v-for="(item, index) of sampleContracts('erc721')" v-bind:key="index">
                         <b-dropdown-item @click="settings.erc721.contract = item.contract; saveSettings();">{{ index }}. {{ item.contract.substring(0, 8) + '...' + item.contract.slice(-6) + ' ' + item.name }}</b-dropdown-item>
@@ -796,7 +796,7 @@
                 <b-input-group size="sm" class="w-50">
                   <b-form-input type="text" size="sm" id="erc1155-contract" v-model="settings.erc1155.contract" @change="saveSettings" placeholder="Enter ERC-1155 token contract address, or select from dropdown"></b-form-input>
                   <b-input-group-append>
-                    <b-dropdown size="sm" id="dropdown-left" text="" variant="link" class="m-0 ml-1 p-0">
+                    <b-dropdown size="sm" id="dropdown-left" text="" variant="link" v-b-popover.hover.ds500="'Some sample token contracts'" class="m-0 ml-1 p-0">
                       <b-dropdown-item v-if="sampleContracts('erc1155').length == 0" disabled>No sample contracts on this network</b-dropdown-item>
                       <div v-for="(item, index) of sampleContracts('erc1155')" v-bind:key="index">
                         <b-dropdown-item @click="settings.erc1155.contract = item.contract; saveSettings();">{{ index }}. {{ item.contract.substring(0, 8) + '...' + item.contract.slice(-6) + ' ' + item.name }}</b-dropdown-item>
